@@ -1,0 +1,3 @@
+.global pthread_mutex_timedlock
+pthread_mutex_timedlock:
+	jmp __pthread_mutex_timedlock
