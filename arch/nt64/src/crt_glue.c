@@ -21,7 +21,7 @@ extern int __libc_start_main(
 
 void __libc_entry_routine(
 	__app_main *		__main,
-	__psx_init_routine *	__psx_init_routine,
+	__psx_init_routine *	__psx_init,
 	int			options)
 {
 	int			argc;
@@ -36,7 +36,7 @@ void __libc_entry_routine(
 	ctx.pthread_surrogate_fn= __pthread_surrogate_init;
 
 	/* __psx_init must succeed... */
-	if (__psx_init_routine(&argc,&argv,&envp,&ctx))
+	if (__psx_init(&argc,&argv,&envp,&ctx))
 		a_crash();
 
 	/* ...and conform */
