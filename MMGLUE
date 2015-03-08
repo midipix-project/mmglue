@@ -1,0 +1,14 @@
+this repository contains the midipix architecture- and target-specific
+files for musl libc (musl-libc.org).
+
+the midipix musl port does not require any changes to upstream source files,
+and has all files under the appropriate architecture-specific directories.
+
+in order to ease development by way of out-of-tree builds, this project
+currently uses 'lazy' as its build system. 'lazy' is deviant and somehow
+slower than standard make files, but nonetheless gets the job done.
+
+building requires a combined source tree (musl+mmglue) together with lazy,
+and of course also the midipix toolchain.
+
+to get lazy, git clone git://midipix.org/lazy;
