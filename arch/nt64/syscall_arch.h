@@ -56,8 +56,3 @@ static __inline long __syscall6(long n, long a1, long a2, long a3, long a4, long
 
 #define __SYSCALL_LL_E(x) (x)
 #define __SYSCALL_LL_O(x) (x)
-
-
-#define VDSO_USEFUL
-#define VDSO_CGT_SYM	"__clock_gettime"
-#define VDSO_CGT_VER	"LINUX_2.6"
