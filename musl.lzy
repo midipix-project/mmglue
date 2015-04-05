@@ -31,7 +31,8 @@ lz_project_definitions()
 		pe_excluded_symbols="$pe_excluded_symbols,__vm_lock_impl"
 		pe_excluded_symbols="$pe_excluded_symbols,__vm_unlock_impl"
 
-		musl_libc_so_ldflags="-shared -e __libc_entry_point -Bsymbolic-functions \
+		musl_libc_so_ldflags="-shared -e "$lz_default_underscore"__libc_entry_point \
+					-Bsymbolic-functions \
 					--subsystem windows \
 					--output-def $lz_build_dir/lib/libc.so.def \
 					--out-implib $lz_build_dir/lib/libc.lib.a \
@@ -175,7 +176,7 @@ musl_libc_shared()
 	musl_crt
 
 	# memory functions
-	lz_cflags_extra="$musl_cflags_shared"
+	lz_cflags_extra="$musl_cflags_shared $musl_cflags_no_complex"
 	lz_cflags_special="$musl_cflags_memops"
 	lz_src_files="$musl_libc_mem_files"
 	lz_src_dirs=$lz_ignore_src_dirs
@@ -248,6 +249,7 @@ musl_libc_shared_no_complex()
 {
 	lz_link_libgcc=
 	lz_exclude_src_dirs="src/complex"
+	musl_cflags_no_complex="-DLIBC_NO_COMPLEX"
 	musl_libc_shared
 }
 
