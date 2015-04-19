@@ -10,6 +10,7 @@ ___dso_main_routine:
 	ret
 
 	.weak	_dso_main_routine
+	.def	_dso_main_routine; .scl	2; .type 32; .endef
 	.set	_dso_main_routine,___dso_main_routine
 
 .section .midipix
