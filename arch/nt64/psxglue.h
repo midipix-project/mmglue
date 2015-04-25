@@ -44,6 +44,8 @@ struct __psx_context {
 	unsigned int		teb_libc_idx;
 	void *			pthread_surrogate_fn;
 	void *			pthread_create_fn;
+	void *			do_global_ctors_fn;
+	void *			do_global_dtors_fn;
 };
 
 struct __tlca {

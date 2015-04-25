@@ -5,13 +5,11 @@ __pei386_runtime_relocator:
 
 .globl __init
 __init:
-	call .init
-	ret
+	jmp .init
 
 .globl __fini
 __fini:
-	call .fini
-	ret
+	jmp .fini
 
 .section .init
 	xor %eax,%eax
@@ -39,3 +37,5 @@ __fini:
 	.long  1
 	.long  0
 	.long  0
+	.long  __CTOR_LIST__
+	.long  __DTOR_LIST__

@@ -8,6 +8,9 @@
 extern struct __ldso_vtbl *	__ldso_vtbl;
 extern struct __psx_vtbl *	__psx_vtbl;
 
+extern void * __init_array_start;
+extern void * __fini_array_start;
+
 typedef int __app_main();
 typedef int __pthread_surrogate_routine(struct pthread *);
 
@@ -18,6 +21,26 @@ extern int __libc_start_main(
 	void *	main,
 	int	argc,
 	char **	argv);
+
+static struct __tls {
+	void *		pad[16/sizeof(void *)];
+	struct pthread	pt;
+} __builtin_tls = {{0}};
+
+void __init_tls (size_t * auxv)
+{
+	#define T __builtin_tls
+
+	__set_thread_area(&T.pt);
+
+	T.pt.self	= &T.pt;
+	T.pt.locale	= &libc.global_locale;
+	T.pt.tid	= __syscall(SYS_set_tid_address, &T.pt.tid);
+
+	libc.can_do_threads	= 1;
+        libc.has_thread_pointer	= 1;
+	libc.tls_size = sizeof(struct __tls);
+};
 
 void __libc_entry_routine(
 	__app_main *		__main,
@@ -43,15 +66,16 @@ void __libc_entry_routine(
 	else if (envp != argv + (argc + 1))
 		a_crash();
 
-	/* dso init routines */
-	_init();
-
 	/* write once */
 	__syscall_vtbl	= (unsigned long **)ctx.sys_vtbl;
 	__ldso_vtbl	= ctx.ldso_vtbl;
 	__psx_vtbl	= ctx.psx_vtbl;
 	__teb_sys_idx	= ctx.teb_sys_idx;
 	__teb_libc_idx	= ctx.teb_libc_idx;
+
+	/* surrogate init/fini arrays */
+	__init_array_start = ctx.do_global_ctors_fn;
+	__fini_array_start = ctx.do_global_dtors_fn;
 
 	/* enter libc */
 	__libc_start_main(__main,argc,argv);

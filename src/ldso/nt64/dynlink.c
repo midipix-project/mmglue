@@ -50,13 +50,15 @@ void *__copy_tls(unsigned char * mem)
 	**/
 
         pthread_t td;
-        void **	  dtv;
+	uintptr_t addr;
 
-	dtv = (void **)mem;
-	dtv[0] = 0;
+	addr = (uintptr_t)mem;
+	addr >>= 4;
+	addr <<= 4;
+	addr +=  16;
 
-	td = (void *)(dtv + 1);
-	td->dtv = dtv;
+	td = (struct __pthread *)addr;
+	td->dtv = 0;
 
 	return td;
 }
