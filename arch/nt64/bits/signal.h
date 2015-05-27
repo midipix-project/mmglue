@@ -11,9 +11,9 @@ typedef struct {
 } mcontext_t;
 
 struct sigaltstack {
-	void *ss_sp;
-	int ss_flags;
-	size_t ss_size;
+	void *	ss_sp;
+	int	ss_flags;
+	size_t	ss_size;
 };
 
 typedef struct __ucontext {
