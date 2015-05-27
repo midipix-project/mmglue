@@ -2,8 +2,8 @@
  || defined(_XOPEN_SOURCE) || defined(_GNU_SOURCE) || defined(_BSD_SOURCE)
 
 #if defined(_XOPEN_SOURCE) || defined(_GNU_SOURCE) || defined(_BSD_SOURCE)
-#define MINSIGSTKSZ 2048
-#define SIGSTKSZ 8192
+#define MINSIGSTKSZ	4096
+#define SIGSTKSZ	8192
 #endif
 
 typedef struct {
