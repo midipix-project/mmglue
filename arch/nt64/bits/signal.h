@@ -17,12 +17,18 @@ struct sigaltstack {
 };
 
 typedef struct __ucontext {
-	unsigned long uc_flags;
-	struct __ucontext *uc_link;
-	stack_t uc_stack;
-	mcontext_t uc_mcontext;
-	sigset_t uc_sigmask;
-	unsigned long __fpregs_mem[64];
+	unsigned int		uc_csize;
+	unsigned int		uc_msize;
+	unsigned int		uc_pad[2];
+	unsigned long		uc_flags;
+	unsigned long		uc_opaquef[3];
+	unsigned int		uc_opaquec[8];
+	unsigned long		uc_reserved[32];
+	unsigned long		uc_align[2];
+	stack_t			uc_stack;
+	struct __ucontext *	uc_link;
+	sigset_t		uc_sigmask;
+	mcontext_t		uc_mcontext;
 } ucontext_t;
 
 #define SA_NOCLDSTOP  1
