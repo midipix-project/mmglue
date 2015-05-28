@@ -37,8 +37,7 @@ void __init_tls (size_t * auxv)
 	T.pt.locale	= &libc.global_locale;
 	T.pt.tid	= __syscall(SYS_set_tid_address, &T.pt.tid);
 
-	libc.can_do_threads	= 1;
-        libc.has_thread_pointer	= 1;
+	libc.can_do_threads = 1;
 	libc.tls_size = sizeof(struct __tls);
 };
 
