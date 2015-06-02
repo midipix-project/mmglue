@@ -3,6 +3,10 @@
 .globl	_longjmp
 .globl	longjmp
 
+.def __longjmp; .scl 2; .type 32; .endef
+.def _longjmp; .scl 2; .type 32; .endef
+.def longjmp; .scl 2; .type 32; .endef
+
 __longjmp:
 _longjmp:
 longjmp:

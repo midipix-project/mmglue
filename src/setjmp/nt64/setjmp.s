@@ -3,6 +3,10 @@
 .globl	_setjmp
 .globl	setjmp
 
+.def __setjmp; .scl 2; .type 32; .endef
+.def _setjmp; .scl 2; .type 32; .endef
+.def setjmp; .scl 2; .type 32; .endef
+
 __setjmp:
 _setjmp:
 setjmp:
