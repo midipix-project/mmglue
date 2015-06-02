@@ -1,3 +1,3 @@
-	.globl	fseeko
+	.global	fseeko
 fseeko:
 	jmp	__fseeko

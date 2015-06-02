@@ -1,3 +1,3 @@
-	.globl	_memalign
+	.global	_memalign
 _memalign:
 	jmp	___memalign

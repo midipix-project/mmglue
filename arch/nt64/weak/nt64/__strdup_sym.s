@@ -1,3 +1,3 @@
-	.globl	strdup
+	.global	strdup
 strdup:
 	jmp	__strdup

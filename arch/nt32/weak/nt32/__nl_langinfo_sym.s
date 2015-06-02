@@ -1,3 +1,3 @@
-	.globl	_nl_langinfo
+	.global	_nl_langinfo
 _nl_langinfo:
 	jmp	___nl_langinfo

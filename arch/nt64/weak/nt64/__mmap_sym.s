@@ -1,3 +1,3 @@
-	.globl	mmap
+	.global	mmap
 mmap:
 	jmp	__mmap

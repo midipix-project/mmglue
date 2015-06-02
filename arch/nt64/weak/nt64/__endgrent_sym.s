@@ -1,3 +1,3 @@
-	.globl	endgrent
+	.global	endgrent
 endgrent:
 	jmp	setgrent

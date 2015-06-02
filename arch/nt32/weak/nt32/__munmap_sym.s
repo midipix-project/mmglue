@@ -1,3 +1,3 @@
-	.globl	_munmap
+	.global	_munmap
 _munmap:
 	jmp	___munmap

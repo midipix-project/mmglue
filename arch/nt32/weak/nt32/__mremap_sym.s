@@ -1,3 +1,3 @@
-	.globl	_mremap
+	.global	_mremap
 _mremap:
 	jmp	___mremap

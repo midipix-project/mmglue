@@ -1,3 +1,3 @@
-	.globl	_mmap
+	.global	_mmap
 _mmap:
 	jmp	___mmap

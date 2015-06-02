@@ -1,3 +1,3 @@
-	.globl	dn_expand
+	.global	dn_expand
 dn_expand:
 	jmp	__dn_expand

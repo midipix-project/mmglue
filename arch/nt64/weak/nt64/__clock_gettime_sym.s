@@ -1,3 +1,3 @@
-	.globl	clock_gettime
+	.global	clock_gettime
 clock_gettime:
 	jmp	__clock_gettime

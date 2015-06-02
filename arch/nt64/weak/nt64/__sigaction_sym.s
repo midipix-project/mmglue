@@ -1,3 +1,3 @@
-	.globl	sigaction
+	.global	sigaction
 sigaction:
 	jmp	__sigaction

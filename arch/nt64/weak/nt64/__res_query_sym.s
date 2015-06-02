@@ -1,3 +1,3 @@
-	.globl	res_query
+	.global	res_query
 res_query:
 	jmp	__res_query

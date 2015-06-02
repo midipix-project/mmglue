@@ -1,4 +1,4 @@
-	.globl	mprotect
+	.global	mprotect
 mprotect:
 	jmp	__mprotect
 

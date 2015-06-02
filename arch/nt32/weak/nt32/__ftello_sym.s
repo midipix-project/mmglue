@@ -1,3 +1,3 @@
-	.globl	_ftello
+	.global	_ftello
 _ftello:
 	jmp	___ftello
