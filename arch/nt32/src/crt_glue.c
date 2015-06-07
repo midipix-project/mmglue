@@ -8,8 +8,8 @@
 extern struct __ldso_vtbl *	__ldso_vtbl;
 extern struct __psx_vtbl *	__psx_vtbl;
 
-extern void * __init_array_start;
-extern void * __fini_array_start;
+extern void * __init_array_start[];
+extern void * __fini_array_start[];
 
 typedef int __app_main();
 typedef int __pthread_surrogate_routine(struct pthread *);
@@ -73,8 +73,8 @@ void __libc_entry_routine(
 	__teb_libc_idx	= ctx.teb_libc_idx;
 
 	/* surrogate init/fini arrays */
-	__init_array_start = ctx.do_global_ctors_fn;
-	__fini_array_start = ctx.do_global_dtors_fn;
+	*__init_array_start = ctx.do_global_ctors_fn;
+	*__fini_array_start = ctx.do_global_dtors_fn;
 
 	/* enter libc */
 	__libc_start_main(__main,argc,argv);

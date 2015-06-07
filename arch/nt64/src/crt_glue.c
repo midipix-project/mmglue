@@ -8,19 +8,28 @@
 extern struct __ldso_vtbl *	__ldso_vtbl;
 extern struct __psx_vtbl *	__psx_vtbl;
 
-extern void * __init_array_start;
-extern void * __fini_array_start;
-
 typedef int __app_main();
 typedef int __pthread_surrogate_routine(struct pthread *);
 
-extern int _init(void);
 static int __pthread_surrogate_init(struct pthread * self);
 
 extern int __libc_start_main(
 	void *	main,
 	int	argc,
 	char **	argv);
+
+static void (*__global_ctors_fn)();
+static void (*__global_dtors_fn)();
+
+void _init()
+{
+	__global_ctors_fn();
+}
+
+void _fini()
+{
+	__global_dtors_fn();
+}
 
 struct __tls {
 	void *		pad[16/sizeof(void *)];
@@ -73,8 +82,8 @@ void __libc_entry_routine(
 	__teb_libc_idx	= ctx.teb_libc_idx;
 
 	/* surrogate init/fini arrays */
-	__init_array_start = ctx.do_global_ctors_fn;
-	__fini_array_start = ctx.do_global_dtors_fn;
+	__global_ctors_fn = ctx.do_global_ctors_fn;
+	__global_dtors_fn = ctx.do_global_dtors_fn;
 
 	/* enter libc */
 	__libc_start_main(__main,argc,argv);

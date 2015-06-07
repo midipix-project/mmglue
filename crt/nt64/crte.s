@@ -16,5 +16,3 @@ __dso_main_routine:
 .section .midipix
 	.quad	dso_main_routine
 	.quad	_so_entry_point
-	.quad	_init
-	.quad	_fini
