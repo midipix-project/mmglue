@@ -30,3 +30,9 @@ longjmp:
 	mov  0x08(%rcx), %rsp	# saved stack pointer
 	mov  (%rcx),     %rdx	# return address
 	jmp  *%rdx		# return
+
+	.section .got$longjmp
+	.global __imp_longjmp
+__imp_longjmp:
+	.quad	longjmp
+	.linkonce discard

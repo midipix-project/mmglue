@@ -25,3 +25,9 @@ setjmp:
 
 	xor %eax,  %eax
 	ret
+
+	.section .got$setjmp,"r"
+	.global __imp_setjmp
+__imp_setjmp:
+	.quad	setjmp
+	.linkonce discard

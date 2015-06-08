@@ -27,3 +27,20 @@ __cp_begin:
 
 __cp_end:
 	ret
+
+
+	.section .got$__syscall_cp_asm
+	.global __imp___syscall_cp_asm
+__imp___syscall_cp_asm:
+	.quad __syscall_cp_asm
+
+
+	.section .got$__cp_begin
+	.global __imp___cp_begin
+__imp___cp_begin:
+	.quad __cp_begin
+
+	.section .got$__cp_end
+	.global __imp___cp_end
+__imp___cp_end:
+	.quad __cp_end
