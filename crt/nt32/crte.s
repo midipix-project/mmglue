@@ -14,7 +14,25 @@ ___dso_main_routine:
 	.set	_dso_main_routine,___dso_main_routine
 
 .section .midipix
-	.long	_dso_main_routine
 	.long	__so_entry_point
-	.long	__init
-	.long	__fini
+	.long	_dso_main_routine
+	.long	0
+	.long	0
+
+	# void *reserved[16];
+	.long	0x0
+	.long	0x1
+	.long	0x2
+	.long	0x3
+	.long	0x4
+	.long	0x5
+	.long	0x6
+	.long	0x7
+	.long	0x8
+	.long	0x9
+	.long	0xa
+	.long	0xb
+	.long	0xc
+	.long	0xd
+	.long	0xe
+	.long	0xf

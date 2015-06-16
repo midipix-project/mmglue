@@ -1,15 +1,6 @@
-.section .init
-	pop %rdx
-	pop %rcx
-	pop %r10
-	or  %r10,%rax
-	ret
-
-.section .fini
-	pop %rdx
-	pop %rcx
-	pop %r10
-	or  %r10,%rax
+.text
+.globl _pei386_runtime_relocator
+_pei386_runtime_relocator:
 	ret
 
 	.section .got$_pei386_runtime_relocator,"r"
