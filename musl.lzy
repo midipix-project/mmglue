@@ -98,7 +98,7 @@ musl_headers()
 	fi
 
 	mkdir -p $lz_build_dir/include
-	cp -r -t $lz_build_dir/include $lz_project_dir/arch/$lz_arch/bits
+	cp -R $lz_project_dir/arch/$lz_arch/bits $lz_build_dir/include
 
 	touch $lz_build_dir/headers.tag
 }
