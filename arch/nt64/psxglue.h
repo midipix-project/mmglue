@@ -53,7 +53,7 @@ struct __tlca {
 	int *	pthread_set_child_tid;
 	int *	pthread_clear_child_tid;
 	char *	pthread_tls;
-	char ***pthread_dtls;
+	char **	pthread_dtls;
 };
 
 typedef int __psx_init_routine(
