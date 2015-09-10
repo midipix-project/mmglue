@@ -11,3 +11,9 @@ ___longjmp:
 __longjmp:
 _longjmp:
 	test %edx, %edx		# is val zero?
+
+	.section .got$longjmp
+	.global __imp__longjmp
+__imp__longjmp:
+	.long	_longjmp
+	.linkonce discard
