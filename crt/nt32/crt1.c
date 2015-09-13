@@ -23,7 +23,7 @@ __psx_init_routine __psx_init;
 __external_routine
 void __libc_entry_routine(void *,void *,int);
 
-void _start(void)
+void start(void)
 {
 	__libc_entry_routine(
 		main,
