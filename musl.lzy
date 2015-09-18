@@ -38,7 +38,7 @@ lz_project_definitions()
 					--out-implib $lz_build_dir/lib/libc.lib.a \
 					--exclude-symbols=$pe_excluded_symbols"
 	else
-		musl_libc_so_ldflags="-shared -e _start -Bsymbolic-functions"
+		musl_libc_so_ldflags="-shared -e _dlstart -Bsymbolic-functions"
 		musl_cflags_shared="$musl_cflags_shared -DSHARED"
 	fi
 
