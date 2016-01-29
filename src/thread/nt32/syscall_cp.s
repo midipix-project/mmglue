@@ -5,9 +5,9 @@
 
 ___syscall_cp_asm:
 ___cp_begin:
-	mov 	(%ecx),	%ecx	/* check content of ptr */
+	mov 	(%ecx),	%ecx	# check content of ptr
 	test	%ecx,	%ecx
-	jnz	___cancel	/* thread is pending cancellation */
+	jnz	___cancel	# thread is pending cancellation
 
 	jmp	___syscall
 
