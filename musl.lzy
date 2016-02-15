@@ -22,7 +22,7 @@ lz_project_definitions()
 	musl_cflags_shared="-fPIC"
 
 	if [ "$lz_pecoff_winnt"x = yesx ]; then
-		pe_excluded_symbols="__libc_entry_point"
+		pe_excluded_symbols="_dlstart"
 		pe_excluded_symbols="$pe_excluded_symbols,__syscall_vtbl"
 		pe_excluded_symbols="$pe_excluded_symbols,__ldso_vtbl"
 		pe_excluded_symbols="$pe_excluded_symbols,__psx_vtbl"
@@ -31,7 +31,7 @@ lz_project_definitions()
 		pe_excluded_symbols="$pe_excluded_symbols,__vm_lock_impl"
 		pe_excluded_symbols="$pe_excluded_symbols,__vm_unlock_impl"
 
-		musl_libc_so_ldflags="-shared -e "$lz_default_underscore"__libc_entry_point \
+		musl_libc_so_ldflags="-shared -e _dlstart \
 					-Bsymbolic-functions \
 					--subsystem windows \
 					--output-def $lz_build_dir/lib/libc.so.def \

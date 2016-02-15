@@ -1,6 +1,6 @@
 typedef unsigned int uint32_t;
 
-int __libc_entry_point(
+int _dlstart(
 	void *		hinstance,
 	uint32_t	reason,
 	void *		reserved)
