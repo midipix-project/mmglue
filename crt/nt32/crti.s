@@ -1,32 +1,3 @@
-.text
-.globl __pei386_runtime_relocator
-__pei386_runtime_relocator:
-	ret
-
-.globl __init
-__init:
-	jmp .init
-
-.globl __fini
-__fini:
-	jmp .fini
-
-.section .init
-	xor %eax,%eax
-	push %eax
-	push %ecx
-	push %edx
-	nop
-	nop
-
-.section .fini
-	xor %eax,%eax
-	push %eax
-	push %ecx
-	push %edx
-	nop
-	nop
-
 .section .midipix
 	.ascii	"e35ed272"
 	.ascii	"9e55"

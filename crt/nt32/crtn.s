@@ -1,13 +1,10 @@
-.section .init
-	pop %edx
-	pop %ecx
-	pop %ebx
-	or  %ebx,%eax
+.text
+.globl _pei386_runtime_relocator
+_pei386_runtime_relocator:
 	ret
 
-.section .fini
-	pop %edx
-	pop %ecx
-	pop %ebx
-	or  %ebx,%eax
-	ret
+	.section .got$_pei386_runtime_relocator,"r"
+	.global __imp__pei386_runtime_relocator
+__imp__pei386_runtime_relocator:
+	.long	_pei386_runtime_relocator
+	.linkonce discard
