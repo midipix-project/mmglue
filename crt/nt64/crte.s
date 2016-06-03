@@ -1,6 +1,6 @@
 .text
-.globl _so_entry_point
-_so_entry_point:
+.globl __so_entry_point
+__so_entry_point:
 	cmp	$0x1,%edx
 	jne	dso_main_routine
 	mov	%edx,%eax
@@ -14,7 +14,7 @@ __dso_main_routine:
 	.set	dso_main_routine,__dso_main_routine
 
 .section .midipix
-	.quad	_so_entry_point
+	.quad	__so_entry_point
 	.quad	dso_main_routine
 	.quad	0
 	.quad	0
