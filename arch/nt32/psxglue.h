@@ -17,6 +17,7 @@ typedef void	__ldso_reset_tls(void);
 typedef void	__psx_convert_thread(void);
 typedef void	__psx_unmapself(void *, void *);
 typedef void *	__psx_get_osfhandle(int fd);
+typedef long	__psx_log_output(char *, signed int);
 
 struct __ldso_vtbl {
 	__ldso_dladdr *		dladdr;
@@ -32,6 +33,7 @@ struct __psx_vtbl {
 	__psx_convert_thread *	convert_thread;
 	__psx_unmapself *	unmapself;
 	__psx_get_osfhandle *	get_osfhandle;
+	__psx_log_output *	log_output;
 };
 
 struct __psx_context {
