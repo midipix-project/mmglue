@@ -1,4 +1,9 @@
 .text
+
+.globl ___chkstk_ms
+___chkstk_ms:
+	ret
+
 .globl _pei386_runtime_relocator
 _pei386_runtime_relocator:
 	ret
