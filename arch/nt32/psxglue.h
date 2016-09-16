@@ -39,7 +39,7 @@ struct __psx_vtbl {
 struct __psx_context {
 	int			size;
 	int			options;
-	void ***		sys_vtbl;
+	void **			sys_vtbl;
 	struct __ldso_vtbl *	ldso_vtbl;
 	struct __psx_vtbl *	psx_vtbl;
 	unsigned int		teb_sys_idx;
