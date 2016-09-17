@@ -18,10 +18,6 @@ void * __emutls_get_address (struct __emutls_object * obj)
 {
 	int dsoidx = obj->align & 0xFFFF0000;
 	struct __tlca * tlca = (struct __tlca *)__psx_tlca();
-
-	if (dsoidx)
-		return (*tlca->pthread_dtls)[dsoidx >> 16] + obj->offset;
-	else
-		return tlca->pthread_tls + obj->offset;
+	return tlca->pthread_dtls[dsoidx >> 16] + obj->offset;
 }
 
