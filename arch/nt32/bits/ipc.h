@@ -11,4 +11,4 @@ struct ipc_perm
 	long __pad2;
 };
 
-#define IPC_64 0x100
+#define IPC_64 0
