@@ -7,7 +7,7 @@ extern struct __psx_vtbl * __psx_vtbl;
 
 void __unmapself(void * base, size_t size)
 {
-	__psx_vtbl->unmapself(base,size);
+	__psx_vtbl->unmapself(base,(void *)size);
 }
 
 uintptr_t __syscall_disp(long n,
