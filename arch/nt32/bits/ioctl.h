@@ -52,10 +52,10 @@
 #define TIOCGSID	0x5429
 #define TIOCGPTN	0x5430
 #define TIOCSPTLCK	0x5431
-#define TCGETX		0x5432
-#define TCSETX		0x5433
-#define TCSETXF		0x5434
-#define TCSETXW		0x5435
+#define TCGETX          0x5432
+#define TCSETX          0x5433
+#define TCSETXF         0x5434
+#define TCSETXW         0x5435
 
 #define FIONCLEX	0x5450
 #define FIOCLEX		0x5451
@@ -83,7 +83,7 @@
 #define TIOCPKT_START		 8
 #define TIOCPKT_NOSTOP		16
 #define TIOCPKT_DOSTOP		32
-#define TIOCPKT_IOCTL		64
+#define TIOCPKT_IOCTL           64
 
 #define TIOCSER_TEMT    0x01
 
@@ -193,5 +193,5 @@ struct winsize {
 #define SIOCADDDLCI     0x8980
 #define SIOCDELDLCI     0x8981
 
-#define SIOCDEVPRIVATE		0x89F0
-#define SIOCPROTOPRIVATE	0x89E0
+#define SIOCDEVPRIVATE  0x89F0
+#define SIOCPROTOPRIVATE 0x89E0
