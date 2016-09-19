@@ -12,7 +12,7 @@ struct msghdr
 struct cmsghdr
 {
 	socklen_t cmsg_len;
-	int __pad1;
 	int cmsg_level;
 	int cmsg_type;
+	int __pad1;
 };
