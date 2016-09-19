@@ -2,75 +2,71 @@
  || defined(_XOPEN_SOURCE) || defined(_GNU_SOURCE) || defined(_BSD_SOURCE)
 
 #if defined(_XOPEN_SOURCE) || defined(_GNU_SOURCE) || defined(_BSD_SOURCE)
-#define MINSIGSTKSZ 2048
-#define SIGSTKSZ 8192
+#define MINSIGSTKSZ	4096
+#define SIGSTKSZ	8192
 #endif
 
-#ifdef _GNU_SOURCE
-#define REG_GS          0
-#define REG_FS          1
-#define REG_ES          2
-#define REG_DS          3
-#define REG_EDI         4
-#define REG_ESI         5
-#define REG_EBP         6
-#define REG_ESP         7
-#define REG_EBX         8
-#define REG_EDX         9
-#define REG_ECX         10
-#define REG_EAX         11
-#define REG_TRAPNO      12
-#define REG_ERR         13
-#define REG_EIP         14
-#define REG_CS          15
-#define REG_EFL         16
-#define REG_UESP        17
-#define REG_SS          18
-#endif
+typedef struct {
+	unsigned long	uc_ctrl_word;		/* 0x000 */
+	unsigned long	uc_status_word;		/* 0x004 */
+	unsigned long	uc_tag_word;		/* 0x008 */
+	unsigned long	uc_error_offset;	/* 0x00c */
+	unsigned long	uc_error_selector;	/* 0x010 */
+	unsigned long	uc_data_offset;		/* 0x014 */
+	unsigned long	uc_data_selector;	/* 0x018 */
+	unsigned char 	uc_reg_area[80];	/* 0x01c */
+	unsigned long	uc_cr0_npx_state;	/* 0x06c */
+} uc_xsave_fmt_t;
 
-#if defined(_GNU_SOURCE) || defined(_BSD_SOURCE)
-typedef int greg_t, gregset_t[19];
-typedef struct _fpstate {
-	unsigned long cw, sw, tag, ipoff, cssel, dataoff, datasel;
-	struct {
-		unsigned short significand[4], exponent;
-	} _st[8];
-	unsigned long status;
-} *fpregset_t;
-struct sigcontext {
-	unsigned short gs, __gsh, fs, __fsh, es, __esh, ds, __dsh;
-	unsigned long edi, esi, ebp, esp, ebx, edx, ecx, eax;
-	unsigned long trapno, err, eip;
-	unsigned short cs, __csh;
-	unsigned long eflags, esp_at_signal;
-	unsigned short ss, __ssh;
-	struct _fpstate *fpstate;
-	unsigned long oldmask, cr2;
-};
 typedef struct {
-	gregset_t gregs;
-	fpregset_t fpregs;
-	unsigned long oldmask, cr2;
+	unsigned long	uc_context_flags;	/* 0x000 */
+	unsigned long	uc_dr0;			/* 0x004 */
+	unsigned long	uc_dr1;			/* 0x008 */
+	unsigned long	uc_dr2;			/* 0x00c */
+	unsigned long	uc_dr3;			/* 0x010 */
+	unsigned long	uc_dr6;			/* 0x014 */
+	unsigned long	uc_dr7;			/* 0x018 */
+
+	uc_xsave_fmt_t	uc_float_save;		/* 0x01c */
+
+	unsigned long	uc_seg_gs; 		/* 0x08c */
+	unsigned long	uc_seg_fs; 		/* 0x090 */
+	unsigned long	uc_seg_es;		/* 0x094 */
+	unsigned long	uc_seg_ds;		/* 0x098 */
+	unsigned long	uc_edi;			/* 0x09c */
+	unsigned long	uc_esi;			/* 0x0a0 */
+	unsigned long	uc_ebx;			/* 0x0a4 */
+	unsigned long	uc_edx;			/* 0x0a8 */
+	unsigned long	uc_ecx;			/* 0x0ac */
+	unsigned long	uc_eax;			/* 0x0b0 */
+	unsigned long	uc_ebp;			/* 0x0b4 */
+	unsigned long	uc_eip;			/* 0x0b8 */
+	unsigned long	uc_seg_cs; 		/* 0x0bc */
+	unsigned long	uc_eflags;		/* 0x0c0 */
+	unsigned long	uc_esp;			/* 0x0c4 */
+	unsigned long	uc_seg_ss;		/* 0x0c8 */
+	unsigned char	uc_extended_regs[512];	/* 0x0cc */
 } mcontext_t;
-#else
-typedef struct {
-	unsigned __space[22];
-} mcontext_t;
-#endif
 
 struct sigaltstack {
-	void *ss_sp;
-	int ss_flags;
-	size_t ss_size;
+	void *	ss_sp;
+	int	ss_flags;
+	size_t	ss_size;
 };
 
 typedef struct __ucontext {
-	unsigned long uc_flags;
-	struct __ucontext *uc_link;
-	stack_t uc_stack;
-	mcontext_t uc_mcontext;
-	sigset_t uc_sigmask;
-	unsigned long __fpregs_mem[28];
+	unsigned int		uc_csize;
+	unsigned int		uc_msize;
+	unsigned int		uc_pad[2];
+	unsigned long		uc_flags;
+	unsigned long		uc_opaquef[3];
+	unsigned int		uc_opaquec[8];
+	unsigned long		uc_reserved[32];
+	unsigned long		uc_align[2];
+	stack_t			uc_stack;
+	struct __ucontext *	uc_link;
+	sigset_t		uc_sigmask;
+	mcontext_t		uc_mcontext;
 } ucontext_t;
 
 #define SA_NOCLDSTOP  1
@@ -120,4 +116,3 @@ typedef struct __ucontext {
 #define SIGUNUSED SIGSYS
 
 #define _NSIG 65
-
