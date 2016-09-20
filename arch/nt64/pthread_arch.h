@@ -29,7 +29,9 @@ static inline void __pthread_convert(void)
 	__asm__ __volatile__ (
 		"push %rax\n\t"
 		"movq __psx_vtbl,%rax\n\t"
+		"sub $0x28,%rsp\n\t"
 		"call *(%rax)\n\t"
+		"add $0x28,%rsp\n\t"
 		"pop  %rax\n\t"
 		);
 }
