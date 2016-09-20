@@ -1,0 +1,56 @@
+header      based on    changes
+------      --------    -------
+
+alltypes.h  i386        TYPEDEF long long time_t;
+
+endian.h    i386        none.
+
+errno.h     nt64        none.
+
+fcntl.h     nt64        none.
+
+fenv.h      i386        none.
+
+float.h     nt64        none (target uses SSE by default).
+
+io.h        i386        none.
+
+ioctl.h     nt64        none.
+
+ipc.h       nt64        none.
+
+limits.h    i386        PAGE_SIZE  = 65536
+
+mman.h      nt64        none.
+
+msg.h       nt64        none.
+
+poll.h      nt64        none.
+
+posix.h     i386        none.
+
+reg.h       <---->      empty, provided for inclusion by <sys/reg.h> only.
+
+resource.h  nt64        none.
+
+sem.h       nt64        none.
+
+setjmp.h    i386        none.
+
+signal.h    target      n/a.
+
+socket.h    i386        none.
+
+stat.h      nt64        none.
+
+statfs.h    nt64        none.
+
+stdarg.h    nt64        none.
+
+stdint.h    i386        none.
+
+syscall.h   nt64        none.
+
+termios.h   nt64        none.
+
+user.h      <---->      empty, provided for inclusion by <sys/user.h> only.

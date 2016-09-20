@@ -1,0 +1,57 @@
+header      based on    changes
+------      --------    -------
+
+alltypes.h  x86_64      none.
+
+endian.h    x86_64      none.
+
+errno.h     x86_64      none.
+
+fcntl.h     x86_64      none.
+
+fenv.h      x86_64      none.
+
+float.h     x86_64      none.
+
+io.h        x86_64      none.
+
+ioctl.h     x86_64      TIOCGPTN   = 0x5430
+                        TIOCSPTLCK = 0x5431
+
+ipc.h       x86_64      none.
+
+limits.h    x86_64      PAGE_SIZE  = 65536
+
+mman.h      x86_64      none.
+
+msg.h       x86_64      none.
+
+poll.h      x86_64      none.
+
+posix.h     x86_64      none.
+
+reg.h       <---->      empty, provided for inclusion by <sys/reg.h> only.
+
+resource.h  x86_64      none.
+
+sem.h       x86_64      none.
+
+setjmp.h    target      n/a.
+
+signal.h    target      n/a.
+
+socket.h    x86_64      struct cmsghdr: __pad1 moved to end.
+
+stat.h      x86_64      none.
+
+statfs.h    x86_64      none.
+
+stdarg.h    x86_64      none.
+
+stdint.h    x86_64      none.
+
+syscall.h   x86_64      none.
+
+termios.h   x86_64      none.
+
+user.h      <---->      empty, provided for inclusion by <sys/user.h> only.
