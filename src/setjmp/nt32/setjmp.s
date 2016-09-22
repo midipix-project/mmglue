@@ -10,6 +10,20 @@
 ___setjmp:
 __setjmp:
 _setjmp:
+	movl 4(%esp), %edx	# jump buffer
+
+	movl (%esp),  %eax	# return address
+	movl %eax,    (%edx)
+
+	leal 4(%esp), %ecx	# caller's stack pointer
+	movl %ecx,    4(%edx)
+
+	movl %ebx,    8(%edx)
+	movl %ebp,    12(%edx)
+	movl %edi,    16(%edx)
+	movl %esi,    20(%edx)
+
+	xor  %eax,%eax
 	ret
 
 	.section .got$setjmp,"r"
