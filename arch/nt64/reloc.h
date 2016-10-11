@@ -1,4 +1,4 @@
-#define LDSO_ARCH "PE32+"
+#define LDSO_ARCH "nt64"
 
 static int remap_rel(int type)
 {
