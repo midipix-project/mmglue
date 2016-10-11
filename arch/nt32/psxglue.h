@@ -9,7 +9,7 @@
 typedef int	__ldso_dladdr(const void * addr, void * info);
 typedef int	__ldso_dlinfo(void * dso, int req, void * res);
 typedef void *	__ldso_dlsym(void * p, const char * s, void * ra);
-typedef void *	__ldso_dlopen(const char * file, int mode);
+typedef void *	__ldso_dlopen(const char * file, int mode, const char * path, void * reserved);
 typedef int	__ldso_dlclose(void *p);
 typedef char *	__ldso_dlerror(void);
 typedef void	__ldso_reset_tls(void);

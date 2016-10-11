@@ -1,5 +1,6 @@
 #define _BSD_SOURCE
 
+#include <stdlib.h>
 #include <dlfcn.h>
 #include "psxglue.h"
 #include "pthread_impl.h"
@@ -23,7 +24,10 @@ void *__dlsym(void * restrict p, const char * restrict s, void * restrict ra)
 
 void * dlopen(const char * file, int mode)
 {
-	return __ldso_vtbl->dlopen(file,mode);
+	return __ldso_vtbl->dlopen(
+		file,mode,
+		getenv("LD_LIBRARY_PATH"),
+		0);
 }
 
 int dlclose(void *p)
