@@ -324,7 +324,6 @@ musl_install_libs()
 musl_install_ldso()
 {
 	$musl_install_sh -D -l $lz_libdir/libc$lz_dylib_ext $musl_ldso
-	$musl_install_sh -D -l $lz_libdir/libc$lz_dylib_ext $lz_bindir/ldd
 }
 
 
