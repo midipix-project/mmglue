@@ -6,3 +6,6 @@
 
 #define LONG_MAX  0x7fffffffL
 #define LLONG_MAX  0x7fffffffffffffffLL
+
+#define _MIDIPIX_GDI    20170101
+#define _MIDIPIX_XFI    20170101
