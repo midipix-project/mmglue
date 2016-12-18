@@ -102,6 +102,7 @@ typedef struct {
 	unsigned long		uc_last_branch_from_rip;	/* 0x4b8 */
 	unsigned long		uc_last_exception_to_rip;	/* 0x4c0 */
 	unsigned long		uc_last_exception_from_rip;	/* 0x4c8 */
+	unsigned long		uc_reserved[6];			/* 0x4d0 */
 } mcontext_t;
 
 struct sigaltstack {
