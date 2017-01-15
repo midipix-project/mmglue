@@ -14,9 +14,9 @@ typedef int	__ldso_dlclose(void *p);
 typedef char *	__ldso_dlerror(void);
 typedef void	__ldso_reset_tls(void);
 
+typedef int	__psx_start_main(void *, int, char **, int (*)(void *, int, char **));
 typedef void	__psx_convert_thread(void);
 typedef void	__psx_unmapself(void *, void *);
-typedef void *	__psx_get_osfhandle(int fd);
 typedef long	__psx_log_output(char *, signed int);
 
 struct __ldso_vtbl {
@@ -30,9 +30,9 @@ struct __ldso_vtbl {
 };
 
 struct __psx_vtbl {
+	__psx_start_main *	start_main;
 	__psx_convert_thread *	convert_thread;
 	__psx_unmapself *	unmapself;
-	__psx_get_osfhandle *	get_osfhandle;
 	__psx_log_output *	log_output;
 };
 
@@ -41,7 +41,7 @@ struct __psx_context {
 	int			options;
 	void **			sys_vtbl;
 	struct __ldso_vtbl *	ldso_vtbl;
-	struct __psx_vtbl *	psx_vtbl;
+	const struct __psx_vtbl*psx_vtbl;
 	unsigned int		teb_sys_idx;
 	unsigned int		teb_libc_idx;
 	void *			pthread_surrogate_fn;
