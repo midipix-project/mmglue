@@ -5,8 +5,8 @@
 #include "psxglue.h"
 #include "pthread_impl.h"
 
-extern struct __ldso_vtbl *	__ldso_vtbl;
-extern struct __psx_vtbl *	__psx_vtbl;
+extern const struct __ldso_vtbl * __ldso_vtbl;
+extern const struct __psx_vtbl *  __psx_vtbl;
 
 typedef int __app_main();
 typedef int __pthread_surrogate_routine(struct pthread *);
@@ -86,7 +86,7 @@ void __libc_entry_routine(
 	__global_dtors_fn = ctx.do_global_dtors_fn;
 
 	/* enter libc */
-	__libc_start_main(__main,argc,argv);
+	__psx_vtbl->start_main(__main,argc,argv,__libc_start_main);
 
 	/* guard */
 	a_crash();
