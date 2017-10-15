@@ -13,7 +13,7 @@
 
 static const int __disabled = 0;
 extern const int __crtopt_posix  __attribute((weak,alias("__disabled")));
-extern const int __crtopt_ttydbg __attribute((weak,alias("__disabled")));
+extern const int __crtopt_debug __attribute((weak,alias("__disabled")));
 
 int main();
 
@@ -28,6 +28,6 @@ void _start(void)
 	__libc_entry_routine(
 		main,
 		__psx_init,
-		__crtopt_posix | __crtopt_ttydbg);
+		__crtopt_posix | __crtopt_debug);
 }
 

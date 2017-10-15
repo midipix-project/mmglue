@@ -3,7 +3,7 @@
 
 #define __PSXOPT_NATIVE		0x0
 #define __PSXOPT_POSIX		0x1
-#define __PSXOPT_TTYDBG		0x2
+#define __PSXOPT_DEBUG		0x2
 #define __PSXOPT_LDSO		0x4
 
 typedef int	__ldso_dladdr(const void * addr, void * info);
