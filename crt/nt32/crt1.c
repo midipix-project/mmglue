@@ -14,6 +14,8 @@
 static const int __disabled = 0;
 extern const int __crtopt_posix  __attribute((weak,alias("__disabled")));
 extern const int __crtopt_debug __attribute((weak,alias("__disabled")));
+extern const int __crtopt_ldso  __attribute((weak,alias("__disabled")));
+extern const int __crtopt_vrfs  __attribute((weak,alias("__disabled")));
 
 int main();
 
