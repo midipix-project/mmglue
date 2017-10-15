@@ -5,6 +5,7 @@
 #define __PSXOPT_POSIX		0x1
 #define __PSXOPT_DEBUG		0x2
 #define __PSXOPT_LDSO		0x4
+#define __PSXOPT_VRFS		0x8
 
 typedef int	__ldso_dladdr(const void * addr, void * info);
 typedef int	__ldso_dlinfo(void * dso, int req, void * res);
