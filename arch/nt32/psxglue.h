@@ -50,7 +50,7 @@ struct __psx_context {
 	void *			do_global_dtors_fn;
 };
 
-struct __tlca {
+struct __tlca_abi {
 	void *	pthread_self;
 	int *	pthread_set_child_tid;
 	int *	pthread_clear_child_tid;
