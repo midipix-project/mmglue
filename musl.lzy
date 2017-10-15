@@ -295,7 +295,7 @@ musl_install_crt()
 
 	for lzp_crt_file in $musl_crt_files; do
 		lzp_crt_obj_file=`basename $lzp_crt_file`
-		$musl_install_sh -D $lzp_crt_obj_file $lz_libdir/$lzp_crt_obj_file
+		$musl_install_sh -D -m 644 $lzp_crt_obj_file $lz_libdir/$lzp_crt_obj_file
 	done
 
 	lz_popd
