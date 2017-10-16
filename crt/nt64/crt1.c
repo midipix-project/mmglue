@@ -27,7 +27,9 @@ void __libc_entry_routine(void *,void *,int);
 void _start(void)
 {
 	__libc_entry_routine(
-		main,
-		__psx_init_fn(),
-		__crtopt_posix | __crtopt_dinga);
+		main,__psx_init_fn(),
+		__crtopt_posix
+			| __crtopt_dinga
+			| __crtopt_ldso
+			| __crtopt_vrfs);
 }

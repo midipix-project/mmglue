@@ -19,17 +19,17 @@ extern const int __crtopt_vrfs  __attribute((weak,alias("__disabled")));
 
 int main();
 
-__external_routine
-__psx_init_routine __psx_init;
+__psx_init_routine * __psx_init_fn(void);
 
 __external_routine
 void __libc_entry_routine(void *,void *,int);
 
-void start(void)
+void _start(void)
 {
 	__libc_entry_routine(
-		main,
-		__psx_init,
-		__crtopt_posix | __crtopt_dinga);
+		main,__psx_init_fn(),
+		__crtopt_posix
+			| __crtopt_dinga
+			| __crtopt_ldso
+			| __crtopt_vrfs);
 }
-
