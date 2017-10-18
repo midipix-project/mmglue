@@ -1,11 +1,14 @@
-#include "psxglue.h"
+/****************************************/
+/* dynamically linked applications only */
+/* see also: crtidata.c                 */
+/****************************************/
 
-__psx_init_routine __psx_init;
+int  __attribute__((__visibility__("hidden"))) __psx_init(int *,char ***,char ***,void *);
+void __attribute__((__visibility__("hidden"))) __libc_entry_routine(void *,void *,int);
 
-__psx_init_routine * __psx_init_fn(void)
+void __libc_loader_init(void * __main, int flags)
 {
-	return __psx_init;
+	__libc_entry_routine(__main,__psx_init,flags);
 }
 
-#define  LIBC_STATIC
 #include "crt1.c"

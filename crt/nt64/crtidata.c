@@ -3,14 +3,12 @@
 /* see also: Scrt1.c                    */
 /****************************************/
 
-#include "psxglue.h"
-
 #define __external_routine __attribute__((dllimport))
 
-__external_routine
-__psx_init_routine __psx_init;
+__external_routine int  __psx_init(int *,char ***,char ***,void *);
+__external_routine void __libc_entry_routine(void *,void *,int);
 
-__psx_init_routine * __psx_init_fn(void)
+void __libc_loader_init(void * __main, int flags)
 {
-	return __psx_init;
+	__libc_entry_routine(__main,__psx_init,flags);
 }
