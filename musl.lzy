@@ -35,7 +35,7 @@ lz_project_definitions()
 					-Bsymbolic-functions \
 					--subsystem windows \
 					--output-def $lz_build_dir/lib/libc.so.def \
-					--out-implib $lz_build_dir/lib/libc.lib.a \
+					--out-dsolib $lz_build_dir/lib/libc.lib.a \
 					--exclude-symbols=$pe_excluded_symbols"
 	else
 		musl_libc_so_ldflags="-shared -e _dlstart -Bsymbolic-functions"
