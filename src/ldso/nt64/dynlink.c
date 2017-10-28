@@ -114,9 +114,9 @@ int __dlinfo(void * dso, int req, void * res)
 	return __ldso_vtbl->dlinfo(dso,req,res);
 }
 
-void *__dlsym(void * restrict p, const char * restrict s, void * restrict ra)
+void *__dlsym(void * restrict p, const char * restrict s)
 {
-	return __ldso_vtbl->dlsym(p,s,ra);
+	return __ldso_vtbl->dlsym(p,s,0);
 }
 
 int dlclose(void *p)
