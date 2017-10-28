@@ -111,7 +111,7 @@ int __dladdr(const void * addr, Dl_info * info)
 
 int __dlinfo(void * dso, int req, void * res)
 {
-	return __ldso_vtbl->dlinfo(dso,req,res);
+	return (__ldso_vtbl->dlinfo(dso,req,res)) ? -1 : 0;
 }
 
 void *__dlsym(void * restrict p, const char * restrict s)
