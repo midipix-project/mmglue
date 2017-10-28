@@ -31,6 +31,8 @@ struct __ldso_vtbl {
 };
 
 struct __psx_vtbl {
+	void			(*do_global_ctors_fn)();
+	void			(*do_global_dtors_fn)();
 	__psx_start_main *	start_main;
 	__psx_convert_thread *	convert_thread;
 	__psx_unmapself *	unmapself;
@@ -47,8 +49,6 @@ struct __psx_context {
 	unsigned int		teb_libc_idx;
 	void *			pthread_surrogate_fn;
 	void *			pthread_create_fn;
-	void *			do_global_ctors_fn;
-	void *			do_global_dtors_fn;
 };
 
 struct __tlca_abi {

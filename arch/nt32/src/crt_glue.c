@@ -82,8 +82,8 @@ void __libc_entry_routine(
 	__teb_libc_idx	= ctx.teb_libc_idx;
 
 	/* surrogate init/fini arrays */
-	__global_ctors_fn = ctx.do_global_ctors_fn;
-	__global_dtors_fn = ctx.do_global_dtors_fn;
+	__global_ctors_fn = __psx_vtbl->do_global_ctors_fn;
+	__global_dtors_fn = __psx_vtbl->do_global_dtors_fn;
 
 	/* enter libc */
 	__psx_vtbl->start_main(__main,argc,argv,__libc_start_main);
