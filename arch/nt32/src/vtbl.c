@@ -1,3 +1,5 @@
+#include <unistd.h>
+#include <stdint.h>
 #include "psxglue.h"
 #include "errno.h"
 

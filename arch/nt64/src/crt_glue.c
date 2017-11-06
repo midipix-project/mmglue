@@ -1,4 +1,5 @@
 #include <unistd.h>
+#include <stdint.h>
 #include <pthread.h>
 #include "atomic.h"
 #include "syscall.h"

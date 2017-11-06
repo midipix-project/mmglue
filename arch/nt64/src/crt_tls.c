@@ -1,3 +1,4 @@
+#include <unistd.h>
 #include <stdint.h>
 #include <stddef.h>
 #include "psxglue.h"

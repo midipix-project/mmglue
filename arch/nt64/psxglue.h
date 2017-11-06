@@ -7,48 +7,23 @@
 #define __PSXOPT_LDSO		0x4
 #define __PSXOPT_VRFS		0x8
 
-typedef int	__ldso_dladdr(const void * addr, void * info);
-typedef int	__ldso_dlinfo(void * dso, int req, void * res);
-typedef void *	__ldso_dlsym(void * p, const char * s, void * ra);
-typedef void *	__ldso_dlopen(const char * file, int mode, const char ** pathv, int * status);
-typedef int	__ldso_dlclose(void *p);
-typedef char *	__ldso_dlerror(void);
-typedef void	__ldso_reset_tls(void);
-
-typedef int	__psx_start_main(void *, int, char **, int (*)(void *, int, char **));
-typedef void	__psx_convert_thread(void);
-typedef void	__psx_unmapself(void *, void *);
-typedef long	__psx_log_output(char *, signed int);
-
 struct __ldso_vtbl {
-	__ldso_dladdr *		dladdr;
-	__ldso_dlinfo *		dlinfo;
-	__ldso_dlsym *		dlsym;
-	__ldso_dlopen *		dlopen;
-	__ldso_dlclose *	dlclose;
-	__ldso_dlerror *	dlerror;
-	__ldso_reset_tls *	reset_tls;
+	int	(*dladdr)	(const void * addr, void * info);
+	int	(*dlinfo)	(void * dso, int req, void * res);
+	void *	(*dlsym)	(void * p, const char * s, void * ra);
+	void *	(*dlopen)	(const char * file, int mode, const char ** pathv, int * status);
+	int	(*dlclose)	(void *p);
+	char *	(*dlerror)	(void);
+	void	(*reset_tls)	(void);
 };
 
 struct __psx_vtbl {
-	void			(*do_global_ctors_fn)();
-	void			(*do_global_dtors_fn)();
-	__psx_start_main *	start_main;
-	__psx_convert_thread *	convert_thread;
-	__psx_unmapself *	unmapself;
-	__psx_log_output *	log_output;
-};
-
-struct __psx_context {
-	int			size;
-	int			options;
-	void **			sys_vtbl;
-	struct __ldso_vtbl *	ldso_vtbl;
-	const struct __psx_vtbl*psx_vtbl;
-	unsigned int		teb_sys_idx;
-	unsigned int		teb_libc_idx;
-	void *			pthread_surrogate_fn;
-	void *			pthread_create_fn;
+	void	(*do_global_ctors_fn)	();
+	void	(*do_global_dtors_fn)	();
+	int	(*start_main)		(void *, int, char **, int (*)(void *, int, char **));
+	void	(*convert_thread)	(void);
+	void	(*unmapself)		(void *, void *);
+	ssize_t	(*log_output)		(void *, ssize_t);
 };
 
 struct __tlca_abi {
@@ -57,6 +32,18 @@ struct __tlca_abi {
 	int *	pthread_clear_child_tid;
 	char *	pthread_tls;
 	char **	pthread_dtls;
+};
+
+struct __psx_context {
+	int				size;
+	int				options;
+	void **				sys_vtbl;
+	const struct __ldso_vtbl *	ldso_vtbl;
+	const struct __psx_vtbl *	psx_vtbl;
+	unsigned int			teb_sys_idx;
+	unsigned int			teb_libc_idx;
+	void *				pthread_surrogate_fn;
+	void *				pthread_create_fn;
 };
 
 typedef int __psx_init_routine(
