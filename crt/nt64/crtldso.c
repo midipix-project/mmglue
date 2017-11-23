@@ -18,6 +18,11 @@ static const unsigned short __rrlibc[] = {'l','i','b','\\',
 				          'l','i','b','c',
 				          '.','s','o',0};
 
+/* pty server root-relative name */
+static const unsigned short __rrctty[] = {'b','i','n','\\',
+				          'n','t','c','t','t','y',
+				          '.','e','x','e',0};
+
 
 static unsigned long	__attribute__((section(".dsodata")))
 			__dsodata[65536/sizeof(unsigned long)];
@@ -29,8 +34,13 @@ void __libc_loader_init(void * __main, int flags)
 	void *		hdsodir;
 	void *		ldsobase;
 	void *		libcbase;
-	int  		(*__psx_init)(int *,char ***,char ***,void *);
-	void		(*__libc_entry_routine)(void *,void *,int);
+	int  		(*__psx_init)(
+				int *,char ***,char ***,
+				void *);
+	void		(*__libc_entry_routine)(
+				void *,void *,
+				const unsigned short *,
+				int);
 
 	if ((status = __ldso_load_framework_loader_ex(
 			&ldsobase,&hroot,&hdsodir,
@@ -55,5 +65,5 @@ void __libc_loader_init(void * __main, int flags)
 			libcbase,"__libc_entry_routine")))
 		__ldso_terminate_current_process(NT_STATUS_NOINTERFACE);
 
-	__libc_entry_routine(__main,__psx_init,flags);
+	__libc_entry_routine(__main,__psx_init,__rrctty,flags);
 }

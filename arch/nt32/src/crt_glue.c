@@ -54,6 +54,7 @@ void __init_tls (size_t * auxv)
 void __libc_entry_routine(
 	__app_main *		__main,
 	__psx_init_routine *	__psx_init,
+	const unsigned short *	__ctty,
 	int			options)
 {
 	int			argc;
@@ -64,6 +65,7 @@ void __libc_entry_routine(
 	/* ctx init */
 	ctx.size		= sizeof(ctx);
 	ctx.options		= options;
+	ctx.ctty		= __ctty;
 	ctx.pthread_create_fn	= pthread_create;
 	ctx.pthread_surrogate_fn= __pthread_surrogate_init;
 
