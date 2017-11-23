@@ -13,7 +13,7 @@ static const unsigned short __rrldso[] = {'l','i','b','\\',
 				          'l','i','b','p','s','x','s','c','l',
 				          '.','s','o',0};
 
-/* loader root-relative name */
+/* libc root-relative name */
 static const unsigned short __rrlibc[] = {'l','i','b','\\',
 				          'l','i','b','c',
 				          '.','s','o',0};

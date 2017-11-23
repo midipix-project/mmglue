@@ -8,11 +8,11 @@ const int __crtopt_vrfs = __PSXOPT_VRFS;
 /* framework (rtdata) abi */
 static const struct __guid  __ldsoabi  = NT_PROCESS_GUID_RTDATA;
 
-/* loader root-relative name */
+/* loader standalone (single directory) name */
 static const unsigned short __sdldso[] = {'l','i','b','p','s','x','s','c','l',
 				          '.','s','o',0};
 
-/* loader root-relative name */
+/* libc standalone (single directory) name */
 static const unsigned short __sdlibc[] = {'l','i','b','c',
 				          '.','s','o',0};
 

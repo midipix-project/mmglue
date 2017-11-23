@@ -1,5 +1,5 @@
 /****************************************/
-/* dynamically linked applications only */
+/* statically linked applications only  */
 /* see also: crtidata.c                 */
 /****************************************/
 
