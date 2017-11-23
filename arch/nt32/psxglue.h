@@ -37,6 +37,7 @@ struct __tlca_abi {
 struct __psx_context {
 	int				size;
 	int				options;
+	const unsigned short *		ctty;
 	void **				sys_vtbl;
 	const struct __ldso_vtbl *	ldso_vtbl;
 	const struct __psx_vtbl *	psx_vtbl;
