@@ -3,8 +3,8 @@
 /* see also: crtidata.c                 */
 /****************************************/
 
-static const unsigned char * __inherit = 0;
-extern const unsigned char * __ctty    __attribute((weak,alias("__inherit")));
+static const unsigned short * __inherit = 0;
+extern const unsigned short * __ctty    __attribute((weak,alias("__inherit")));
 
 int  __attribute__((__visibility__("hidden"))) __psx_init(int *,char ***,char ***,void *);
 void __attribute__((__visibility__("hidden"))) __libc_entry_routine(void *,void *,const unsigned short *,int);
