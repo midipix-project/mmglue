@@ -37,6 +37,8 @@ struct __tlca_abi {
 struct __psx_context {
 	int				size;
 	int				options;
+	void *				refaddr;
+	void *				libcaddr;
 	const unsigned short *		ctty;
 	void **				sys_vtbl;
 	const struct __ldso_vtbl *	ldso_vtbl;
