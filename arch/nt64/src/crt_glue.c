@@ -65,6 +65,8 @@ void __libc_entry_routine(
 	/* ctx init */
 	ctx.size		= sizeof(ctx);
 	ctx.options		= options;
+	ctx.refaddr		= __main;
+	ctx.libcaddr		= _init;
 	ctx.ctty		= __ctty;
 	ctx.pthread_create_fn	= pthread_create;
 	ctx.pthread_surrogate_fn= __pthread_surrogate_init;
