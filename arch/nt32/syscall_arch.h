@@ -26,14 +26,14 @@ static __inline long __syscall1(long n, long a1)
 
 static __inline long __syscall2(long n, long a1, long a2)
 {
-	sysfn_from_fn(__syscall2_fn);
-	return sysfn ? sysfn(a1, a2) : __syscall_alert(n);
+	sysfn_from_fn(__syscall3_fn);
+	return sysfn ? sysfn(a1, a2, 0) : __syscall_alert(n);
 }
 
 static __inline long __syscall3(long n, long a1, long a2, long a3)
 {
-	sysfn_from_fn(__syscall3_fn);
-	return sysfn ? sysfn(a1, a2, a3) : __syscall_alert(n);
+	sysfn_from_fn(__syscall4_fn);
+	return sysfn ? sysfn(a1, a2, a3, 0) : __syscall_alert(n);
 }
 
 static __inline long __syscall4(long n, long a1, long a2, long a3, long a4)
