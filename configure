@@ -351,6 +351,11 @@ common_defaults()
 		fi
 	fi
 
+	# shell
+	if [ -z "$mb_shell" ]; then
+		mb_shell='/bin/sh'
+	fi
+
 	# inherited cflags & ldflags
 	mb_cflags_cmdline="$mb_cflags_cmdline $mb_cflags"
 	mb_ldflags_cmdline="$mb_ldflags_cmdline $mb_ldflags"
