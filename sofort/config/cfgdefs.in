@@ -1,0 +1,6 @@
+# changes made to this file will be gone the next time
+#   you run ./configure.
+
+# for persistent post-configure, ad-hoc changes to the
+#   build project, use usrdefs.mk instead.
+

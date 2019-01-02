@@ -1,0 +1,57 @@
+# project
+mb_package=c
+mb_require_out_of_tree=no
+mb_custom_install_headers=no
+mb_avoid_version=no
+
+# config
+mb_all_static=
+mb_all_shared=
+mb_disable_frontend=yes
+mb_disable_static=yes
+mb_disable_shared=yes
+
+# custom config step
+mb_use_custom_cfgdefs=no
+mb_use_custom_cfgtest=no
+
+# pkgconfig
+mb_pkgname='mmglue'
+mb_pkgdesc='mmglue'
+mb_pkgusrc=
+mb_pkgrepo='git://midipix.org/mmglue'
+mb_pkgpsrc=
+mb_pkgdurl=
+mb_pkgdefs=
+mb_pkglibs=
+
+# ccenv
+mb_ccenv_create_log=
+mb_ccenv_skip_native=
+
+# switches
+mb_default_cflags_common="-std=c99 -D_XOPEN_SOURCE=700"
+mb_default_cflags_common="$mb_default_cflags_common -I\$(SOURCE_DIR)/src/internal"
+mb_default_cflags_common="$mb_default_cflags_common -I\$(SOURCE_DIR)/include"
+mb_default_cflags_common="$mb_default_cflags_common -Ibuild"
+
+mb_default_cflags_debug=
+mb_default_cflags_cmdline=
+mb_default_cflags_config=
+mb_default_cflags_sysroot=
+mb_default_cflags_path=
+mb_default_cflags_strict=
+mb_default_cflags_util=
+mb_default_cflags_last=
+mb_default_cflags_once=
+
+mb_default_ldflags_common="-Llib"
+mb_default_ldflags_debug=
+mb_default_ldflags_cmdline=
+mb_default_ldflags_config=
+mb_default_ldflags_sysroot=
+mb_default_ldflags_path=
+mb_default_ldflags_strict=
+mb_default_ldflags_util=
+mb_default_ldflags_last=
+mb_default_ldflags_once=

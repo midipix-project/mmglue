@@ -1,0 +1,752 @@
+#!/bin/sh
+
+set -eu
+
+trap config_failure 1 2 EXIT
+
+usage()
+{
+	cat "$mb_project_dir"/config.usage
+
+	if [ _$mb_use_custom_cfgdefs = _yes ]; then
+		printf '\n\n%s%s\n' \
+			" ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" \
+			"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+
+		printf '%s%s\n' \
+			"| Listed above are configure's common switches " \
+			"and environment variables.     |"
+
+		printf '%s%s\n' \
+			"| Found below are project-specific variables " \
+			"and other customization options. |"
+
+		printf '%s%s\n\n\n' \
+			" ___________________________________________" \
+			"__________________________________"
+
+		cat "$mb_project_dir"/project/config/cfgdefs.usage
+	fi
+
+	exit 0
+}
+
+error_msg()
+{
+	echo "$@" >&2
+}
+
+warning_msg()
+{
+	echo "$@" >&2
+}
+
+
+init_vars()
+{
+	mb_project_dir=$(cd "$(dirname $0)" ; pwd)
+	mb_pwd=$(pwd)
+
+	mb_custom_cfgdefs_args=''
+	mb_custom_cfgdefs_space=''
+
+	sfrt_impl_dir=$mb_project_dir/sofort
+	sfrt_config_dir=$sfrt_impl_dir/config
+	sfrt_core_dir=$sfrt_impl_dir/core
+	sfrt_config_vars=$sfrt_config_dir/config.vars
+	sfrt_flag_vars=$sfrt_config_dir/flag.vars
+	sfrt_cfgdefs_in=$sfrt_config_dir/cfgdefs.in
+
+	mb_make_vars=$(cat $sfrt_config_vars \
+		| grep -v -e '^#' -e '^$' | tr '[:lower:]' '[:upper:]')
+
+	mb_impl_vars=$(cat $sfrt_config_vars \
+		| grep -v -e '^#' -e '^$' | sed 's/^/mb_/g')
+
+	mb_proj_vars=$(cat $sfrt_config_vars \
+		| grep -v -e '^#' -e '^$' | sed 's/^/mb_default_/g')
+
+	mb_flag_vars=$(cat $sfrt_flag_vars \
+		| grep -v -e '^#' -e '^$')
+
+	mb_vars="$mb_make_vars $mb_impl_vars $mb_proj_vars $mb_flag_vars"
+
+	for mb_var in $mb_vars ; do
+		mb_expr=$mb_var='${'$mb_var':-}'
+		eval "$mb_expr"
+	done
+
+	# ccenv
+	. $mb_project_dir/sofort/ccenv/ccenv.sh
+
+	if ! [ -L ./ccenv ]; then
+		if [ -d ./ccenv ]; then
+			rm -f ./ccenv/host.mk
+			rm -f ./ccenv/native.mk
+			rmdir ./ccenv
+		fi
+	fi
+
+	# config.project
+	if [ -z "$mb_config" ]; then
+		. $mb_project_dir/config.project
+	else
+		. "$mb_config"
+	fi
+
+	# project-specific config definitions
+	if [ _$mb_use_custom_cfgdefs = _yes ]; then
+		cat $sfrt_cfgdefs_in > cfgdefs.mk
+	else
+		printf '%s %s\n\n' \
+				'# this project does not include' \
+				'a custom config step.'           \
+			> cfgdefs.mk
+		cat $sfrt_cfgdefs_in >> cfgdefs.mk
+
+		if [ -f $mb_project_dir/project/cfgdefs.in ]; then
+			cat $mb_project_dir/project/cfgdefs.in >> cfgdefs.mk
+		fi
+	fi
+
+	# user build-time overrides
+	touch usrdefs.mk
+
+	# project
+	mb_nickname=$NICKNAME
+	mb_source_dir=$SOURCE_DIR
+
+	# dirs
+	mb_prefix=$PREFIX
+	mb_exec_prefix=$EXEC_PREFIX
+	mb_bindir=$BINDIR
+	mb_sbindir=$SBINDIR
+	mb_libdir=$LIBDIR
+	mb_includedir=$INCLUDEDIR
+	mb_oldincludedir=$OLDINCLUDEDIR
+	mb_mandir=$MANDIR
+	mb_docdir=$DOCDIR
+	mb_libexecdir=$LIBEXECDIR
+
+	mb_sysconfdir=$SYSCONFDIR
+	mb_sharedstatedir=$SHAREDSTATEDIR
+	mb_localstatedir=$LOCALSTATEDIR
+	mb_runstatedir=$RUNSTATEDIR
+	mb_datarootdir=$DATAROOTDIR
+	mb_datadir=$DATADIR
+	mb_infodir=$INFODIR
+	mb_localedir=$LOCALEDIR
+	mb_htmldir=$HTMLDIR
+	mb_dvidir=$DVIDIR
+	mb_pdfdir=$PDFDIR
+	mb_psdir=$PSDIR
+
+
+	# build
+	mb_build=$BUILD
+	mb_host=$HOST
+	mb_cchost=$CCHOST
+	mb_cfghost=$CFGHOST
+	mb_target=$TARGET
+	mb_arch=$ARCH
+	mb_compiler=$COMPILER
+	mb_toolchain=$TOOLCHAIN
+	mb_sysroot=$SYSROOT
+	mb_cross_compile=$CROSS_COMPILE
+	mb_shell=$SHELL
+
+	# switches
+	mb_cflags=$CFLAGS
+	mb_cflags_debug=$CFLAGS_DEBUG
+	mb_cflags_common=$CFLAGS_COMMON
+	mb_cflags_cmdline=$CFLAGS_CMDLINE
+	mb_cflags_config=$CFLAGS_CONFIG
+	mb_cflags_sysroot=$CFLAGS_SYSROOT
+	mb_cflags_os=$CFLAGS_OS
+	mb_cflags_site=$CFLAGS_SITE
+	mb_cflags_path=$CFLAGS_PATH
+	mb_cflags_strict=$CFLAGS_STRICT
+	mb_cflags_util=$CFLAGS_UTIL
+	mb_cflags_last=$CFLAGS_LAST
+	mb_cflags_once=$CFLAGS_ONCE
+
+	mb_ldflags=$LDFLAGS
+	mb_ldflags_debug=$LDFLAGS_DEBUG
+	mb_ldflags_common=$LDFLAGS_COMMON
+	mb_ldflags_cmdline=$LDFLAGS_CMDLINE
+	mb_ldflags_config=$LDFLAGS_CONFIG
+	mb_ldflags_sysroot=$LDFLAGS_SYSROOT
+	mb_ldflags_path=$LDFLAGS_PATH
+	mb_ldflags_strict=$LDFLAGS_STRICT
+	mb_ldflags_util=$LDFLAGS_UTIL
+	mb_ldflags_last=$LDFLAGS_LAST
+	mb_ldflags_once=$LDFLAGS_ONCE
+
+	mb_pe_subsystem=$PE_SUBSYSTEM
+	mb_pe_image_base=$PE_IMAGE_BASE
+	mb_pe_config_defs=$PE_CONFIG_DEFS
+
+	mb_elf_eh_frame=$ELF_EH_FRAME
+	mb_elf_hash_style=$ELF_HASH_STYLE
+	mb_elf_config_defs=$ELF_CONFIG_DEFS
+
+	# overrides
+	mb_user_cc=$CC
+	mb_user_cpp=$CPP
+	mb_user_cxx=$CXX
+
+	mb_native_cc=$NATIVE_CC
+	mb_native_cpp=$NATIVE_CPP
+	mb_native_cxx=$NATIVE_CXX
+
+	mb_native_host=$NATIVE_HOST
+	mb_native_cfghost=$NATIVE_CFGHOST
+	mb_native_cflags=$NATIVE_CFLAGS
+	mb_native_ldflags=$NATIVE_LDFLAGS
+}
+
+
+verify_build_directory()
+{
+	if [ "$mb_project_dir" = "$mb_pwd" ]; then
+		if [ _$mb_require_out_of_tree = _yes ]; then
+			error_msg "$mb_package: out-of-tree builds are required."
+			error_msg "please invoke configure again from a clean build directory."
+			exit 1
+		else
+			mb_project_dir='.'
+		fi
+	fi
+
+	rm -f Makefile Makefile.host Makefile.tmp Makefile.failed
+}
+
+
+verify_source_directory()
+{
+	if [ -z "$mb_source_dir" ]; then
+		if [ _$mb_require_source_dir = _yes ]; then
+			error_msg "$mb_package: specifying an external source directory is required."
+			error_msg "you can set the source directory either via --source-dir=<path>,"
+			error_msg "or by setting the SOURCE_DIR variable."
+			exit 1
+		fi
+	fi
+}
+
+
+common_defaults()
+{
+	# git
+	if [ -n "$mb_source_dir" ]; then
+		if [ -d "$mb_source_dir/.git" ]; then
+			mb_git_reference_index="\$(SOURCE_DIR)/.git/index"
+		fi
+	elif [ -d "$mb_project_dir/.git" ]; then
+		mb_git_reference_index="\$(PROJECT_DIR)/.git/index"
+	fi
+
+	# project
+	[ -z "$mb_nickname" ] 		&& mb_nickname=$mb_package
+	[ -z "$mb_source_dir" ] 	&& mb_source_dir=$mb_project_dir
+	[ -z "$mb_avoid_version" ] 	&& mb_avoid_version='no'
+
+	# pkgconfig
+	[ -z "$mb_pkgname" ]		&& mb_pkgname="$mb_default_pkgname"
+	[ -z "$mb_pkgdesc" ]		&& mb_pkgdesc="$mb_default_pkgdesc"
+	[ -z "$mb_pkgusrc" ]		&& mb_pkgusrc="$mb_default_pkgusrc"
+	[ -z "$mb_pkgrepo" ]		&& mb_pkgrepo="$mb_default_pkgrepo"
+	[ -z "$mb_pkgpsrc" ]		&& mb_pkgpsrc="$mb_default_pkgpsrc"
+	[ -z "$mb_pkgdurl" ]		&& mb_pkgdurl="$mb_default_pkgdurl"
+	[ -z "$mb_pkgdefs" ]		&& mb_pkgdefs="$mb_default_pkgdefs"
+	[ -z "$mb_pkglibs" ]		&& mb_pkglibs="$mb_default_pkglibs"
+
+	# dirs
+	[ -z "$mb_prefix" ] 		&& [ -z "$mb_prefix_set" ] \
+					&& mb_prefix='/usr/local'
+
+	[ -z "$mb_exec_prefix" ] 	&& [ -z "$mb_exec_prefix_set" ]	\
+					&& mb_exec_prefix=$mb_prefix
+
+	[ -z "$mb_bindir" ] 		&& [ -z "$mb_bindir_set" ] \
+					&& [ -z "$mb_bindir_basename" ] \
+					&& mb_bindir=$mb_exec_prefix/bin
+
+	[ -z "$mb_bindir" ] 		&& [ -z "$mb_bindir_set" ] \
+					&& mb_bindir=$mb_exec_prefix/$mb_bindir_basename
+
+	[ -z "$mb_sbindir" ] 		&& mb_sbindir=$mb_exec_prefix/sbin
+	[ -z "$mb_libdir" ] 		&& mb_libdir=$mb_exec_prefix/lib
+	[ -z "$mb_includedir" ]		&& mb_includedir=$mb_prefix/include
+	[ -z "$mb_oldincludedir" ]	&& mb_oldincludedir=$mb_prefix/include
+	[ -z "$mb_datarootdir" ] 	&& mb_datarootdir=$mb_prefix/share
+	[ -z "$mb_mandir" ] 		&& mb_mandir=$mb_datarootdir/man
+	[ -z "$mb_docdir" ] 		&& mb_docdir=$mb_datarootdir/doc
+	[ -z "$mb_libexecdir" ]		&& mb_libexecdir=$mb_exec_prefix/libexec
+
+	[ -z "$mb_sysconfdir" ] 	&& mb_sysconfdir=$mb_exec_prefix/etc
+	[ -z "$mb_sharedstatedir" ] 	&& mb_sharedstatedir=$mb_prefix/com
+	[ -z "$mb_localstatedir" ] 	&& mb_localstatedir=$mb_prefix/var
+	[ -z "$mb_runstatedir" ] 	&& mb_runstatedir=$mb_localstatedir/run
+	[ -z "$mb_datarootdir" ] 	&& mb_datarootdir=$mb_prefix/share
+	[ -z "$mb_datadir" ] 		&& mb_datadir=$mb_datarootdir
+	[ -z "$mb_infodir" ] 		&& mb_infodir=$mb_datarootdir/info
+	[ -z "$mb_localedir" ] 		&& mb_localedir=$mb_datarootdir/locale
+	[ -z "$mb_htmldir" ] 		&& mb_htmldir=$mb_docdir
+	[ -z "$mb_dvidir" ] 		&& mb_dvidir=$mb_docdir
+	[ -z "$mb_pdfdir" ] 		&& mb_pdfdir=$mb_docdir
+	[ -z "$mb_psdir" ] 		&& mb_psdir=$mb_docdir
+
+	# switches
+	[ -z "$mb_cflags_debug" ]	&& mb_cflags_debug=$mb_default_cflags_debug
+	[ -z "$mb_cflags_common" ]	&& mb_cflags_common=$mb_default_cflags_common
+	[ -z "$mb_cflags_cmdline" ]	&& mb_cflags_cmdline=$mb_default_cflags_cmdline
+	[ -z "$mb_cflags_config" ]	&& mb_cflags_config=$mb_default_cflags_config
+	[ -z "$mb_cflags_sysroot" ]	&& mb_cflags_sysroot=$mb_default_cflags_sysroot
+	[ -z "$mb_cflags_os" ]		&& mb_cflags_os=$mb_default_cflags_os
+	[ -z "$mb_cflags_site" ]	&& mb_cflags_site=$mb_default_cflags_site
+	[ -z "$mb_cflags_path" ]	&& mb_cflags_path=$mb_default_cflags_path
+	[ -z "$mb_cflags_strict" ]	&& mb_cflags_strict=$mb_default_cflags_strict
+	[ -z "$mb_cflags_util" ]	&& mb_cflags_util=$mb_default_cflags_util
+	[ -z "$mb_cflags_last" ]	&& mb_cflags_last=$mb_default_cflags_last
+	[ -z "$mb_cflags_once" ]	&& mb_cflags_once=$mb_default_cflags_once
+
+	[ -z "$mb_ldflags_debug" ]	&& mb_ldflags_debug=$mb_default_ldflags_debug
+	[ -z "$mb_ldflags_common" ]	&& mb_ldflags_common=$mb_default_ldflags_common
+	[ -z "$mb_ldflags_cmdline" ]	&& mb_ldflags_cmdline=$mb_default_ldflags_cmdline
+	[ -z "$mb_ldflags_config" ]	&& mb_ldflags_config=$mb_default_ldflags_config
+	[ -z "$mb_ldflags_sysroot" ]	&& mb_ldflags_sysroot=$mb_default_ldflags_sysroot
+	[ -z "$mb_ldflags_path" ]	&& mb_ldflags_path=$mb_default_ldflags_path
+	[ -z "$mb_ldflags_strict" ]	&& mb_ldflags_strict=$mb_default_ldflags_strict
+	[ -z "$mb_ldflags_util" ]	&& mb_ldflags_util=$mb_default_ldflags_util
+	[ -z "$mb_ldflags_last" ]	&& mb_ldflags_last=$mb_default_ldflags_last
+	[ -z "$mb_ldflags_once" ]	&& mb_ldflags_once=$mb_default_ldflags_once
+
+	# config
+	[ -z "$mb_all_static" ]		&& mb_all_static='no'
+	[ -z "$mb_all_shared" ]		&& mb_all_shared='no'
+	[ -z "$mb_disable_frontend" ]	&& mb_disable_frontend='no'
+	[ -z "$mb_disable_static" ]	&& mb_disable_static='no'
+	[ -z "$mb_disable_shared" ]	&& mb_disable_shared='no'
+
+	# host/target
+	[ -z "$mb_host" ] 		&& mb_host=$mb_target
+	[ -z "$mb_target" ] 		&& mb_target=$mb_host
+
+	# sysroot
+	if [ -n "$mb_sysroot" ]; then
+		if [ -z "$mb_cflags_sysroot" ]; then
+			mb_cflags_sysroot="--sysroot=$mb_sysroot"
+		fi
+
+		if [ -z "$mb_ldflags_sysroot" ]; then
+			mb_ldflags_sysroot="--sysroot=$mb_sysroot"
+		fi
+	fi
+
+	# debug
+	if [ _$mb_debug = _yes ]; then
+		if [ -z "$mb_cflags_debug" ]; then
+			mb_cflags_debug='-g3 -O0'
+		fi
+	fi
+
+	# inherited cflags & ldflags
+	mb_cflags_cmdline="$mb_cflags_cmdline $mb_cflags"
+	mb_ldflags_cmdline="$mb_ldflags_cmdline $mb_ldflags"
+}
+
+
+config_flags()
+{
+	mb_ldflags_tmp=" $mb_ldflags "
+	mb_ldflags_libs=$(echo "$mb_ldflags_tmp" | sed 's/ -static / /g')
+
+	if [ "$mb_ldflags_tmp" != "$mb_ldflags_libs" ]; then
+		mb_ldflags="$mb_ldflags_libs"
+		mb_ldflags_util="$mb_ldflags_util -static"
+	fi
+
+	# ccstrict
+	if [ _$mb_ccstrict = _yes ]; then
+		mb_cflags_strict='-Wall -Werror -Wextra -Wundef'
+	fi
+
+	# ldstrict
+	if [ _$mb_ldstrict = _yes ]; then
+		mb_ldflags_strict='-Wl,--no-undefined'
+	fi
+}
+
+
+config_copy()
+{
+	mb_vars=$(cut -d'=' -f1 $sfrt_config_vars \
+			| grep -v '^#')
+
+	mb_sed_substs=" \
+		$(for __var in $mb_vars; do                  \
+			printf '%s"$%s"%s' "-e 's^@$__var@^'" \
+				"mb_$__var" "'^g' ";           \
+		done)"
+
+	eval sed $mb_sed_substs \
+		$mb_project_dir/Makefile.in    \
+			| sed -e 's/[ \t]*$//g' \
+			> $mb_pwd/Makefile.tmp
+}
+
+
+config_ccenv()
+{
+	mkdir -p ./ccenv
+	touch ./ccenv/host.mk
+	touch ./ccenv/native.mk
+
+	ccenv_set_host_variables
+	ccenv_set_native_variables
+
+	config_copy
+}
+
+config_custom()
+{
+	if [ _$mb_use_custom_cfgdefs = _yes ]; then
+		eval . $mb_project_dir/project/config/cfgdefs.sh \
+			"$mb_custom_cfgdefs_args"
+		config_copy
+	fi
+
+	if [ _$mb_use_custom_usrdefs = _yes ]; then
+		. $mb_project_dir/project/usrdefs.sh
+	fi
+}
+
+
+config_cfghost()
+{
+	if [ -z "$mb_cfghost" ]; then
+		mb_cfghost=$mb_cchost
+	fi
+
+	sed		-e 's^@cchost@^'"$mb_cchost"'^g'     \
+			-e 's^@cfghost@^'"$mb_cfghost"'^g'   \
+		$mb_pwd/Makefile.tmp > $mb_pwd/Makefile.host
+
+	rm  $mb_pwd/Makefile.tmp
+	mv  $mb_pwd/Makefile.host $mb_pwd/Makefile
+}
+
+
+config_host()
+{
+	make -s host.tag && return 0
+
+	error_msg "configure was able to generate a Makefile for the selected host,"
+	error_msg "however the host-targeting compiler was found to be missing"
+	error_msg "at least one of the required headers or features."
+	exit 2
+}
+
+
+config_status()
+{
+	printf "\n\n"
+	make .display
+	printf "\nconfiguration completed successfully.\n\n"
+}
+
+
+config_failure()
+{
+	if [ -f Makefile ]; then
+		mb_error='failed to use the generated Makefile.'
+		printf '\n%s: error: %s\n' "${0}" "$mb_error" >&2
+		mv Makefile Makefile.failed
+	fi
+
+	exit 2
+}
+
+
+config_success()
+{
+	trap '' EXIT
+	exit 0
+}
+
+
+# one: init
+init_vars
+verify_build_directory
+
+
+# two: args
+for arg ; do
+	case "$arg" in
+		--help)
+			usage
+			;;
+		--help=ccenv)
+			ccenv_usage
+			;;
+
+		# ccenv
+		--cross-compile=*)
+			mb_cross_compile=${arg#*=}
+			;;
+		--compiler=*)
+			mb_compiler=${arg#*=}
+			;;
+		--toolchain=*)
+			mb_toolchain=${arg#*=}
+			;;
+		--zealous)
+			mb_agnostic=yes
+			mb_zealous=
+			;;
+		--zealous=*)
+			mb_zealous=${arg#*=}
+			;;
+		--ccenv=*)
+			mb_ccenv=${arg#*=}
+			;;
+
+		# dirs
+		--prefix=*)
+			mb_prefix_set=yes
+			mb_prefix=${arg#*=}
+			;;
+		--exec-prefix=*)
+			mb_exec_prefix_set=yes
+			mb_exec_prefix=${arg#*=}
+			;;
+		--bindir=*)
+			mb_bindir_set=yes
+			mb_bindir=${arg#*=}
+			;;
+		--sbindir=*)
+			mb_sbindir=${arg#*=}
+			;;
+		--libdir=*)
+			mb_libdir=${arg#*=}
+			;;
+		--includedir=*)
+			mb_includedir=${arg#*=}
+			;;
+		--oldincludedir=*)
+			mb_oldincludedir=${arg#*=}
+			;;
+		--mandir=*)
+			mb_mandir=${arg#*=}
+			;;
+		--libexecdir=*)
+			mb_libexecdir=${arg#*=}
+			;;
+
+
+		--sysconfdir=*)
+			mb_sysconfdir=${arg#*=}
+			;;
+		--sharedstatedir=*)
+			mb_sharedstatedir=${arg#*=}
+			;;
+		--localstatedir=*)
+			mb_localstatedir=${arg#*=}
+			;;
+		--runstatedir=*)
+			mb_runstatedir=${arg#*=}
+			;;
+		--datarootdir=*)
+			mb_datarootdir=${arg#*=}
+			;;
+		--datadir=*)
+			mb_datadir=${arg#*=}
+			;;
+		--infodir=*)
+			mb_infodir=${arg#*=}
+			;;
+		--localedir=*)
+			mb_localedir=${arg#*=}
+			;;
+		--htmldir=*)
+			mb_htmldir=${arg#*=}
+			;;
+		--dvidir=*)
+			mb_dvidir=${arg#*=}
+			;;
+		--pdfdir=*)
+			mb_pdfdir=${arg#*=}
+			;;
+		--psdir=*)
+			mb_psdir=${arg#*=}
+			;;
+
+
+		# build
+		--build=*)
+			mb_build=${arg#*=}
+			;;
+		--host=*)
+			mb_host=${arg#*=}
+			;;
+		--cchost=*)
+			mb_cchost=${arg#*=}
+			;;
+		--cfghost=*)
+			mb_cfghost=${arg#*=}
+			;;
+		--target=*)
+			mb_target=${arg#*=}
+			;;
+		--arch=*)
+			mb_arch=${arg#*=}
+			;;
+		--sysroot=*)
+			mb_sysroot=${arg#*=}
+			;;
+		--shell=*)
+			mb_shell=${arg#*=}
+			;;
+		--debug)
+			mb_debug=yes
+			;;
+
+		# config
+		--all-static)
+			mb_all_static=yes
+			;;
+		--all-shared)
+			mb_all_shared=yes
+			;;
+		--disable-frontend)
+			mb_disable_frontend=yes
+			;;
+		--disable-app)
+			mb_disable_frontend=yes
+			;;
+		--enable-frontend)
+			mb_disable_frontend='no'
+			;;
+		--enable-app)
+			mb_disable_frontend='no'
+			;;
+		--disable-static)
+			mb_disable_static=yes
+			;;
+		--disable-shared)
+			mb_disable_shared=yes
+			;;
+		--enable-static)
+			mb_disable_static='no'
+			;;
+		--enable-shared)
+			mb_disable_shared='no'
+			;;
+
+		# convenience
+		--strict)
+			mb_ccstrict=yes
+			mb_ldstrict=yes
+			;;
+		--ccstrict)
+			mb_ccstrict=yes
+			;;
+		--ldstrict)
+			mb_ldstrict=yes
+			;;
+
+		# project
+		--nickname=*)
+			mb_nickname=${arg#*=}
+			;;
+		--program-prefix=*)
+			mb_program_prefix=${arg#*=}
+			;;
+		--avoid-version)
+			mb_avoid_version=yes
+			;;
+		--source-dir=*)
+			mb_source_dir=${arg#*=}
+			;;
+
+		# pkgconfig
+		--pkgname=*)
+			mb_pkgname=${arg#*=}
+			;;
+
+		--pkgdesc=*)
+			mb_pkgdesc=${arg#*=}
+			;;
+
+		--pkgusrc=*)
+			mb_pkgusrc=${arg#*=}
+			;;
+
+		--pkgrepo=*)
+			mb_pkgrepo=${arg#*=}
+			;;
+
+		--pkgpsrc=*)
+			mb_pkgpsrc=${arg#*=}
+			;;
+
+		--pkgdurl=*)
+			mb_pkgdurl=${arg#*=}
+			;;
+
+		--pkgdefs=*)
+			mb_pkgdefs=${arg#*=}
+			;;
+
+		--pkglibs=*)
+			mb_pkglibs=${arg#*=}
+			;;
+
+		# compatibility
+		--enable-dependency-tracking)
+			;;
+		--disable-dependency-tracking)
+			;;
+
+		*)
+			if [ _$mb_use_custom_cfgdefs = _yes ]; then
+				mb_escaped_arg=\'$(printf '%s\n' "$arg" | sed -e "s/'/'\\\\''/g")\'
+				mb_escaped_arg="$mb_custom_cfgdefs_space$mb_escaped_arg"
+				mb_custom_cfgdefs_args="$mb_custom_cfgdefs_args$mb_escaped_arg"
+				mb_custom_cfgdefs_space=' '
+			else
+				error_msg ${arg#}: "unsupported config argument."
+				exit 2
+			fi
+			;;
+	esac
+done
+
+
+
+# three: validation
+verify_source_directory
+
+if ! [ -z "$mb_program_prefix" ]; then
+	error_msg "--program-prefix is not yet fully support (must be null)."
+fi
+
+
+
+# four: defaults
+common_defaults
+
+
+# five: config
+config_flags
+config_copy
+config_ccenv
+config_custom
+config_cfghost
+config_host
+config_status
+
+
+# all done
+config_success

@@ -1,0 +1,167 @@
+configure: common usage
+
+supported switches:
+-------------------
+	--help
+
+	--nickname
+	--program-prefix
+	--avoid-version
+	--source-dir
+
+	--pkgname
+	--pkgdesc
+	--pkgusrc
+	--pkgrepo
+	--pkgpsrc
+	--pkgdurl
+	--pkgdefs
+	--pkglibs
+
+	--prefix
+	--exec-prefix
+	--bindir
+	--sbindir
+	--libdir
+	--includedir
+	--oldincludedir
+	--mandir
+	--docdir
+	--libexecdir
+
+	--sysconfdir
+	--sharedstatedir
+	--localstatedir
+	--runstatedir
+	--datarootdir
+	--datadir
+	--infodir
+	--localedir
+	--htmldir
+	--dvidir
+	--pdfdir
+	--psdir
+
+	--build
+	--host
+	--cchost
+	--cfghost
+	--target
+	--arch
+	--compiler
+	--toolchain
+	--sysroot
+	--cross-compile
+	--shell
+	--debug
+
+	--strict
+	--ccstrict
+	--ldstrict
+
+	--all-static
+	--all-shared
+	--enable-static
+	--enable-shared
+	--disable-static
+	--disable-shared
+
+	--enable-app
+	--enable-frontend
+	--disable-app
+	--disable-frontend
+
+	--enable-dependency-tracking
+	--disable-dependency-tracking
+
+
+supported variables:
+--------------------
+	NICKNAME
+	SOURCE_DIR
+
+	PREFIX
+	EXEC_PREFIX
+	BINDIR
+	SBINDIR
+	LIBDIR
+	INCLUDEDIR
+	MANDIR
+	DOCDIR
+	LIBEXECDIR
+
+	SYSCONFDIR
+	SHAREDSTATEDIR
+	LOCALSTATEDIR
+	RUNSTATEDIR
+	DATAROOTDIR
+	DATADIR
+	INFODIR
+	LOCALEDIR
+	HTMLDIR
+	DVIDIR
+	PDFDIR
+	PSDIR
+
+	CC
+	CPP
+	CXX
+
+	BUILD
+	HOST
+	CCHOST
+	CFGHOST
+	TARGET
+	ARCH
+	COMPILER
+	TOOLCHAIN
+	SYSROOT
+	CROSS_COMPILE
+	SHELL
+
+	CFLAGS
+	CFLAGS_DEBUG
+	CFLAGS_COMMON
+	CFLAGS_CMDLINE
+	CFLAGS_CONFIG
+	CFLAGS_SYSROOT
+	CFLAGS_OS
+	CFLAGS_SITE
+	CFLAGS_PATH
+	CFLAGS_STRICT
+	CFLAGS_UTIL
+	CFLAGS_LAST
+	CFLAGS_ONCE
+
+	LDFLAGS
+	LDFLAGS_DEBUG
+	LDFLAGS_COMMON
+	LDFLAGS_CMDLINE
+	LDFLAGS_CONFIG
+	LDFLAGS_SYSROOT
+	LDFLAGS_PATH
+	LDFLAGS_STRICT
+	LDFLAGS_UTIL
+	LDFLAGS_LAST
+	LDFLAGS_ONCE
+
+	PE_SUBSYSTEM
+	PE_IMAGE_BASE
+	PE_CONFIG_DEFS
+
+	ELF_EH_FRAME
+	ELF_HASH_STYLE
+	ELF_CONFIG_DEFS
+
+	NATIVE_CC
+	NATIVE_CPP
+	NATIVE_CXX
+
+	NATIVE_HOST
+	NATIVE_CFGHOST
+	NATIVE_CFLAGS
+	NATIVE_LDFLAGS
+
+	NATIVE_OS
+	NATIVE_OS_BITS
+	NATIVE_OS_UNDERSCORE

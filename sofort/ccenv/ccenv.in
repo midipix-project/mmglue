@@ -1,0 +1,85 @@
+# @ccenv_cfgtype@ system flavor
+OS                              = @ccenv_os@
+OS_SEMANTICS                    = @ccenv_os_semantics@
+
+OS_DSO_EXRULES                  = @ccenv_os_dso_exrules@
+OS_DSO_LINKAGE                  = @ccenv_os_dso_linkage@
+
+OS_APP_PREFIX                   = @ccenv_os_app_prefix@
+OS_APP_SUFFIX                   = @ccenv_os_app_suffix@
+
+OS_LIB_PREFIX                   = @ccenv_os_lib_prefix@
+OS_LIB_SUFFIX                   = @ccenv_os_lib_suffix@
+
+OS_IMPLIB_EXT                   = @ccenv_os_implib_ext@
+OS_LIBDEF_EXT                   = @ccenv_os_libdef_ext@
+
+OS_ARCHIVE_EXT                  = @ccenv_os_archive_ext@
+OS_SONAME                       = @ccenv_os_soname@
+
+OS_LIB_PREFIXED_SUFFIX          = @ccenv_os_lib_prefixed_suffix@
+OS_LIB_SUFFIXED_SUFFIX          = @ccenv_os_lib_suffixed_suffix@
+
+# @ccenv_cfgtype@ characteristics
+CC_HOST                         = @ccenv_cc_host@
+CC_BITS                         = @ccenv_cc_bits@
+
+CC_BINFMT                       = @ccenv_cc_binfmt@
+CC_UNDERSCORE                   = @ccenv_cc_underscore@
+
+CC_ARCH_BFD                     = @ccenv_cc_arch_bfd@
+CC_ARCH_LLVM                    = @ccenv_cc_arch_llvm@
+
+# incompatible tool variants
+AS_ASM                          = @ccenv_as_asm@
+AS_LL                           = @ccenv_as_ll@
+AS_MC                           = @ccenv_as_mc@
+
+LD_BFD                          = @ccenv_ld_bfd@
+LD_GOLD                         = @ccenv_ld_gold@
+LD_LLD                          = @ccenv_ld_lld@
+
+OBJDUMP_BFD                     = @ccenv_objdump_bfd@
+OBJDUMP_LLVM                    = @ccenv_objdump_llvm@
+
+READELF_BFD                     = @ccenv_readelf_bfd@
+READELF_LLVM                    = @ccenv_readelf_llvm@
+
+# @ccenv_cfgtype@ primary tools
+CC                              = @ccenv_cc@
+CPP                             = @ccenv_cpp@
+CXX                             = @ccenv_cxx@
+
+AR                              = @ccenv_ar@
+NM                              = @ccenv_nm@
+OBJDUMP                         = @ccenv_objdump@
+RANLIB                          = @ccenv_ranlib@
+SIZE                            = @ccenv_size@
+STRIP                           = @ccenv_strip@
+STRINGS                         = @ccenv_strings@
+
+ADDR2LINE                       = @ccenv_addr2line@
+COV                             = @ccenv_cov@
+CXXFILT                         = @ccenv_cxxfilt@
+OBJCOPY                         = @ccenv_objcopy@
+
+ELFEDIT                         = @ccenv_elfedit@
+READELF                         = @ccenv_readelf@
+READOBJ                         = @ccenv_readobj@
+
+PERK                            = @ccenv_perk@
+MDSO                            = @ccenv_mdso@
+DLLTOOL                         = @ccenv_dlltool@
+
+WINDMC                          = @ccenv_windmc@
+WINDRC                          = @ccenv_windrc@
+
+# @ccenv_cfgtype@ secondary tools
+# note: the direct use of $(@ccenv_makevar_prefix@LD) is highly discouraged
+AS                              = @ccenv_as@
+LD                              = @ccenv_ld@
+
+# @ccenv_cfgtype@ cflags
+CFLAGS_OS                      += @ccenv_cflags_os@
+CFLAGS_PIC                     += @ccenv_cflags_pic@
+

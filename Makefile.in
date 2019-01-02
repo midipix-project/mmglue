@@ -1,0 +1,475 @@
+PACKAGE 		= @package@
+NICKNAME 		= @nickname@
+PROJECT_DIR 		= @project_dir@
+SOURCE_DIR 		= @source_dir@
+GIT_REFERENCE_INDEX	= @git_reference_index@
+CUSTOM_INSTALL_HEADERS  = @custom_install_headers@
+AVOID_VERSION		= @avoid_version@
+
+PKGNAME			= @pkgname@
+PKGDESC			= @pkgdesc@
+PKGUSRC			= @pkgusrc@
+PKGREPO			= @pkgrepo@
+PKGPSRC			= @pkgpsrc@
+PKGDURL			= @pkgdurl@
+PKGDEFS			= @pkgdefs@
+PKGLIBS			= @pkglibs@
+
+BUILD 			= @build@
+HOST 			= @host@
+CCHOST 			= @cchost@
+CFGHOST 		= @cfghost@
+TARGET 			= @target@
+ARCH 			= @arch@
+COMPILER 		= @compiler@
+TOOLCHAIN		= @toolchain@
+SYSROOT 		= @sysroot@
+CROSS_COMPILE 		= @cross_compile@
+SHELL 			= @shell@
+
+PREFIX 			= @prefix@
+EXEC_PREFIX 		= @exec_prefix@
+BINDIR 			= @bindir@
+SBINDIR 		= @sbindir@
+LIBDIR 			= @libdir@
+INCLUDEDIR 		= @includedir@
+OLDINCLUDEDIR 		= @oldincludedir@
+MANDIR 			= @mandir@
+DOCDIR 			= @docdir@
+LIBEXECDIR 		= @libexecdir@
+
+SYSCONFDIR		= @sysconfdir@
+SHAREDSTATEDIR		= @sharedstatedir@
+LOCALSTATEDIR		= @localstatedir@
+RUNSTATEDIR		= @runstatedir@
+DATAROOTDIR		= @datarootdir@
+DATADIR			= @datadir@
+INFODIR			= @infodir@
+LOCALEDIR		= @localedir@
+HTMLDIR			= @htmldir@
+DVIDIR			= @dvidir@
+PDFDIR			= @pdfdir@
+PSDIR			= @psdir@
+
+CFLAGS_COMMON 		+= @cflags_common@
+CFLAGS_DEBUG 		+= @cflags_debug@
+CFLAGS_CMDLINE 		+= @cflags_cmdline@
+CFLAGS_CONFIG 		+= @cflags_config@
+CFLAGS_SYSROOT 		+= @cflags_sysroot@
+CFLAGS_OS		+= @cflags_os@
+CFLAGS_SITE		+= @cflags_site@
+CFLAGS_PATH 		+= @cflags_path@
+CFLAGS_STRICT 		+= @cflags_strict@
+CFLAGS_UTIL 		+= @cflags_util@
+CFLAGS_LAST 		+= @cflags_last@
+CFLAGS_ONCE 		+= @cflags_once@
+
+LDFLAGS_COMMON 		+= @ldflags_common@
+LDFLAGS_DEBUG 		+= @ldflags_debug@
+LDFLAGS_CMDLINE 	+= @ldflags_cmdline@
+LDFLAGS_CONFIG 		+= @ldflags_config@
+LDFLAGS_SYSROOT 	+= @ldflags_sysroot@
+LDFLAGS_PATH 		+= @ldflags_path@
+LDFLAGS_STRICT 		+= @ldflags_strict@
+LDFLAGS_UTIL 		+= @ldflags_util@
+LDFLAGS_LAST 		+= @ldflags_last@
+LDFLAGS_ONCE 		+= @ldflags_once@
+
+USER_CC                 = @user_cc@
+USER_CPP                = @user_cpp@
+USER_CXX                = @user_cxx@
+
+PE_SUBSYSTEM 		= @pe_subsystem@
+PE_IMAGE_BASE 		= @pe_image_base@
+PE_CONFIG_DEFS  	= @pe_config_defs@
+
+ELF_EH_FRAME 		= @elf_eh_frame@
+ELF_HASH_STYLE 		= @elf_hash_style@
+ELF_CONFIG_DEFS 	= @elf_config_defs@
+
+NATIVE_HOST		= @native_host@
+NATIVE_CFGHOST		= @native_cfghost@
+NATIVE_CFLAGS		= @native_cflags@
+NATIVE_LDFLAGS		= @native_ldflags@
+
+ALL_SHARED              = @all_shared@
+ALL_STATIC              = @all_static@
+DISABLE_FRONTEND	= @disable_frontend@
+DISABLE_SHARED          = @disable_shared@
+DISABLE_STATIC          = @disable_static@
+
+USE_CUSTOM_CFGDEFS      = @use_custom_cfgdefs@
+USE_CUSTOM_USRDEFS      = @use_custom_usrdefs@
+
+all:
+install:
+shared:
+static:
+
+install-extras:
+install-app-extras:
+
+include ./ccenv/host.mk
+include ./ccenv/native.mk
+
+include ./cfgdefs.mk
+include ./usrdefs.mk
+
+include $(PROJECT_DIR)/sofort/core/defs.mk
+include $(PROJECT_DIR)/sofort/core/pkgconf.mk
+include $(PROJECT_DIR)/sofort/core/version.mk
+include $(PROJECT_DIR)/sofort/core/flavor.mk
+
+include $(PROJECT_DIR)/project/osforce.mk
+include $(PROJECT_DIR)/project/tree.mk
+include $(PROJECT_DIR)/project/depends.mk
+include $(PROJECT_DIR)/project/headers.mk
+include $(PROJECT_DIR)/project/common.mk
+include $(PROJECT_DIR)/project/arch.mk
+include $(PROJECT_DIR)/project/extras.mk
+include $(PROJECT_DIR)/project/overrides.mk
+
+
+$(APP_SRCS:%.c=%.o): CFLAGS_STATIC = $(CFLAGS_APP)
+
+src/%.lo: 	$(SOURCE_DIR)/src/%.c $(ALL_HEADERS) host.tag tree.tag
+		$(CC) -c -o $@ $< $(CFLAGS_SHARED)
+
+src/%.o: 	$(SOURCE_DIR)/src/%.c $(ALL_HEADERS) host.tag tree.tag
+		$(CC) -c -o $@ $< $(CFLAGS_STATIC)
+
+lib/%$(OS_LIB_PREFIXED_SUFFIX)$(VER_XYZ)$(OS_LIB_SUFFIXED_SUFFIX):
+		$(CC) -shared -o $@ $^ $(LDFLAGS_SHARED)
+
+lib/%$(OS_ARCHIVE_EXT):
+		rm -f $@
+		$(AR) rcs $@ $^
+
+
+
+all:		package-shared package-static app
+
+install:	package-install-app
+install:	package-install-extras
+install:	install-libs
+
+app:		app-tag
+
+app.tag:
+		cp $(PACKAGE_APP) $(APP)
+		touch app.tag
+
+install-libs:	package-install-shared
+install-libs:	package-install-static
+
+install-headers-default:
+		mkdir -p $(DESTDIR)$(INCLUDEDIR)/$(PACKAGE)
+		cp $(API_HEADERS) $(DESTDIR)$(INCLUDEDIR)/$(PACKAGE)
+
+install-shared:	shared install-lib install-implib
+install-shared: package-install-soname package-install-solink
+install-shared: install-headers
+
+install-lib:	shared
+		mkdir -p $(DESTDIR)$(LIBDIR)
+		cp $(SHARED_LIB) $(DESTDIR)$(LIBDIR)
+
+install-static:	static install-headers
+		mkdir -p $(DESTDIR)$(LIBDIR)
+		cp $(STATIC_LIB) $(DESTDIR)$(LIBDIR)
+
+install-app:	app install-app-extras
+		mkdir -p $(DESTDIR)$(BINDIR)
+		cp $(APP) $(DESTDIR)$(BINDIR)
+
+install-static-app:	static-app install-app-extras
+			mkdir -p $(DESTDIR)$(BINDIR)
+			cp $(STATIC_APP) $(DESTDIR)$(BINDIR)/$(NICKNAME)$(OS_APP_SUFFIX)
+
+
+
+shared:		shared-lib implib
+shared:		package-shared-soname package-shared-solink
+
+static:		static-lib
+
+shared-lib:	shared-objs $(SHARED_LIB)
+
+shared-soname:	shared-lib $(SHARED_SONAME)
+
+shared-solink:	shared-lib $(SHARED_SOLINK)
+
+static-lib:	static-objs $(STATIC_LIB)
+
+
+
+default-app:	version.tag static-objs $(DEFAULT_APP)
+
+shared-app:	version.tag shared $(SHARED_APP)
+
+static-app:	version.tag static-objs $(STATIC_APP)
+
+
+
+shared-objs:	dirs $(SHARED_OBJS)
+
+static-objs:	dirs $(STATIC_OBJS)
+
+app-objs:	dirs $(APP_OBJS)
+
+
+
+$(SHARED_LIB):	$(SHARED_OBJS)
+$(SHARED_LIB):	LDFLAGS_SHARED += $(LDFLAGS_IMPLIB)
+
+$(STATIC_LIB):	$(STATIC_OBJS)
+
+$(APP):		$(PACKAGE_APP)
+
+$(DEFAULT_APP):	$(STATIC_OBJS) $(APP_OBJS)
+		rm -f app.tag
+		$(CC) -o $@ $^ $(LDFLAGS_APP)
+
+$(SHARED_APP):	$(DSO_REF_SOLINK) $(APP_OBJS) $(SHARED_SOLINK)
+		rm -f app.tag
+		$(CC) -o $@ $(APP_OBJS) $(LDFLAGS_APP) -l$(PACKAGE)
+
+$(STATIC_APP):	$(STATIC_OBJS) $(APP_OBJS)
+		rm -f app.tag
+		$(CC) -static -o $@ $^ $(LDFLAGS_STATIC)
+
+
+dirs: 		dirs.tag
+
+dirs.tag:
+		mkdir -p build
+		mkdir -p bin
+		mkdir -p lib
+		touch dirs.tag
+
+host.tag:	Makefile
+		$(CC) $(CFLAGS) -dumpmachine > host.tmp
+		mv host.tmp host.tag
+
+version.tag:	$(GIT_REFERENCE_INDEX) dirs.tag
+		$(PROJECT_DIR)/sofort/tools/version.sh	\
+			-s $(SOURCE_DIR)		\
+			-o build/$(PACKAGE)_version.h	\
+			-p $(PACKAGE)
+		touch version.tag
+
+distclean:	clean
+		rm -f cfgdefs.mk
+		rm -f usrdefs.mk
+		rm -f Makefile
+
+clean:		clean-implib
+		rm -f tree.tag
+		rm -f dirs.tag
+		rm -f host.tag
+		rm -f host.tmp
+		rm -f version.tag
+		rm -f app.tag
+		rm -f $(SHARED_OBJS)
+		rm -f $(STATIC_OBJS)
+		rm -f $(APP_OBJS)
+		rm -f $(SHARED_LIB)
+		rm -f $(SHARED_SONAME)
+		rm -f $(SHARED_SOLINK)
+		rm -f $(STATIC_LIB)
+		rm -f $(APP)
+		rm -f $(DEFAULT_APP)
+		rm -f $(SHARED_APP)
+		rm -f $(STATIC_APP)
+		rm -f build/$(PACKAGE)_version.h
+		rm -f build/$(PACKAGE).pc
+
+
+.display:	.display-project     .display-pkgconf     .display-env \
+		.display-tools .display-flags .display-pe .display-elf \
+		.display-dirs  .display-build .display-config
+
+.conf:		PAGER ?= less
+.conf:
+		$(MAKE) .display | $(PAGER)
+
+.display-project:
+		@echo PACKAGE:'                '$(PACKAGE)
+		@echo NICKNAME:'               '$(NICKNAME)
+		@echo PROJECT_DIR:'            '$(PROJECT_DIR)
+		@echo SOURCE_DIR:'             '$(SOURCE_DIR)
+		@echo BUILD_DIR:'              '$(CURDIR)
+		@echo
+
+.display-pkgconf:
+		@echo PKGNAME:'                '$(PKGNAME)
+		@echo PKGDESC:'                '$(PKGDESC)
+		@echo PKGUSRC:'                '$(PKGUSRC)
+		@echo PKGREPO:'                '$(PKGREPO)
+		@echo PKGPSRC:'                '$(PKGPSRC)
+		@echo PKGDURL:'                '$(PKGDURL)
+		@echo PKGDEFS:'                '$(PKGDEFS)
+		@echo PKGLIBS:'                '$(PKGLIBS)
+		@echo
+
+.display-env:
+		@echo BUILD:'                  '$(BUILD)
+		@echo HOST:'                   '$(HOST)
+		@echo CCHOST:'                 '$(CCHOST)
+		@echo CFGHOST:'                '$(CFGHOST)
+		@echo TARGET:'                 '$(TARGET)
+		@echo ARCH:'                   '$(ARCH)
+		@echo COMPILER:'               '$(COMPILER)
+		@echo TOOLCHAIN:'              '$(TOOLCHAIN)
+		@echo SYSROOT:'                '$(SYSROOT)
+		@echo CROSS_COMPILE:'          '$(CROSS_COMPILE)
+		@echo SHELL:'                  '$(SHELL)
+		@echo
+
+.display-tools:
+		@echo CC:'                     '$(CC)
+		@echo CPP:'                    '$(CPP)
+		@echo CXX:'                    '$(CXX)
+		@echo
+		@echo AS:'                     '$(AS)
+		@echo AR:'                     '$(AR)
+		@echo LD:'                     '$(LD)
+		@echo NM:'                     '$(NM)
+		@echo OBJDUMP:'                '$(OBJDUMP)
+		@echo RANLIB:'                 '$(RANLIB)
+		@echo SIZE:'                   '$(SIZE)
+		@echo STRIP:'                  '$(STRIP)
+		@echo STRINGS:'                '$(STRINGS)
+		@echo
+		@echo ADDR2LINE:'              '$(ADDR2LINE)
+		@echo COV:'                    '$(COV)
+		@echo CXXFILT'                 '$(CXXFILT)
+		@echo ELFEDIT:'                '$(ELFEDIT)
+		@echo OBJCOPY:'                '$(OBJCOPY)
+		@echo READELF:'                '$(READELF)
+		@echo
+
+.display-flags:
+		@echo CFLAGS_COMMON:'          '$(CFLAGS_COMMON)
+		@echo CFLAGS_DEBUG:'           '$(CFLAGS_DEBUG)
+		@echo CFLAGS_VERSION:'         '$(CFLAGS_VERSION)
+		@echo CFLAGS_CMDLINE:'         '$(CFLAGS_CMDLINE)
+		@echo CFLAGS_CONFIG:'          '$(CFLAGS_CONFIG)
+		@echo CFLAGS_SYSROOT:'         '$(CFLAGS_SYSROOT)
+		@echo CFLAGS_OS:'              '$(CFLAGS_OS)
+		@echo CFLAGS_SITE:'            '$(CFLAGS_SITE)
+		@echo CFLAGS_PATH:'            '$(CFLAGS_PATH)
+		@echo CFLAGS_STRICT:'          '$(CFLAGS_STRICT)
+		@echo CFLAGS_UTIL:'            '$(CFLAGS_UTIL)
+		@echo CFLAGS_LAST:'            '$(CFLAGS_LAST)
+		@echo CFLAGS_ONCE:'            '$(CFLAGS_ONCE)
+		@echo
+		@echo LDFLAGS_COMMON:'         '$(LDFLAGS_COMMON)
+		@echo LDFLAGS_DEBUG:'          '$(LDFLAGS_DEBUG)
+		@echo LDFLAGS_CMDLINE:'        '$(LDFLAGS_CMDLINE)
+		@echo LDFLAGS_CONFIG:'         '$(LDFLAGS_CONFIG)
+		@echo LDFLAGS_SYSROOT:'        '$(LDFLAGS_SYSROOT)
+		@echo LDFLAGS_PATH:'           '$(LDFLAGS_PATH)
+		@echo LDFLAGS_STRICT:'         '$(LDFLAGS_STRICT)
+		@echo LDFLAGS_UTIL:'           '$(LDFLAGS_UTIL)
+		@echo LDFLAGS_LAST:'           '$(LDFLAGS_LAST)
+		@echo LDFLAGS_ONCE:'           '$(LDFLAGS_ONCE)
+		@echo
+
+.display-pe:
+		@echo PE_SUBSYSTEM:'           '$(PE_SUBSYSTEM)
+		@echo PE_IMAGE_BASE:'          '$(PE_IMAGE_BASE)
+		@echo PE_CONFIG_DEFS:'         '$(PE_CONFIG_DEFS)
+		@echo
+
+.display-elf:
+		@echo ELF_EH_FRAME:'           '$(ELF_EH_FRAME)
+		@echo ELF_HASH_STYLE:'         '$(ELF_HASH_STYLE)
+		@echo ELF_CONFIG_DEFS:'        '$(ELF_CONFIG_DEFS)
+		@echo
+
+.display-dirs:
+		@echo PREFIX:'                 '$(PREFIX)
+		@echo EXEC_PREFIX:'            '$(EXEC_PREFIX)
+		@echo BINDIR:'                 '$(BINDIR)
+		@echo SBINDIR:'                '$(SBINDIR)
+		@echo LIBDIR:'                 '$(LIBDIR)
+		@echo INCLUDEDIR:'             '$(INCLUDEDIR)
+		@echo OLDINCLUDEDIR:'          '$(OLDINCLUDEDIR)
+		@echo MANDIR:'                 '$(MANDIR)
+		@echo DOCDIR:'                 '$(DOCDIR)
+		@echo LIBEXECDIR:'             '$(LIBEXECDIR)
+		@echo
+
+.display-exdirs:
+		@echo SYSCONFDIR'              '$(SYSCONFDIR)
+		@echo SHAREDSTATEDIR'          '$(SHAREDSTATEDIR)
+		@echo LOCALSTATEDIR'           '$(LOCALSTATEDIR)
+		@echo RUNSTATEDIR'             '$(RUNSTATEDIR)
+		@echo DATAROOTDIR'             '$(DATAROOTDIR)
+		@echo DATADIR'                 '$(DATADIR)
+		@echo INFODIR'                 '$(INFODIR)
+		@echo LOCALEDIR'               '$(LOCALEDIR)
+		@echo HTMLDIR'                 '$(HTMLDIR)
+		@echo DVIDIR'                  '$(DVIDIR)
+		@echo PDFDIR'                  '$(PDFDIR)
+		@echo PSDIR'                   '$(PSDIR)
+
+.display-build:
+		@echo NATIVE_CC:'              '$(NATIVE_CC)
+		@echo NATIVE_CPP:'             '$(NATIVE_CPP)
+		@echo NATIVE_CXX:'             '$(NATIVE_CXX)
+
+		@echo NATIVE_HOST:'            '$(NATIVE_HOST)
+		@echo NATIVE_CFGHOST:'         '$(NATIVE_CFGHOST)
+		@echo NATIVE_CFLAGS:'          '$(NATIVE_CFLAGS)
+		@echo NATIVE_LDFLAGS:'         '$(NATIVE_LDFLAGS)
+		@echo
+		@echo NATIVE_OS:'              '$(NATIVE_OS)
+		@echo NATIVE_OS_BITS:'         '$(NATIVE_OS_BITS)
+		@echo NATIVE_OS_UNDERSCORE:'   '$(NATIVE_OS_UNDERSCORE)
+		@echo
+		@echo USER_CC:'                '$(USER_CC)
+		@echo USER_CPP:'               '$(USER_CPP)
+		@echo USER_CXX:'               '$(USER_CXX)
+		@echo
+
+.display-config:
+		@echo ALL_SHARED:'             '$(ALL_SHARED)
+		@echo ALL_STATIC:'             '$(ALL_STATIC)
+		@echo DISABLE_FRONTEND:'       '$(DISABLE_FRONTEND)
+		@echo DISABLE_SHARED:'         '$(DISABLE_SHARED)
+		@echo DISABLE_STATIC:'         '$(DISABLE_STATIC)
+		@echo
+		@echo USE_CUSTOM_CFGDEFS:'     '$(USE_CUSTOM_CFGDEFS)
+		@echo USE_CUSTOM_USRDEFS:'     '$(USE_CUSTOM_USRDEFS)
+
+.display-host:
+		@$(CC) $(CFLAGS) -dumpmachine
+
+.display-cc:
+		@echo $(CC)
+
+.display-cflags:
+		@echo $(CFLAGS)
+
+
+.PHONY:		package-app \
+		all install shared static app \
+		shared-objs shared-lib \
+		shared-soname shared-solink \
+		package-shared-soname package-shared-solink \
+		static-objs static-lib \
+		default-app shared-app static-app \
+		install-shared install-static \
+		install-soname install-solink \
+		package-install-soname package-install-solink \
+		install-headers install-app \
+		install-headers-default install-headers-custom \
+		clean distclean clean-implib version \
+		.display .conf \
+		.display-project .display-env .display-tools .display-flags \
+		.display-pe .display-elf .display-dirs .display-build \
+		implib implib-ver implib-soname implib-solink \
+		install-implib install-implib-ver \
+		install-implib-soname install-implib-solink
