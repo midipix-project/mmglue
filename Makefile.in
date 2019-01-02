@@ -83,10 +83,6 @@ PE_SUBSYSTEM 		= @pe_subsystem@
 PE_IMAGE_BASE 		= @pe_image_base@
 PE_CONFIG_DEFS  	= @pe_config_defs@
 
-ELF_EH_FRAME 		= @elf_eh_frame@
-ELF_HASH_STYLE 		= @elf_hash_style@
-ELF_CONFIG_DEFS 	= @elf_config_defs@
-
 NATIVE_HOST		= @native_host@
 NATIVE_CFGHOST		= @native_cfghost@
 NATIVE_CFLAGS		= @native_cflags@
@@ -286,7 +282,7 @@ clean:		clean-implib
 
 
 .display:	.display-project     .display-pkgconf     .display-env \
-		.display-tools .display-flags .display-pe .display-elf \
+		.display-tools .display-flags .display-pe              \
 		.display-dirs  .display-build .display-config
 
 .conf:		PAGER ?= less
@@ -382,12 +378,6 @@ clean:		clean-implib
 		@echo PE_CONFIG_DEFS:'         '$(PE_CONFIG_DEFS)
 		@echo
 
-.display-elf:
-		@echo ELF_EH_FRAME:'           '$(ELF_EH_FRAME)
-		@echo ELF_HASH_STYLE:'         '$(ELF_HASH_STYLE)
-		@echo ELF_CONFIG_DEFS:'        '$(ELF_CONFIG_DEFS)
-		@echo
-
 .display-dirs:
 		@echo PREFIX:'                 '$(PREFIX)
 		@echo EXEC_PREFIX:'            '$(EXEC_PREFIX)
@@ -469,7 +459,7 @@ clean:		clean-implib
 		clean distclean clean-implib version \
 		.display .conf \
 		.display-project .display-env .display-tools .display-flags \
-		.display-pe .display-elf .display-dirs .display-build \
+		.display-pe .display-dirs .display-build \
 		implib implib-ver implib-soname implib-solink \
 		install-implib install-implib-ver \
 		install-implib-soname install-implib-solink

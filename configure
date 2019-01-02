@@ -186,10 +186,6 @@ init_vars()
 	mb_pe_image_base=$PE_IMAGE_BASE
 	mb_pe_config_defs=$PE_CONFIG_DEFS
 
-	mb_elf_eh_frame=$ELF_EH_FRAME
-	mb_elf_hash_style=$ELF_HASH_STYLE
-	mb_elf_config_defs=$ELF_CONFIG_DEFS
-
 	# overrides
 	mb_user_cc=$CC
 	mb_user_cpp=$CPP
