@@ -905,7 +905,7 @@ ccenv_set_os_dso_patterns()
 
 ccenv_set_os_pe_switches()
 {
-	if [ "$ccenv_os" = 'PE' ] && [ -z "$ccenv_pe_subsystem" ]; then
+	if [ "$ccenv_cc_binfmt" = 'PE' ] && [ -z "$ccenv_pe_subsystem" ]; then
 		case "$ccenv_os" in
 			midipix | mingw )
 				ccenv_pe_subsystem='windows'
