@@ -63,3 +63,7 @@ mb_default_ldflags_strict=
 mb_default_ldflags_util=
 mb_default_ldflags_last=
 mb_default_ldflags_once=
+
+# native
+mb_default_native_cflags="-std=c99 -D_XOPEN_SOURCE=700"
+mb_default_native_ldflags=
