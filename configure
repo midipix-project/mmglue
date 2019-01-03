@@ -320,6 +320,10 @@ common_defaults()
 	[ -z "$mb_ldflags_last" ]	&& mb_ldflags_last=$mb_default_ldflags_last
 	[ -z "$mb_ldflags_once" ]	&& mb_ldflags_once=$mb_default_ldflags_once
 
+	# native switches
+	[ -z "$mb_native_cflags" ]	&& mb_native_cflags=$mb_default_native_cflags
+	[ -z "$mb_native_ldflags" ]	&& mb_native_ldflags=$mb_default_native_ldflags
+
 	# config
 	[ -z "$mb_all_static" ]		&& mb_all_static='no'
 	[ -z "$mb_all_shared" ]		&& mb_all_shared='no'
