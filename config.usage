@@ -147,7 +147,6 @@ supported variables:
 
 	PE_SUBSYSTEM
 	PE_IMAGE_BASE
-	PE_CONFIG_DEFS
 
 	NATIVE_CC
 	NATIVE_CPP

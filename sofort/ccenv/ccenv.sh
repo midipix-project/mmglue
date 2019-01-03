@@ -903,10 +903,29 @@ ccenv_set_os_dso_patterns()
 	esac
 }
 
+ccenv_set_os_pe_switches()
+{
+	if [ "$ccenv_os" = 'PE' ] && [ -z "$ccenv_pe_subsystem" ]; then
+		case "$ccenv_os" in
+			midipix | mingw )
+				ccenv_pe_subsystem='windows'
+				;;
+			* )
+				ccenv_pe_subsystem='console'
+				;;
+		esac
+	fi
+}
+
 ccenv_output_defs()
 {
 	ccenv_in="$mb_project_dir/sofort/ccenv/ccenv.in"
 	ccenv_mk="$mb_pwd/ccenv/$ccenv_cfgtype.mk"
+
+	if [ "$ccenv_cc_binfmt" = 'PE' ]; then
+		ccenv_pe="$mb_project_dir/sofort/ccenv/pedefs.in"
+		ccenv_in="$ccenv_in $ccenv_pe"
+	fi
 
 	if [ $ccenv_cfgtype = 'native' ]; then
 
@@ -919,7 +938,7 @@ ccenv_output_defs()
 				-e 's/NATIVE_#/#/g' \
 				-e 's/       =/=/g'  \
 				-e 's/       +=/+=/g' \
-			"$ccenv_in" > "$ccenv_tmp"
+			$ccenv_in > "$ccenv_tmp"
 
 		ccenv_in="$ccenv_tmp"
 	fi
@@ -935,7 +954,7 @@ ccenv_output_defs()
 				"$__var" "'/g' ";              \
 		done)"
 
-	eval sed $ccenv_sed_substs "$ccenv_in" \
+	eval sed $ccenv_sed_substs $ccenv_in   \
 			| sed -e 's/[ \t]*$//g' \
 		> "$ccenv_mk"
 
@@ -1015,12 +1034,18 @@ ccenv_common_init()
 		ccenv_cc="$mb_user_cc"
 		ccenv_cpp="$mb_user_cpp"
 		ccenv_cxx="$mb_user_cxx"
+
+		ccenv_pe_subsystem="$mb_pe_subsystem"
+		ccenv_pe_image_base="$mb_pe_image_base"
 	else
 		ccenv_tflags=
 		ccenv_cflags="$mb_native_cflags"
 		ccenv_cc="$mb_native_cc"
 		ccenv_cpp="$mb_native_cpp"
 		ccenv_cxx="$mb_native_cxx"
+
+		ccenv_pe_subsystem="$mb_native_pe_subsystem"
+		ccenv_pe_image_base="$mb_native_pe_image_base"
 	fi
 }
 
@@ -1048,6 +1073,7 @@ ccenv_set_toolchain_variables()
 	ccenv_set_os_dso_exrules
 	ccenv_set_os_dso_linkage
 	ccenv_set_os_dso_patterns
+	ccenv_set_os_pe_switches
 
 	ccenv_output_defs
 	ccenv_clean_up

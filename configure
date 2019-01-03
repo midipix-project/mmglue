@@ -184,7 +184,6 @@ init_vars()
 
 	mb_pe_subsystem=$PE_SUBSYSTEM
 	mb_pe_image_base=$PE_IMAGE_BASE
-	mb_pe_config_defs=$PE_CONFIG_DEFS
 
 	# overrides
 	mb_user_cc=$CC
@@ -199,6 +198,9 @@ init_vars()
 	mb_native_cfghost=$NATIVE_CFGHOST
 	mb_native_cflags=$NATIVE_CFLAGS
 	mb_native_ldflags=$NATIVE_LDFLAGS
+
+	mb_native_pe_subsystem=$NATIVE_PE_SUBSYSTEM
+	mb_native_pe_image_base=$NATIVE_PE_IMAGE_BASE
 }
 
 

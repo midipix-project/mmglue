@@ -79,10 +79,6 @@ USER_CC                 = @user_cc@
 USER_CPP                = @user_cpp@
 USER_CXX                = @user_cxx@
 
-PE_SUBSYSTEM 		= @pe_subsystem@
-PE_IMAGE_BASE 		= @pe_image_base@
-PE_CONFIG_DEFS  	= @pe_config_defs@
-
 NATIVE_HOST		= @native_host@
 NATIVE_CFGHOST		= @native_cfghost@
 NATIVE_CFLAGS		= @native_cflags@
@@ -281,9 +277,10 @@ clean:		clean-implib
 		rm -f build/$(PACKAGE).pc
 
 
-.display:	.display-project     .display-pkgconf     .display-env \
-		.display-tools .display-flags .display-pe              \
-		.display-dirs  .display-build .display-config
+.display:	.display-project .display-pkgconf .display-env \
+		.display-tools   .display-flags                \
+		.display-dirs    .display-build                \
+		.display-config
 
 .conf:		PAGER ?= less
 .conf:
@@ -375,7 +372,6 @@ clean:		clean-implib
 .display-pe:
 		@echo PE_SUBSYSTEM:'           '$(PE_SUBSYSTEM)
 		@echo PE_IMAGE_BASE:'          '$(PE_IMAGE_BASE)
-		@echo PE_CONFIG_DEFS:'         '$(PE_CONFIG_DEFS)
 		@echo
 
 .display-dirs:
