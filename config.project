@@ -12,7 +12,7 @@ mb_disable_static=yes
 mb_disable_shared=yes
 
 # custom config step
-mb_use_custom_cfgdefs=no
+mb_use_custom_cfgdefs=yes
 mb_use_custom_cfgtest=no
 
 # pkgconfig
