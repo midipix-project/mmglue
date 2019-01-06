@@ -71,9 +71,9 @@ cfgdefs_set_libc_options()
 	fi
 
 	if [ -f $arch_dir/arch/$mb_arch/bits/syscall.h.in ]; then
-		libc_syscall_arch='syscall-gen'
+		libc_syscall_arch='syscall-gen.tag'
 	else
-		libc_syscall_arch='syscall-copy'
+		libc_syscall_arch='syscall-copy.tag'
 	fi
 }
 

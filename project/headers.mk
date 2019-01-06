@@ -23,17 +23,23 @@ $(ALLTYPES_H):	$(ALLTYPES_DEPS) build/include/bits/
 			$(PORT_DIR)/arch/$(ARCH)/bits/alltypes.h.in \
 			$(SOURCE_DIR)/include/alltypes.h.in > $@
 
-syscall-copy:	| build/include/bits/
-syscall-copy:	$(PORT_DIR)/arch/$(ARCH)/bits/syscall.h
-		cp $< $(SYSCALL_H)
+build/syscall_h.tag:
+		touch $@
+		touch $(SYSCALL_H)
 
-syscall-gen:	| build/include/bits/
-syscall-gen:	$(PORT_DIR)/arch/$(ARCH)/bits/syscall.h.in
+build/syscall-copy.tag: $(PORT_DIR)/arch/$(ARCH)/bits/syscall.h
+		mkdir -p build/include/bits/
+		cp $< $(SYSCALL_H)
+		touch $@
+
+build/syscall-gen.tag: $(PORT_DIR)/arch/$(ARCH)/bits/syscall.h.in
+		mkdir -p build/include/bits/
 		cp $< $(SYSCALL_H).tmp
 		sed -n -e 's/__NR_/SYS_/p' < $< >> $(SYSCALL_H).tmp
 		mv $(SYSCALL_H).tmp $(SYSCALL_H)
+		touch $@
 
-$(SYSCALL_H):	syscall-arch
+$(SYSCALL_H):	build/syscall_h.tag
 
 
 # arch headers
@@ -83,9 +89,9 @@ $(DESTDIR)$(INCLUDEDIR)/%.h: $(SOURCE_DIR)/include/%.h
 			chmod 0644 $@.tmp
 			mv $@.tmp $@
 
-install-arch-headers:	build/headers.tag $(src_bits_h) $(dst_bits_h)
+install-arch-headers:	headers.tag $(src_bits_h) $(dst_bits_h)
 
-install-libc-headers:	$(dst_header_dirs) $(dst_c_headers)
+install-libc-headers:	headers.tag $(dst_header_dirs) $(dst_c_headers)
 
 install-headers:	install-arch-headers install-libc-headers
 
@@ -96,6 +102,9 @@ build/headers.tag:	$(ARCH_HEADERS)
 			cp $(ARCH_HEADERS) build/include/bits/
 			touch $@
 
+headers.tag:		build/headers.tag $(ARCH_GEN_H)
+			touch $@
+
 clean-headers:
 		rm -f $(src_bits_h)
 		rm -f $(SYSCALL_H).tmp
@@ -103,6 +112,10 @@ clean-headers:
 		rmdir build/include/bits 2>/dev/null || true
 		rmdir build/include      2>/dev/null || true
 		rm -f build/headers.tag
+		rm -f build/syscall-copy.tag
+		rm -f build/syscall-gen.tag
+		rm -f build/syscall_h.tag
+		rm -f headers.tag
 
 clean:		clean-headers
 

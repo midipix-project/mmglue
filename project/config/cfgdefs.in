@@ -8,5 +8,5 @@ LIBC_MICRO               = @libc_micro@
 PORT_DIR                 = @port_dir@
 
 # syscall.h
-syscall-arch:            @libc_syscall_arch@
+build/syscall_h.tag:     build/@libc_syscall_arch@
 
