@@ -1,7 +1,7 @@
 # project
 mb_package=c
 mb_require_out_of_tree=no
-mb_custom_install_headers=no
+mb_custom_install_headers=yes
 mb_avoid_version=no
 
 # config
@@ -34,13 +34,9 @@ mb_default_cflags_common="-std=c99 -pipe -D_XOPEN_SOURCE=700"
 mb_default_cflags_common="$mb_default_cflags_common -ffreestanding -nostdinc"
 mb_default_cflags_common="$mb_default_cflags_common -fomit-frame-pointer"
 mb_default_cflags_common="$mb_default_cflags_common -Ibuild/include"
-mb_default_cflags_common="$mb_default_cflags_common -I\$(SOURCE_DIR)/arch/\$(ARCH)"
-mb_default_cflags_common="$mb_default_cflags_common -I\$(PROJECT_DIR)/arch/\$(ARCH)"
-mb_default_cflags_common="$mb_default_cflags_common -I\$(SOURCE_DIR)/arch/\$(ARCH)/generic"
-mb_default_cflags_common="$mb_default_cflags_common -Iobj/src/internal"
+mb_default_cflags_common="$mb_default_cflags_common -I\$(PORT_DIR)/arch/\$(ARCH)"
 mb_default_cflags_common="$mb_default_cflags_common -I\$(SOURCE_DIR)/src/include"
 mb_default_cflags_common="$mb_default_cflags_common -I\$(SOURCE_DIR)/src/internal"
-mb_default_cflags_common="$mb_default_cflags_common -Iobj/include"
 mb_default_cflags_common="$mb_default_cflags_common -I\$(SOURCE_DIR)/include"
 mb_default_cflags_common="$mb_default_cflags_common -Ibuild"
 
