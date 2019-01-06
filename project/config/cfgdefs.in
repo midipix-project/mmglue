@@ -4,3 +4,9 @@ LIBC_MAJOR               = @libc_major@
 LIBC_MINOR               = @libc_minor@
 LIBC_MICRO               = @libc_micro@
 
+# port source directory
+PORT_DIR                 = @port_dir@
+
+# syscall.h
+syscall-arch:            @libc_syscall_arch@
+

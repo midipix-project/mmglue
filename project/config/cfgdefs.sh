@@ -60,13 +60,33 @@ cfgdefs_detect_libc_version()
 }
 
 
+cfgdefs_set_libc_options()
+{
+	if [ -d $mb_project_dir/arch/$mb_arch ]; then
+		port_dir='$(PROJECT_DIR)'
+		arch_dir=$mb_project_dir
+	else
+		port_dir='$(SOURCE_DIR)'
+		arch_dir=$mb_source_dir
+	fi
+
+	if [ -f $arch_dir/arch/$mb_arch/bits/syscall.h.in ]; then
+		libc_syscall_arch='syscall-gen'
+	else
+		libc_syscall_arch='syscall-copy'
+	fi
+}
+
+
 cfgdefs_output_custom_defs()
 {
 	sed \
+			-e 's/@port_dir@/'"$port_dir"'/g'       \
 			-e 's/@libc_ver@/'"$libc_ver"'/g'       \
 			-e 's/@libc_major@/'"$libc_major"'/g'   \
 			-e 's/@libc_minor@/'"$libc_minor"'/g'   \
 			-e 's/@libc_micro@/'"$libc_micro"'/g'   \
+			-e 's/@libc_syscall_arch@/'"$libc_syscall_arch"'/g' \
 		"$mb_project_dir/project/config/cfgdefs.in"         \
 	| sed -e 's/[ \t]*$//g'                                     \
 			>> "$mb_pwd/cfgdefs.mk"
@@ -78,6 +98,9 @@ cfgdefs_set_arch
 
 # libc version info
 cfgdefs_detect_libc_version
+
+# libc (variant-specific) options
+cfgdefs_set_libc_options
 
 # cfgdefs.in --> cfgdefs.mk
 cfgdefs_output_custom_defs
