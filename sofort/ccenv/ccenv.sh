@@ -221,7 +221,7 @@ ccenv_set_tool_variants()
 
 	# as
 	if [ -n "$ccenv_cc" ]; then
-		ccenv_as='$('"$ccenv_makevar_prefix"'CC) -x assembler'
+		ccenv_as='$('"$ccenv_makevar_prefix"'CC) -c -x assembler'
 	elif [ -n "$mb_agnostic" ]; then
 		ccenv_as='$('"$ccenv_makevar_prefix"'AS_ASM)'
 	elif [ "$mb_zealous" = 'gcc' ]; then
