@@ -1,3 +1,9 @@
+# build/version.h
+build/version.h:$(SOURCE_DIR)/VERSION $(SOURCE_DIR)/.git/index
+		mkdir -p build
+		printf '#define VERSION "%s"\n' \
+		       "$$(cd $(SOURCE_DIR); $(SHELL) ./tools/version.sh)" > $@
+
 # alltypes.h, syscall.h
 build/include/bits/:
 		mkdir -p $@
@@ -93,6 +99,7 @@ build/headers.tag:	$(ARCH_HEADERS)
 clean-headers:
 		rm -f $(src_bits_h)
 		rm -f $(SYSCALL_H).tmp
+		rm -f build/version.h
 		rmdir build/include/bits 2>/dev/null || true
 		rmdir build/include      2>/dev/null || true
 		rm -f build/headers.tag
