@@ -1,0 +1,6 @@
+# libc
+LIBC_VER                 = @libc_ver@
+LIBC_MAJOR               = @libc_major@
+LIBC_MINOR               = @libc_minor@
+LIBC_MICRO               = @libc_micro@
+
