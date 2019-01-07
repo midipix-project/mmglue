@@ -84,7 +84,7 @@ src/%.o:$(PORT_DIR)/src/%.c
 	$(CC) -c -o $@ $< $(CFLAGS_STATIC)
 
 src/%.o:$(PORT_DIR)/src/%.s
-	$(AS) -o $@ $<
+	$(AS) -o $@ $< $(CFLAGS_ASM)
 
 src/%.o:$(PORT_DIR)/src/%.S
 	$(CC) -c -o $@ $< $(CFLAGS_STATIC)
@@ -93,7 +93,7 @@ src/%.lo:$(PORT_DIR)/src/%.c
 	$(CC) -c -o $@ $< $(CFLAGS_SHARED)
 
 src/%.lo:$(PORT_DIR)/src/%.s
-	$(AS) -o $@ $<
+	$(AS) -o $@ $< $(CFLAGS_ASM)
 
 src/%.lo:$(PORT_DIR)/src/%.S
 	$(CC) -c -o $@ $< $(CFLAGS_SHARED)
@@ -114,7 +114,7 @@ crt/%.o:$(PORT_DIR)/crt/%.c
 	$(CC) -c -o $@ $< $(CFLAGS_STATIC)
 
 crt/%.o:$(PORT_DIR)/crt/%.s
-	$(AS) -o $@ $<
+	$(AS) -o $@ $< $(CFLAGS_ASM)
 
 crt/%.o:$(PORT_DIR)/crt/%.S
 	$(CC) -c -o $@ $< $(CFLAGS_STATIC)
@@ -147,7 +147,7 @@ ldso/%.lo:$(PORT_DIR)/ldso/%.c
 	$(CC) -c -o $@ $< $(CFLAGS_SHARED)
 
 ldso/%.lo:$(PORT_DIR)/ldso/%.s
-	$(AS) -o $@ $<
+	$(AS) -o $@ $< $(CFLAGS_ASM)
 
 ldso/%.lo:$(PORT_DIR)/ldso/%.S
 	$(CC) -c -o $@ $< $(CFLAGS_SHARED)

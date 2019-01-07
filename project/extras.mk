@@ -25,6 +25,12 @@ CFLAGS_COMMON    += -fno-asynchronous-unwind-tables
 CFLAGS_COMMON    += -frounding-math
 CFLAGS_COMMON    += -fexcess-precision=standard
 
+# assembler cflags
+ifeq ($(CC_BINFMT),ELF)
+CFLAGS_ASM       += -Wa,--noexecstack
+CFLAGS_CONFIG    += $(CFLAGS_ASM)
+endif
+
 # memory modules
 libc_mem_modules  = \
 	./src/string/memcpy.c \
