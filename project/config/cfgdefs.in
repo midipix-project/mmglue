@@ -7,6 +7,9 @@ LIBC_MICRO               = @libc_micro@
 # port source directory
 PORT_DIR                 = @port_dir@
 
+# source tree (atomic.h vs. atomic_arch.h)
+CFLAGS_CONFIG           += @libc_source_tree@
+
 # syscall.h
 build/syscall_h.tag:     build/@libc_syscall_arch@
 

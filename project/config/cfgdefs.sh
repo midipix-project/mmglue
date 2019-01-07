@@ -75,6 +75,12 @@ cfgdefs_set_libc_options()
 	else
 		libc_syscall_arch='syscall-copy.tag'
 	fi
+
+	if [ -f $mb_source_dir/arch/x86_64/atomic_arch.h ]; then
+		libc_source_tree='-D__LIBC_MODERN_SOURCE_TREE'
+	else
+		libc_source_tree='-D__LIBC_LEGACY_SOURCE_TREE'
+	fi
 }
 
 
@@ -86,6 +92,7 @@ cfgdefs_output_custom_defs()
 			-e 's/@libc_major@/'"$libc_major"'/g'   \
 			-e 's/@libc_minor@/'"$libc_minor"'/g'   \
 			-e 's/@libc_micro@/'"$libc_micro"'/g'   \
+			-e 's/@libc_source_tree@/'"$libc_source_tree"'/g'  \
 			-e 's/@libc_syscall_arch@/'"$libc_syscall_arch"'/g' \
 		"$mb_project_dir/project/config/cfgdefs.in"         \
 	| sed -e 's/[ \t]*$//g'                                     \
