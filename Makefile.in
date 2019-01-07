@@ -93,6 +93,8 @@ DISABLE_STATIC          = @disable_static@
 USE_CUSTOM_CFGDEFS      = @use_custom_cfgdefs@
 USE_CUSTOM_USRDEFS      = @use_custom_usrdefs@
 
+.SUFFIXES:
+
 all:
 install:
 shared:
