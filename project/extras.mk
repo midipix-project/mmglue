@@ -24,3 +24,16 @@ CFLAGS_COMMON    += -fno-unwind-tables
 CFLAGS_COMMON    += -fno-asynchronous-unwind-tables
 CFLAGS_COMMON    += -frounding-math
 CFLAGS_COMMON    += -fexcess-precision=standard
+
+# memory modules
+libc_mem_modules  = \
+	./src/string/memcpy.c \
+	./src/string/memmove.c \
+	./src/string/memcmp.c   \
+	./src/string/memset.c
+
+libc_mem_objs     = $(libc_mem_modules:%.c=%.o)
+libc_mem_lobjs    = $(libc_mem_modules:%.c=%.lo)
+
+$(libc_mem_objs):   CFLAGS_CONFIG += -fno-tree-loop-distribute-patterns
+$(libc_mem_lobjs):  CFLAGS_CONFIG += -fno-tree-loop-distribute-patterns
