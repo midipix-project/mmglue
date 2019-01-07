@@ -8,8 +8,8 @@ mb_avoid_version=yes
 mb_all_static=
 mb_all_shared=
 mb_disable_frontend=yes
-mb_disable_static=yes
-mb_disable_shared=yes
+mb_disable_static=
+mb_disable_shared=
 
 # custom config step
 mb_use_custom_cfgdefs=yes
