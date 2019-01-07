@@ -15,9 +15,10 @@ ARCH_GEN_H      = $(ALLTYPES_H) $(SYSCALL_H)
 ALLTYPES_DEPS   = \
 		$(PORT_DIR)/arch/$(ARCH)/bits/alltypes.h.in \
 		$(SOURCE_DIR)/include/alltypes.h.in \
-		$(SOURCE_DIR)/tools/mkalltypes.sed
+		$(SOURCE_DIR)/tools/mkalltypes.sed \
+		| build/include/bits/
 
-$(ALLTYPES_H):	$(ALLTYPES_DEPS) build/include/bits/
+$(ALLTYPES_H):	$(ALLTYPES_DEPS)
 		sed -f $(SOURCE_DIR)/tools/mkalltypes.sed \
 			$(PORT_DIR)/arch/$(ARCH)/bits/alltypes.h.in \
 			$(SOURCE_DIR)/include/alltypes.h.in > $@
@@ -26,13 +27,13 @@ build/syscall_h.tag:
 		touch $@
 		touch $(SYSCALL_H)
 
+build/syscall-copy.tag: | build/include/bits/
 build/syscall-copy.tag: $(PORT_DIR)/arch/$(ARCH)/bits/syscall.h
-		mkdir -p build/include/bits/
 		cp $< $(SYSCALL_H)
 		touch $@
 
+build/syscall-gen.tag: | build/include/bits/
 build/syscall-gen.tag: $(PORT_DIR)/arch/$(ARCH)/bits/syscall.h.in
-		mkdir -p build/include/bits/
 		cp $< $(SYSCALL_H).tmp
 		sed -n -e 's/__NR_/SYS_/p' < $< >> $(SYSCALL_H).tmp
 		mv $(SYSCALL_H).tmp $(SYSCALL_H)
