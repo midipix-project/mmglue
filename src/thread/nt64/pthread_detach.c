@@ -1,4 +1,4 @@
-#include "../pthread_detach.c"
+#include "../thread/pthread_detach.c"
 
 int __pthread_detach_impl(pthread_t t)
 {
