@@ -2,7 +2,7 @@
 mb_package=c
 mb_require_out_of_tree=no
 mb_custom_install_headers=yes
-mb_avoid_version=no
+mb_avoid_version=yes
 
 # config
 mb_all_static=
