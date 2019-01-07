@@ -11,8 +11,8 @@
 #define	MAP_PRIVATE    0x02
 #define	MAP_FIXED      0x10
 
+#define MAP_FILE       0
 #define MAP_TYPE       0x0f
-#define MAP_FILE       0x00
 #define MAP_ANON       0x20
 #define MAP_ANONYMOUS  MAP_ANON
 #define MAP_32BIT      0x40
@@ -30,7 +30,7 @@
 #define POSIX_MADV_RANDOM       1
 #define POSIX_MADV_SEQUENTIAL   2
 #define POSIX_MADV_WILLNEED     3
-#define POSIX_MADV_DONTNEED     0
+#define POSIX_MADV_DONTNEED     4
 
 #define MS_ASYNC        1
 #define MS_INVALIDATE   2
