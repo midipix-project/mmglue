@@ -12,10 +12,13 @@ LDFLAGS_COMMON   += -Wl,--no-undefined
 LDFLAGS_COMMON   += -Wl,--exclude-libs=ALL
 
 LDFLAGS_COMMON   += -Wl,-e              -Wl,_dlstart
-LDFLAGS_COMMON   += -Wl,--hash-style    -Wl,both
 LDFLAGS_COMMON   += -Wl,--sort-section  -Wl,alignment
 
 SHARED_LIB_DEPS  += -lgcc -lgcc_eh
+
+ifeq ($(CC_BINFMT),ELF)
+LDFLAGS_COMMON   += -Wl,--hash-style    -Wl,both
+endif
 
 # common cflags
 CFLAGS_COMMON    += -fdata-sections
