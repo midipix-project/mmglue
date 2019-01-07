@@ -16,3 +16,11 @@ LDFLAGS_COMMON   += -Wl,--hash-style    -Wl,both
 LDFLAGS_COMMON   += -Wl,--sort-section  -Wl,alignment
 
 SHARED_LIB_DEPS  += -lgcc -lgcc_eh
+
+# common cflags
+CFLAGS_COMMON    += -fdata-sections
+CFLAGS_COMMON    += -ffunction-sections
+CFLAGS_COMMON    += -fno-unwind-tables
+CFLAGS_COMMON    += -fno-asynchronous-unwind-tables
+CFLAGS_COMMON    += -frounding-math
+CFLAGS_COMMON    += -fexcess-precision=standard
