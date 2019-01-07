@@ -1,6 +1,5 @@
 # build/version.h
-build/version.h:$(SOURCE_DIR)/VERSION $(SOURCE_DIR)/.git/index
-		mkdir -p build
+build/version.h:$(wildcard $(SOURCE_DIR)/VERSION $(SOURCE_DIR)/.git/index) dirs.tag
 		printf '#define VERSION "%s"\n' \
 		       "$$(cd $(SOURCE_DIR); $(SHELL) ./tools/version.sh)" > $@
 
