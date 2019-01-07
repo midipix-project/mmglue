@@ -2,6 +2,7 @@
 
 #define	TP_ADJ(p)	(p)
 #define	CANCEL_REG_IP	16
+#define MC_PC           uc_eip
 
 extern uintptr_t __teb_sys_idx;
 extern uintptr_t __teb_libc_idx;
