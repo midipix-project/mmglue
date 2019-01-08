@@ -2,6 +2,8 @@ ifeq ($(OS),midipix)
 
 src/env/__libc_start_main.lo: CFLAGS_SHARED += -USHARED
 
+SHARED_OBJS    += crt/$(ARCH)/crtn.o
+
 LDFLAGS_CONFIG += -Wl,--exclude-symbols=_dlstart
 LDFLAGS_CONFIG += -Wl,--exclude-symbols=__syscall_vtbl
 LDFLAGS_CONFIG += -Wl,--exclude-symbols=__ldso_vtbl
