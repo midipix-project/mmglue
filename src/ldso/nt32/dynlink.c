@@ -157,3 +157,6 @@ void *__copy_tls(unsigned char * mem)
 
 	return td;
 }
+
+weak_alias(__dlsym,dlsym);
+weak_alias(__dlinfo,dlinfo);
