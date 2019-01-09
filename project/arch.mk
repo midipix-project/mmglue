@@ -18,5 +18,6 @@ LDFLAGS_CONFIG += -Wl,--exclude-symbols=_IO_getc
 LDFLAGS_CONFIG += -Wl,--exclude-symbols=_IO_getc_unlocked
 LDFLAGS_CONFIG += -Wl,--exclude-symbols=_IO_putc
 LDFLAGS_CONFIG += -Wl,--exclude-symbols=_IO_putc_unlocked
+LDFLAGS_CONFIG += -Wl,--exclude-symbols=___errno_location
 
 endif
