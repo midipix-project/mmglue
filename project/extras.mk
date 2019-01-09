@@ -45,3 +45,23 @@ libc_mem_lobjs    = $(libc_mem_modules:%.c=%.lo)
 
 $(libc_mem_objs):   CFLAGS_CONFIG += -fno-tree-loop-distribute-patterns
 $(libc_mem_lobjs):  CFLAGS_CONFIG += -fno-tree-loop-distribute-patterns
+
+# target libdir
+$(DESTDIR)$(LIBDIR):
+	mkdir -p $@
+
+# empty libs
+LIBC_EMPTY_LIBS_NAMES    = m rt dl crypt util pthread xnet resolv
+LIBC_EMPTY_LIBS          = $(LIBC_EMPTY_LIBS_NAMES:%=lib/lib%.a)
+LIBC_EMPTY_LIBS_TARGET   = $(LIBC_EMPTY_LIBS_NAMES:%=$(DESTDIR)$(LIBDIR)/lib%.a)
+
+shared-lib:                $(LIBC_EMPTY_LIBS)
+static-lib:                $(LIBC_EMPTY_LIBS)
+
+$(DESTDIR)$(LIBDIR)/%.a: lib/%.a $(DESTDIR)$(LIBDIR)
+	cp $< $@.tmp
+	chmod 0644 $@.tmp
+	mv $@.tmp $@
+
+install-shared:	$(LIBC_EMPTY_LIBS_TARGET)
+install-static:	$(LIBC_EMPTY_LIBS_TARGET)
