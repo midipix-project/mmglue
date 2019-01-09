@@ -4,11 +4,17 @@ LIBC_MAJOR               = @libc_major@
 LIBC_MINOR               = @libc_minor@
 LIBC_MICRO               = @libc_micro@
 
+# build mode
+LIBC_EXCL_FILES          = @libc_excl_files@
+
 # port source directory
 PORT_DIR                 = @port_dir@
 
 # source tree (atomic.h vs. atomic_arch.h)
 CFLAGS_CONFIG           += @libc_source_tree@
+
+# libgcc, libgcc_eh
+LIBC_DEPS               += @libc_deps@
 
 # syscall.h
 build/syscall_h.tag:     build/@libc_syscall_arch@

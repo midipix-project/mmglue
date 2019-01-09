@@ -48,7 +48,7 @@ libc_ldso_files_c   = $(filter %.c, $(libc_ldso_files))
 libc_ldso_files_s   = $(filter %.s, $(libc_ldso_files))
 libc_ldso_files_S   = $(filter %.S, $(libc_ldso_files))
 
-libc_excl_files     = $(libc_crt_files) $(libc_ldso_files)
+libc_excl_files     = $(libc_crt_files) $(libc_ldso_files) $(LIBC_EXCL_FILES)
 libc_core_files     = $(filter-out $(libc_excl_files), $(libc_all_files))
 
 libc_core_files_c   = $(filter %.c, $(libc_core_files))

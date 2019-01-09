@@ -3,6 +3,7 @@
 
 # libc.so
 SHARED_OBJS      += $(LDSO_OBJS)
+SHARED_LIB_DEPS  += $(LIBC_DEPS)
 
 LDFLAGS_COMMON   += -nostdlib
 LDFLAGS_COMMON   += -Wl,-Bsymbolic-functions
@@ -13,8 +14,6 @@ LDFLAGS_COMMON   += -Wl,--exclude-libs=ALL
 
 LDFLAGS_COMMON   += -Wl,-e              -Wl,_dlstart
 LDFLAGS_COMMON   += -Wl,--sort-section  -Wl,alignment
-
-SHARED_LIB_DEPS  += -lgcc -lgcc_eh
 
 ifeq ($(CC_BINFMT),ELF)
 LDFLAGS_COMMON   += -Wl,--hash-style    -Wl,both

@@ -1,5 +1,8 @@
 for arg ; do
 	case "$arg" in
+		--no-complex )
+			libc_no_complex=yes
+			;;
 		*)
 			error_msg ${arg#}: "unsupported config argument."
 			exit 2
@@ -81,6 +84,14 @@ cfgdefs_set_libc_options()
 	else
 		libc_source_tree='-D__LIBC_LEGACY_SOURCE_TREE'
 	fi
+
+	if [ _${libc_no_complex:-} = _yes ]; then
+		libc_deps=
+		libc_excl_files='$(filter ./src/complex/%, $(libc_all_files))'
+	else
+		libc_deps='-lgcc -lgcc_eh'
+		libc_excl_files=
+	fi
 }
 
 
@@ -92,6 +103,8 @@ cfgdefs_output_custom_defs()
 			-e 's/@libc_major@/'"$libc_major"'/g'   \
 			-e 's/@libc_minor@/'"$libc_minor"'/g'   \
 			-e 's/@libc_micro@/'"$libc_micro"'/g'   \
+			-e 's/@libc_deps@/'"$libc_deps"'/g'     \
+			-e 's^@libc_excl_files@^'"$libc_excl_files"'^g'   \
 			-e 's/@libc_source_tree@/'"$libc_source_tree"'/g'  \
 			-e 's/@libc_syscall_arch@/'"$libc_syscall_arch"'/g' \
 		"$mb_project_dir/project/config/cfgdefs.in"         \
