@@ -65,3 +65,20 @@ $(DESTDIR)$(LIBDIR)/%.a: lib/%.a $(DESTDIR)$(LIBDIR)
 
 install-shared:	$(LIBC_EMPTY_LIBS_TARGET)
 install-static:	$(LIBC_EMPTY_LIBS_TARGET)
+
+# crt objects
+CRT_OBJS_REFS   = $(subst $(ARCH)/,,$(CRT_OBJS))
+CRT_OBJS_TARGET = $(subst ./crt/,$(DESTDIR)$(LIBDIR)/,$(CRT_OBJS_REFS))
+
+$(DESTDIR)$(LIBDIR)/%.o: crt/$(ARCH)/%.o $(DESTDIR)$(LIBDIR)
+	cp $< $@.tmp
+	chmod 0644 $@.tmp
+	mv $@.tmp $@
+
+$(DESTDIR)$(LIBDIR)/%.o: crt/%.o $(DESTDIR)$(LIBDIR)
+	cp $< $@.tmp
+	chmod 0644 $@.tmp
+	mv $@.tmp $@
+
+install-shared:	$(CRT_OBJS_TARGET)
+install-static:	$(CRT_OBJS_TARGET)
