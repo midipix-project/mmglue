@@ -51,12 +51,12 @@ port_substs_h   = $(subst $(PORT_DIR)/arch/$(ARCH)/, \
 
 ARCH_HEADERS    = $(port_bits_h) $(filter-out $(port_substs_h), $(libc_bits_h))
 
-src_bits_h      = $(ARCH_GEN_H)
-src_bits_h     += $(subst $(SOURCE_DIR)/arch/generic/,build/include/,\
+src_bits_h      = $(subst $(SOURCE_DIR)/arch/generic/,build/include/,\
 		    $(subst $(PORT_DIR)/arch/$(ARCH)/,build/include/, \
 		      $(ARCH_HEADERS)))
 
-dst_bits_h      = $(src_bits_h:build/include/%=$(DESTDIR)$(INCLUDEDIR)/%)
+dst_bits_h      = $(ARCH_GEN_H:build/include/%=$(DESTDIR)$(INCLUDEDIR)/%)
+dst_bits_h     += $(src_bits_h:build/include/%=$(DESTDIR)$(INCLUDEDIR)/%)
 
 
 # libc headers
@@ -73,7 +73,7 @@ dst_c_headers   = $(subst $(SOURCE_DIR)/include/,  \
 $(dst_header_dirs):
 			mkdir -p $@
 
-build/include/bits/%.h:	build/headers.tag
+$(src_bits_h):		build/headers.tag
 
 $(DESTDIR)$(INCLUDEDIR)/bits/:
 			mkdir -p $@
@@ -89,7 +89,7 @@ $(DESTDIR)$(INCLUDEDIR)/%.h: $(SOURCE_DIR)/include/%.h
 			chmod 0644 $@.tmp
 			mv $@.tmp $@
 
-install-arch-headers:	headers.tag $(src_bits_h) $(dst_bits_h)
+install-arch-headers:	headers.tag $(ARCH_GEN_H) $(src_bits_h) $(dst_bits_h)
 
 install-libc-headers:	headers.tag $(dst_header_dirs) $(dst_c_headers)
 
@@ -106,6 +106,7 @@ headers.tag:		build/headers.tag $(ARCH_GEN_H)
 			touch $@
 
 clean-headers:
+		rm -f $(ARCH_GEN_H)
 		rm -f $(src_bits_h)
 		rm -f $(SYSCALL_H).tmp
 		rm -f build/version.h
