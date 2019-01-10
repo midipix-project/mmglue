@@ -159,4 +159,5 @@ void *__copy_tls(unsigned char * mem)
 }
 
 weak_alias(__dlsym,dlsym);
+weak_alias(__dladdr,dladdr);
 weak_alias(__dlinfo,dlinfo);
