@@ -37,7 +37,6 @@ struct __tlca_abi {
 struct __psx_context {
 	int				size;
 	int				options;
-	void *				usrmain;
 	void *				ldsoaddr;
 	const unsigned short *		ctty;
 	void **				sys_vtbl;
@@ -47,6 +46,7 @@ struct __psx_context {
 	unsigned int			teb_libc_idx;
 	void *				pthread_surrogate_fn;
 	void *				pthread_create_fn;
+	int				(*usrmain)();
 };
 
 typedef int __psx_init_routine(
