@@ -37,7 +37,7 @@ struct __tlca_abi {
 struct __psx_context {
 	int				size;
 	int				options;
-	void *				refaddr;
+	void *				usrmain;
 	void *				ldsoaddr;
 	const unsigned short *		ctty;
 	void **				sys_vtbl;

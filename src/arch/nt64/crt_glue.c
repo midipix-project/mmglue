@@ -65,7 +65,7 @@ void __libc_entry_routine(
 	/* ctx init */
 	ctx.size		= sizeof(ctx);
 	ctx.options		= options;
-	ctx.refaddr		= __main;
+	ctx.usrmain		= __main;
 	ctx.ldsoaddr		= _init;
 	ctx.ctty		= __ctty;
 	ctx.pthread_create_fn	= pthread_create;
