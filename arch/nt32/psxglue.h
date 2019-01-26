@@ -22,7 +22,7 @@ struct __psx_vtbl {
 	void	(*do_global_dtors_fn)	();
 	int	(*start_main)		(void *, int, char **, int (*)(void *, int, char **));
 	void	(*convert_thread)	(void);
-	void	(*unmapself)		(void *, void *);
+	void	(*unmapself)		(void *, size_t);
 	ssize_t	(*log_output)		(void *, ssize_t);
 };
 
