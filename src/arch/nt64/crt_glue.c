@@ -9,9 +9,6 @@
 extern const struct __ldso_vtbl * __ldso_vtbl;
 extern const struct __psx_vtbl *  __psx_vtbl;
 
-typedef int __app_main();
-typedef int __pthread_surrogate_routine(struct pthread *);
-
 static int __pthread_surrogate_init(struct pthread * self);
 
 extern int __libc_start_main(
@@ -52,7 +49,7 @@ void __init_tls (size_t * auxv)
 };
 
 void __libc_entry_routine(
-	__app_main *		__main,
+	int			(*main)(),
 	__psx_init_routine *	__psx_init,
 	const unsigned short *	__ctty,
 	int			options)
@@ -65,7 +62,7 @@ void __libc_entry_routine(
 	/* ctx init */
 	ctx.size		= sizeof(ctx);
 	ctx.options		= options;
-	ctx.usrmain		= __main;
+	ctx.usrmain		= main;
 	ctx.ldsoaddr		= _init;
 	ctx.ctty		= __ctty;
 	ctx.pthread_create_fn	= pthread_create;
@@ -91,7 +88,7 @@ void __libc_entry_routine(
 	__global_dtors_fn = __psx_vtbl->do_global_dtors_fn;
 
 	/* enter libc */
-	__psx_vtbl->start_main(__main,argc,argv,__libc_start_main);
+	__psx_vtbl->start_main(argc,argv,__libc_start_main);
 
 	/* guard */
 	a_crash();

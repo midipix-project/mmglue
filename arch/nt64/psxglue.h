@@ -20,7 +20,7 @@ struct __ldso_vtbl {
 struct __psx_vtbl {
 	void	(*do_global_ctors_fn)	();
 	void	(*do_global_dtors_fn)	();
-	int	(*start_main)		(int (*)(int,char **,char **), int, char **, int (*)());
+	int	(*start_main)		(int, char **, int (*)());
 	void	(*convert_thread)	(void);
 	void	(*unmapself)		(void *, size_t);
 	ssize_t	(*log_output)		(void *, ssize_t);
