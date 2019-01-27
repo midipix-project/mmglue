@@ -1,19 +1,31 @@
 #include <syscall.h>
 
+/* take advantage of i686 vararg abi */
+#define  __clone ____clone
+#include "pthread_impl.h"
+#undef   __clone
+
 struct pt_regs {
-	unsigned long	ebp;
 	unsigned long	ebx;
-	unsigned long	eax;
 	unsigned long	ecx;
 	unsigned long	edx;
 	unsigned long	esi;
 	unsigned long	edi;
+	unsigned long	ebp;
+	unsigned long	eax;
+	unsigned long	xds;
+	unsigned long	xes;
+	unsigned long	xfs;
+	unsigned long	xgs;
 	unsigned long	orig_eax;
 	unsigned long	eip;
-	unsigned long	cs;
+	unsigned long	xcs;
 	unsigned long	eflags;
 	unsigned long	esp;
-	unsigned long	ss;
+	unsigned long	xss;
+	unsigned long	sbase;
+	unsigned long	slimit;
+	unsigned long	sbottom;
 };
 
 typedef long __sys_clone(
@@ -22,8 +34,6 @@ typedef long __sys_clone(
 	void *		ptid,
 	void *		ctid,
 	struct pt_regs *regs);
-
-typedef int __entry_point(void *);
 
 extern unsigned long ** __syscall_vtbl;
 
@@ -38,12 +48,18 @@ int __clone(
 {
 	struct pt_regs	regs;
 	__sys_clone *	pfn_clone;
+	pthread_t	pthread;
 
 	regs.eip = (unsigned long)fn;
 	regs.ecx = (unsigned long)arg;
 	regs.edx = (unsigned long)pthread_self_addr;
 
 	pfn_clone = (__sys_clone *)(__syscall_vtbl[SYS_clone]);
+
+	pthread      = (pthread_t)pthread_self_addr;
+	regs.sbase   = (unsigned long)pthread->stack;
+	regs.slimit  = regs.sbase  - pthread->stack_size;
+	regs.sbottom = regs.slimit - pthread->guard_size;
 
 	return (int)pfn_clone(
 		flags,
