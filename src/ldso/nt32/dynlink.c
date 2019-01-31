@@ -131,33 +131,6 @@ char * dlerror(void)
 	return __ldso_vtbl->dlerror();
 }
 
-void __reset_tls(void)
-{
-	__ldso_vtbl->reset_tls();
-}
-
-void *__copy_tls(unsigned char * mem)
-{
-	/**
-	 * this is always the simple case, since:
-	 * emutls is based on PE named sections; and
-	 * tls allocation and initialization are handled by clone(2)
-	**/
-
-        pthread_t td;
-	uintptr_t addr;
-
-	addr = (uintptr_t)mem;
-	addr >>= 4;
-	addr <<= 4;
-	addr +=  16;
-
-	td = (struct __pthread *)addr;
-	td->dtv = 0;
-
-	return td;
-}
-
 weak_alias(__dlsym,dlsym);
 weak_alias(__dladdr,dladdr);
 weak_alias(__dlinfo,dlinfo);

@@ -14,7 +14,7 @@ struct __ldso_vtbl {
 	void *	(*dlopen)	(const char * file, int mode, const char ** pathv, int * status);
 	int	(*dlclose)	(void *p);
 	char *	(*dlerror)	(void);
-	void	(*reset_tls)	(void);
+	void	(*tlsreset)	(void);
 };
 
 struct __psx_vtbl {
