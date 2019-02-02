@@ -1,9 +1,10 @@
 #include <unistd.h>
 #include <stdint.h>
+#include "crtinit.h"
 #include "psxglue.h"
 #include "peldso.h"
 
-const int __crtopt_vrfs = __PSXOPT_VRFS;
+const int __hidden __crtopt_vrfs = __PSXOPT_VRFS;
 
 /* framework (rtdata) abi */
 static const struct __guid  __ldsoabi  = NT_PROCESS_GUID_RTDATA;
@@ -24,7 +25,7 @@ static const unsigned short __sdctty[] = {'n','t','c','t','t','y',
 static unsigned long	__attribute__((section(".dsodata")))
 			__dsodata[65536/sizeof(unsigned long)];
 
-void __libc_loader_init(void * __main, int flags)
+void __hidden __libc_loader_init(void * __main, int flags)
 {
 	int		status;
 	void *		hroot;

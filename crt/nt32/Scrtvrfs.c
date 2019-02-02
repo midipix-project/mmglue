@@ -1,9 +1,10 @@
 #include <unistd.h>
 #include <stdint.h>
+#include "crtinit.h"
 #include "psxglue.h"
 
-const int __crtopt_vrfs = __PSXOPT_VRFS;
+const int __hidden __crtopt_vrfs = __PSXOPT_VRFS;
 
 /* pty server root-relative name */
-const unsigned short __ctty[] = {'n','t','c','t','t','y',
+const unsigned short __hidden __ctty[] = {'n','t','c','t','t','y',
                                  '.','e','x','e',0};
