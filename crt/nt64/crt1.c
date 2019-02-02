@@ -4,7 +4,7 @@ extern const int __crtopt_dinga  __attribute((weak,alias("__disabled")));
 extern const int __crtopt_ldso   __attribute((weak,alias("__disabled")));
 extern const int __crtopt_vrfs   __attribute((weak,alias("__disabled")));
 
-int  main();
+int  __attribute__((visibility("hidden"))) main();
 void __libc_loader_init(void * __main, int flags);
 
 void _start(void)
