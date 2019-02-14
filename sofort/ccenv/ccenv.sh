@@ -52,7 +52,14 @@ ccenv_find_tool()
 {
 	if [ -z "$ccenv_prefixes" ]; then
 		for ccenv_tool in $ccenv_candidates; do
-			command -v "$ccenv_tool" > /dev/null && return 0
+			if [ -z ${@:-} ]; then
+				command -v "$ccenv_tool" > /dev/null && \
+					return 0
+			else
+				command -v "$ccenv_tool" > /dev/null && \
+					"$ccenv_tool" $@ > /dev/null 2>&1 && \
+						return 0
+			fi
 		done
 
 		ccenv_tool=false
@@ -273,7 +280,7 @@ ccenv_set_cc()
 {
 	if [ -z "$ccenv_cc" ]; then
 		ccenv_set_c_compiler_candidates
-		ccenv_find_tool
+		ccenv_find_tool -dumpmachine
 		ccenv_cc="$ccenv_tool"
 	fi
 
