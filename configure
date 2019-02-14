@@ -399,7 +399,7 @@ config_copy()
 
 	eval sed $mb_sed_substs \
 		$mb_project_dir/Makefile.in    \
-			| sed -e 's/[ \t]*$//g' \
+			| sed -e 's/[[:blank:]]*$//g' \
 			> $mb_pwd/Makefile.tmp
 }
 

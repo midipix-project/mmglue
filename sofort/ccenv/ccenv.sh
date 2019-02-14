@@ -955,7 +955,7 @@ ccenv_output_defs()
 		done)"
 
 	eval sed $ccenv_sed_substs $ccenv_in   \
-			| sed -e 's/[ \t]*$//g' \
+			| sed -e 's/[[:blank:]]*$//g' \
 		> "$ccenv_mk"
 
 	if [ "$ccenv_cfgtype" = 'host' ]; then
