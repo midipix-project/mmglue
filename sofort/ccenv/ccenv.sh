@@ -87,7 +87,7 @@ ccenv_find_tool()
 ccenv_set_primary_tools()
 {
 	ccenv_core_tools="ar nm objdump ranlib size strip strings objcopy"
-	ccenv_hack_tools="addr2line cov elfedit readelf readobj"
+	ccenv_hack_tools="addr2line cov elfedit readelf readobj otool"
 	ccenv_peep_tools="perk mdso dlltool windmc windres"
 
 	for __tool in $ccenv_core_tools $ccenv_hack_tools $ccenv_peep_tools; do
@@ -528,6 +528,7 @@ ccenv_create_freestanding_executable()
 ccenv_set_cc_binfmt()
 {
 	ccenv_use_perk=
+	ccenv_use_otool=
 	ccenv_use_readelf=
 	ccenv_use_readobj=
 	ccenv_use_bfd_objdump=
@@ -571,6 +572,24 @@ ccenv_set_cc_binfmt()
 				> /dev/null                       \
 		&& ccenv_cc_binfmt='PE'                           \
 		&& ccenv_use_readelf=yes
+	fi
+
+	# MACHO-64 / otool
+	if [ -n "$ccenv_otool" ] && [ -z "$ccenv_cc_binfmt" ]; then
+		$ccenv_otool -hv $ccenv_image 2>/dev/null         \
+			| grep -i 'MH_MAGIC_64'                   \
+				> /dev/null                       \
+		&& ccenv_cc_binfmt='MACHO'                        \
+		&& ccenv_use_otool=yes
+	fi
+
+	# MACHO-32 / otool
+	if [ -n "$ccenv_otool" ] && [ -z "$ccenv_cc_binfmt" ]; then
+		$ccenv_otool -hv $ccenv_image 2>/dev/null         \
+			| grep -i 'MH_MAGIC'                      \
+				> /dev/null                       \
+		&& ccenv_cc_binfmt='MACHO'                        \
+		&& ccenv_use_otool=yes
 	fi
 
 	# MACHO-64 / readelf
