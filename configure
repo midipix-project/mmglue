@@ -144,10 +144,8 @@ init_vars()
 
 	# build
 	mb_build=$BUILD
-	mb_host=$HOST
 	mb_cchost=$CCHOST
 	mb_cfghost=$CFGHOST
-	mb_target=$TARGET
 	mb_arch=$ARCH
 	mb_compiler=$COMPILER
 	mb_toolchain=$TOOLCHAIN
