@@ -308,7 +308,7 @@ ccenv_set_cc()
 		ccenv_host=$($ccenv_cc $ccenv_cflags -dumpmachine 2>/dev/null)
 		ccenv_cchost=$ccenv_host
 	else
-		ccenv_tmp=$(mktemp)
+		ccenv_tmp=$(mktemp ./tmp_XXXXXXXXXXXXXXXX)
 		ccenv_cmd="$ccenv_cc --target=$ccenv_host -E -xc -"
 
 		if [ -z "$mb_user_cc" ]; then
@@ -322,6 +322,9 @@ ccenv_set_cc()
 				ccenv_cc="$ccenv_cc $ccenv_tflags"
 			fi
 		fi
+
+		rm -f "$ccenv_tmp"
+		unset ccenv_tmp
 
 		ccenv_cchost=$($ccenv_cc $ccenv_cflags -dumpmachine 2>/dev/null)
 	fi
@@ -955,7 +958,7 @@ ccenv_output_defs()
 
 	if [ $ccenv_cfgtype = 'native' ]; then
 
-		ccenv_tmp=$(mktemp)
+		ccenv_tmp=$(mktemp ./tmp_XXXXXXXXXXXXXXXX)
 
 		sed                             \
 				-e 's/^\s*$/@/g' \
@@ -967,6 +970,8 @@ ccenv_output_defs()
 			$ccenv_in > "$ccenv_tmp"
 
 		ccenv_in="$ccenv_tmp"
+	else
+		unset ccenv_tmp
 	fi
 
 	ccenv_vars=$(cut -d'=' -f1 "$mb_project_dir/sofort/ccenv/ccenv.vars" \
@@ -1005,6 +1010,11 @@ ccenv_output_defs()
 
 		mb_native_host=$ccenv_host
 		mb_native_cchost=$ccenv_cchost
+	fi
+
+	if [ -n "${ccenv_tmp:-}" ]; then
+		rm -f "$ccenv_tmp"
+		unset ccenv_tmp
 	fi
 }
 
