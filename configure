@@ -620,9 +620,11 @@ for arg ; do
 		# config
 		--all-static)
 			mb_all_static=yes
+			mb_all_shared=no
 			;;
 		--all-shared)
 			mb_all_shared=yes
+			mb_all_static=no
 			;;
 		--disable-frontend)
 			mb_disable_frontend=yes
