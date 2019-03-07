@@ -7,6 +7,8 @@
 #define __PSXOPT_LDSO		0x4
 #define __PSXOPT_VRFS		0x8
 
+struct __seh_vtbl;
+
 struct __ldso_vtbl {
 	int	(*dladdr)	(const void * addr, void * info);
 	int	(*dlinfo)	(void * dso, int req, void * res);
@@ -40,6 +42,7 @@ struct __psx_context {
 	void *				ldsoaddr;
 	const unsigned short *		ctty;
 	void **				sys_vtbl;
+	const struct __seh_vtbl *	seh_vtbl;
 	const struct __ldso_vtbl *	ldso_vtbl;
 	const struct __psx_vtbl *	psx_vtbl;
 	unsigned int			teb_sys_idx;
