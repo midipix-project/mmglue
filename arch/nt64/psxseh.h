@@ -13,7 +13,7 @@ struct __unwind_context;
 
 
 
-typedef void * __thread_context;
+typedef void __thread_context;
 
 typedef enum __unwind_reason_code(*__unwind_personality_routine)(
 	int, int, uintptr_t,
