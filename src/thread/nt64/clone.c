@@ -1,4 +1,7 @@
+#define  _GNU_SOURCE
+
 #include <syscall.h>
+#include <sched.h>
 
 /* take advantage of winnt's x64 vararg abi */
 #define  __clone ____clone
@@ -59,6 +62,17 @@ hidden int __clone(
 	regs.rdx = (unsigned long)pthread_self_addr;
 
 	pfn_clone = (__sys_clone *)(__syscall_vtbl[SYS_clone]);
+
+	if (flags == CLONE_VM|CLONE_VFORK|SIGCHLD) {
+		regs.sbase   = 0;
+		regs.slimit  = 0;
+		regs.sbottom = 0;
+
+		return (int)pfn_clone(
+			flags,
+			child_stack,
+			0,0,&regs);
+	}
 
 	pthread      = (pthread_t)pthread_self_addr;
 	regs.sbase   = (unsigned long)pthread->stack;
