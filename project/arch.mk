@@ -27,6 +27,10 @@ TARGET_SYS_HEADERS = \
 
 install-headers: install-target-sys-headers
 
+else
+
+CFLAGS_CONFIG  += -fno-asynchronous-unwind-tables
+
 endif
 
 install-target-sys-headers: $(TARGET_SYS_HEADERS)
