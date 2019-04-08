@@ -59,7 +59,7 @@ int __clone(
 
 	pfn_clone = (__sys_clone *)(__syscall_vtbl[SYS_clone]);
 
-	if (flags == CLONE_VM|CLONE_VFORK|SIGCHLD) {
+	if (flags == (CLONE_VM|CLONE_VFORK|SIGCHLD)) {
 		regs.sbase   = 0;
 		regs.slimit  = 0;
 		regs.sbottom = 0;
