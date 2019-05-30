@@ -22,10 +22,10 @@ struct __ldso_vtbl {
 struct __psx_vtbl {
 	void	(*do_global_ctors_fn)	();
 	void	(*do_global_dtors_fn)	();
-	int	(*start_main)		(int, char **, int (*)());
-	void	(*convert_thread)	(void);
-	void	(*unmapself)		(void *, size_t);
-	ssize_t	(*log_output)		(void *, ssize_t);
+	int	(*mm_start_main)	(int, char **, int (*)());
+	void	(*mm_convert_thread)	(void);
+	void	(*mm_unmapself)		(void *, size_t);
+	ssize_t	(*mm_log_output)	(void *, ssize_t);
 };
 
 struct __tlca_abi {

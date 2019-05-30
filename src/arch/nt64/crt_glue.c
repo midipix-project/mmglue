@@ -95,7 +95,7 @@ void __libc_entry_routine(
 	__global_dtors_fn = __psx_vtbl->do_global_dtors_fn;
 
 	/* enter libc */
-	__psx_vtbl->start_main(argc,argv,__libc_start_main);
+	__psx_vtbl->mm_start_main(argc,argv,__libc_start_main);
 
 	/* guard */
 	a_crash();
