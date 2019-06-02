@@ -22,6 +22,10 @@ struct __ldso_vtbl {
 struct __psx_vtbl {
 	void	(*do_global_ctors_fn)	();
 	void	(*do_global_dtors_fn)	();
+	int	(*fs_rpath)		(int, const char *, int, char *, size_t);
+	int	(*fs_apath)		(int, const char *, int, char *, size_t);
+	int	(*fs_npath)		(int, const char *, int, char *, size_t);
+	int	(*fs_dpath)		(int, const char *, int, char *, size_t);
 	int	(*mm_start_main)	(int, char **, int (*)());
 	void	(*mm_convert_thread)	(void);
 	void	(*mm_unmapself)		(void *, size_t);
