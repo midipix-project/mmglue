@@ -7,10 +7,10 @@ extern const struct __seh_vtbl * __eh_vtbl;
 
 
 int __unwind_exception_filter(
-	struct _nt_exception_record * erec,
+	struct __exception_record * erec,
 	void * fctx,
 	mcontext_t * tctx,
-	struct _nt_dispatcher_context * dctx,
+	struct __dispatcher_context * dctx,
 	__unwind_personality_routine uw_routine)
 {
 	return __eh_vtbl->seh_exception_filter(
@@ -19,10 +19,10 @@ int __unwind_exception_filter(
 
 
 int __unwind_exception_handler(
-	struct _nt_exception_record * erec,
+	struct __exception_record * erec,
 	uintptr_t fbase,
 	mcontext_t * tctx,
-	struct _nt_dispatcher_context * dctx)
+	struct __dispatcher_context * dctx)
 {
 	return __eh_vtbl->seh_exception_handler(
 		erec,fbase,tctx,dctx);

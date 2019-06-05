@@ -4,8 +4,8 @@
 
 enum __unwind_reason_code;
 
-struct _nt_exception_record;
-struct _nt_dispatcher_context;
+struct __exception_record;
+struct __dispatcher_context;
 
 struct __unwind_exception;
 struct __unwind_context;
@@ -28,17 +28,17 @@ typedef void (*__unwind_exception_cleanup_routine)(
 
 struct __seh_vtbl {
 	int    (*seh_exception_filter)(
-		struct _nt_exception_record *,
+		struct __exception_record *,
 		void *,
 		__thread_context *,
-		struct _nt_dispatcher_context *,
+		struct __dispatcher_context *,
 		__unwind_personality_routine);
 
 	int    (*seh_exception_handler)(
-		struct _nt_exception_record *,
+		struct __exception_record *,
 		uintptr_t,
 		__thread_context *,
-		struct _nt_dispatcher_context *);
+		struct __dispatcher_context *);
 
 	int    (*seh_unwind_raise_exception)(
 		struct __unwind_exception *);
