@@ -13,7 +13,7 @@ struct __dbg_vtbl {
 	int (*dbg_kill)(int);
 
 	int (*dbg_event_query_one)(int, struct __dbg_event *);
-	int (*dbg_event_query_all)(int, struct __dbg_event[], int);
+	int (*dbg_event_query_all)(int, struct __dbg_event *, int);
 
 	int (*dbg_event_acquire)(int, struct __dbg_event *);
 	int (*dbg_event_respond)(int, struct __dbg_event *);

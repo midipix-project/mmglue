@@ -144,7 +144,7 @@ int __dbg_kill(int);
  *    of elements in the user-provided buffer.
 **/
 int __dbg_event_query_one(int, struct __dbg_event *);
-int __dbg_event_query_all(int, struct __dbg_event[], int);
+int __dbg_event_query_all(int, struct __dbg_event *, int);
 
 /**
  * first acquire (remove from the queue) the next pending debug event;
