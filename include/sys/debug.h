@@ -1,7 +1,14 @@
+#ifndef _SYS_DEBUG_H
+#define _SYS_DEBUG_H
+
 #include <stdint.h>
 #include <stddef.h>
 #include <signal.h>
 #include <unistd.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* debug states */
 enum __dbg_state {
@@ -160,3 +167,9 @@ int __dbg_query_syspid(int);
 /* code of last debug operation error encountered by this pthread */
 int __dbg_common_error(void);
 int __dbg_native_error(void);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
