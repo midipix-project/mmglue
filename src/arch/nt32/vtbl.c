@@ -19,7 +19,7 @@ long __syscall_alert(long n)
 	__lmsg[35] = '0' + n % 10; n /= 10;
 	__lmsg[34] = '0' + n % 10;
 
-	__psx_vtbl->log_output(
+	__psx_vtbl->mm_log_output(
 		__lmsg,
 		sizeof(__lmsg));
 
