@@ -131,7 +131,7 @@ int __dbg_detach(int);
 
 /* process creation/suspension/termination --> debug file descriptor */
 int __dbg_spawn(const char *, char **, char **);
-int __dbg_fork();
+int __dbg_fork(void);
 int __dbg_suspend(int);
 int __dbg_kill(int);
 
@@ -143,15 +143,15 @@ int __dbg_kill(int);
  * in the 'all' case, the third argument specifies the number
  *    of elements in the user-provided buffer.
 **/
-int __dbg_event_query_one(int,struct __dbg_event *);
-int __dbg_event_query_all(int,struct __dbg_event[],int);
+int __dbg_event_query_one(int, struct __dbg_event *);
+int __dbg_event_query_all(int, struct __dbg_event[], int);
 
 /**
  * first acquire (remove from the queue) the next pending debug event;
  * later respond to the event, the default being __DBG_RESPONSE_CONTINUE.
 **/
-int __dbg_event_acquire(int,struct __dbg_event *);
-int __dbg_event_respond(int,struct __dbg_event *);
+int __dbg_event_acquire(int, struct __dbg_event *);
+int __dbg_event_respond(int, struct __dbg_event *);
 
 /* debug file descriptor --> common (or system) pid */
 int __dbg_query_cpid(int);
