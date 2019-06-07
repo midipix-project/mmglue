@@ -66,6 +66,10 @@ libc_tree_dirs     += ./crt/  ./crt/$(ARCH)/
 libc_tree_dirs     += ./ldso/ ./ldso/$(ARCH)/
 
 
+# depend on all headers
+HEADER_DEPS         = $(TARGET_SYS_HEADERS) $(src_bits_h) $(src_c_headers)
+ALL_HEADERS        += $(HEADER_DEPS)
+
 # core objects
 STATIC_OBJS        += $(libc_core_files_c:%.c=%.o)
 STATIC_OBJS        += $(libc_core_files_s:%.s=%.o)
@@ -80,22 +84,22 @@ $(SHARED_OBJS):       headers.tag host.tag tree.tag
 
 $(SHARED_OBJS):       CFLAGS_SHARED += -DSHARED=
 
-src/%.o:$(PORT_DIR)/src/%.c
+src/%.o:$(PORT_DIR)/src/%.c $(HEADER_DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS_STATIC)
 
 src/%.o:$(PORT_DIR)/src/%.s
 	$(AS) -o $@ $< $(CFLAGS_ASM)
 
-src/%.o:$(PORT_DIR)/src/%.S
+src/%.o:$(PORT_DIR)/src/%.S $(HEADER_DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS_STATIC)
 
-src/%.lo:$(PORT_DIR)/src/%.c
+src/%.lo:$(PORT_DIR)/src/%.c $(HEADER_DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS_SHARED)
 
 src/%.lo:$(PORT_DIR)/src/%.s
 	$(AS) -o $@ $< $(CFLAGS_ASM)
 
-src/%.lo:$(PORT_DIR)/src/%.S
+src/%.lo:$(PORT_DIR)/src/%.S $(HEADER_DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS_SHARED)
 
 
@@ -110,16 +114,16 @@ $(CRT_OBJS):          CFLAGS_CONFIG += -DCRT
 ./crt/Scrt1.o:        CFLAGS_CONFIG += -fPIC
 ./crt/rcrt1.o:        CFLAGS_CONFIG += -fPIC
 
-crt/%.o:$(PORT_DIR)/crt/%.c
+crt/%.o:$(PORT_DIR)/crt/%.c $(HEADER_DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS_STATIC)
 
 crt/%.o:$(PORT_DIR)/crt/%.s
 	$(AS) -o $@ $< $(CFLAGS_ASM)
 
-crt/%.o:$(PORT_DIR)/crt/%.S
+crt/%.o:$(PORT_DIR)/crt/%.S $(HEADER_DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS_STATIC)
 
-crt/%.o:$(SOURCE_DIR)/crt/%.c
+crt/%.o:$(SOURCE_DIR)/crt/%.c $(HEADER_DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS_STATIC)
 
 crt-objs:  $(CRT_OBJS)
@@ -143,16 +147,16 @@ $(LDSO_OBJS):         headers.tag host.tag tree.tag
 
 $(LDSO_OBJS):         CFLAGS_SHARED += -DSHARED=
 
-ldso/%.lo:$(PORT_DIR)/ldso/%.c
+ldso/%.lo:$(PORT_DIR)/ldso/%.c $(HEADER_DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS_SHARED)
 
 ldso/%.lo:$(PORT_DIR)/ldso/%.s
 	$(AS) -o $@ $< $(CFLAGS_ASM)
 
-ldso/%.lo:$(PORT_DIR)/ldso/%.S
+ldso/%.lo:$(PORT_DIR)/ldso/%.S $(HEADER_DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS_SHARED)
 
-ldso/%.lo:$(SOURCE_DIR)/ldso/%.c
+ldso/%.lo:$(SOURCE_DIR)/ldso/%.c $(HEADER_DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS_SHARED)
 
 ldso-objs:$(LDSO_OBJS)
