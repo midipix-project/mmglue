@@ -38,6 +38,21 @@ int __dbg_kill(int pfd)
 	return __db_vtbl->dbg_kill(pfd);
 }
 
+int __dbg_rbreak(int pfd)
+{
+	return __db_vtbl->dbg_rbreak(pfd);
+}
+
+int __dbg_tbreak(int pfd)
+{
+	return __db_vtbl->dbg_tbreak(pfd);
+}
+
+int __dbg_lbreak(int pfd)
+{
+	return __db_vtbl->dbg_lbreak(pfd);
+}
+
 int __dbg_event_query_one(int pfd, struct __dbg_event * evt)
 {
 	return __db_vtbl->dbg_event_query_one(pfd,evt);
