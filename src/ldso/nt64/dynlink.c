@@ -106,6 +106,58 @@ void * dlopen(const char * file, int mode)
 	return base;
 }
 
+void * __dldopen(int fd, int mode)
+{
+	int		status;
+	void *		base;
+	int		cs;
+
+	/* prolog */
+	pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &cs);
+	pthread_rwlock_wrlock(&__ldso_lock);
+	__inhibit_ptc();
+
+	/* dldopen */
+	base = __ldso_vtbl->dldopen(fd,mode,&status);
+
+	/* epilog */
+	__release_ptc();
+	pthread_rwlock_unlock(&__ldso_lock);
+
+	if (base)
+		__psx_vtbl->do_global_ctors_fn();
+
+	pthread_setcancelstate(cs, 0);
+
+	return base;
+}
+
+void * __dlsopen(const char * file, int mode)
+{
+	int		status;
+	void *		base;
+	int		cs;
+
+	/* prolog */
+	pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &cs);
+	pthread_rwlock_wrlock(&__ldso_lock);
+	__inhibit_ptc();
+
+	/* dlsopen */
+	base = __ldso_vtbl->dlsopen(file,mode,&status);
+
+	/* epilog */
+	__release_ptc();
+	pthread_rwlock_unlock(&__ldso_lock);
+
+	if (base)
+		__psx_vtbl->do_global_ctors_fn();
+
+	pthread_setcancelstate(cs, 0);
+
+	return base;
+}
+
 int __dladdr(const void * addr, Dl_info * info)
 {
 	return __ldso_vtbl->dladdr(addr,info);

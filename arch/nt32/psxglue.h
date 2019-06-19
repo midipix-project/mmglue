@@ -14,6 +14,8 @@ struct __ldso_vtbl {
 	int	(*dlinfo)	(void * dso, int req, void * res);
 	void *	(*dlsym)	(void * p, const char * s, void * ra);
 	void *	(*dlopen)	(const char * file, int mode, const char ** pathv, int * status);
+	void *	(*dldopen)	(int fd, int mode, int * status);
+	void *	(*dlsopen)	(const char * file, int mode, int * status);
 	int	(*dlclose)	(void *p);
 	char *	(*dlerror)	(void);
 	void	(*tlsreset)	(void);
