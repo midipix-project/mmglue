@@ -38,3 +38,16 @@ endif
 install-target-sys-headers: $(TARGET_SYS_HEADERS)
 	mkdir -p $(DESTDIR)$(INCLUDEDIR)/sys
 	cp    -p $(TARGET_SYS_HEADERS)       $(DESTDIR)$(INCLUDEDIR)/sys
+
+
+
+# fallback alltypes.sed
+build/alltypes.sed:
+	touch $@
+
+clean-alltypes-sed:
+	rm -f build/alltypes.sed
+
+clean:	clean-alltypes-sed
+
+.PHONY:	clean-alltypes-sed

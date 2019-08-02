@@ -14,13 +14,13 @@ ARCH_GEN_H      = $(ALLTYPES_H) $(SYSCALL_H)
 
 ALLTYPES_DEPS   = \
 		$(PORT_DIR)/arch/$(ARCH)/bits/alltypes.h.in \
-		$(PORT_DIR)/arch/$(ARCH)/bits/alltypes.sed \
+		$(ALLTYPES_SED) \
 		$(SOURCE_DIR)/include/alltypes.h.in \
 		$(SOURCE_DIR)/tools/mkalltypes.sed \
 		| build/include/bits/
 
 $(ALLTYPES_H):	$(ALLTYPES_DEPS)
-		sed -f $(PORT_DIR)/arch/$(ARCH)/bits/alltypes.sed \
+		sed -f $(ALLTYPES_SED) \
 		    -f $(SOURCE_DIR)/tools/mkalltypes.sed \
 			$(PORT_DIR)/arch/$(ARCH)/bits/alltypes.h.in \
 			$(SOURCE_DIR)/include/alltypes.h.in > $@

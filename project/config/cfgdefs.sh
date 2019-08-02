@@ -85,6 +85,12 @@ cfgdefs_set_libc_options()
 		libc_source_tree='-D__LIBC_LEGACY_SOURCE_TREE'
 	fi
 
+	if [ -f $arch_dir/arch/$mb_arch/bits/alltypes.sed ]; then
+		alltypes_sed=$arch_dir/arch/$mb_arch/bits/alltypes.sed
+	else
+		alltypes_sed=build/alltypes.sed
+	fi
+
 	if [ _${libc_no_complex:-} = _yes ]; then
 		libc_deps=
 		libc_excl_files='$(filter ./src/complex/%, $(libc_all_files))'
@@ -107,6 +113,7 @@ cfgdefs_output_custom_defs()
 			-e 's^@libc_excl_files@^'"$libc_excl_files"'^g'   \
 			-e 's/@libc_source_tree@/'"$libc_source_tree"'/g'  \
 			-e 's/@libc_syscall_arch@/'"$libc_syscall_arch"'/g' \
+			-e 's!@alltypes_sed@!'"$alltypes_sed"'!g'            \
 		"$mb_project_dir/project/config/cfgdefs.in"         \
 	| sed -e 's/[ \t]*$//g'                                     \
 			>> "$mb_pwd/cfgdefs.mk"
