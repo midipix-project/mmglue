@@ -82,7 +82,8 @@ SHARED_OBJS        += $(libc_core_files_S:%.S=%.lo)
 $(STATIC_OBJS):       headers.tag host.tag tree.tag
 $(SHARED_OBJS):       headers.tag host.tag tree.tag
 
-$(SHARED_OBJS):       CFLAGS_SHARED += -DSHARED=
+$(SHARED_OBJS):       CFLAGS_SHARED += $(LIBC_CFLAGS_SHARED) -DSHARED=
+$(STATIC_OBJS):       CFLAGS_STATIC += $(LIBC_CFLAGS_STATIC)
 
 src/%.o:$(PORT_DIR)/src/%.c $(HEADER_DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS_STATIC)

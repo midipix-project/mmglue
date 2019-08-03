@@ -4,6 +4,10 @@ LIBC_MAJOR               = @libc_major@
 LIBC_MINOR               = @libc_minor@
 LIBC_MICRO               = @libc_micro@
 
+# libc version-specific defs
+LIBC_CFLAGS_SHARED      += @libc_td_tid_addr@
+LIBC_CFLAGS_STATIC      += @libc_td_tid_addr@
+
 # build mode
 LIBC_EXCL_FILES          = @libc_excl_files@
 

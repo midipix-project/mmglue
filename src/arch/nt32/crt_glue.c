@@ -6,6 +6,8 @@
 #include "psxglue.h"
 #include "pthread_impl.h"
 
+volatile int __thread_list_lock;
+
 extern const struct __ldso_vtbl * __ldso_vtbl;
 extern const struct __psx_vtbl *  __psx_vtbl;
 extern const struct __seh_vtbl *  __eh_vtbl;
@@ -44,7 +46,6 @@ void __init_tls (size_t * auxv)
 
 	T.pt.self	= &T.pt;
 	T.pt.locale	= &libc.global_locale;
-	T.pt.tid	= __syscall(SYS_set_tid_address, &T.pt.tid);
 
 	T.pt.detach_state     = DT_JOINABLE;
 	T.pt.locale           = &libc.global_locale;
@@ -52,6 +53,22 @@ void __init_tls (size_t * auxv)
 
 	libc.can_do_threads = 1;
 	libc.tls_size = sizeof(struct __tls);
+
+#if defined(__LIBC_TD_TID_ADDR_TID)
+	T.pt.tid	= __syscall(SYS_set_tid_address, &T.pt.tid);
+#elif defined(__LIBC_TD_TID_ADDR_JOIN_FUTEX)
+	T.pt.join_futex = -1;
+	T.pt.tid	= __syscall(SYS_set_tid_address, &T.pt.join_futex);
+#elif defined(__LIBC_TD_TID_ADDR_DETACH_STATE)
+	T.pt.tid	= __syscall(SYS_set_tid_address, &T.pt.detach_state);
+#elif defined(__LIBC_TD_TID_ADDR_THREAD_LIST_LOCK)
+	T.pt.tid	= __syscall(SYS_set_tid_address, &T.pt.detach_state);
+	T.pt.next       = &T.pt;
+	T.pt.prev       = &T.pt;
+#else
+	#error could not detect tid address logic.
+#endif
+
 };
 
 void __libc_entry_routine(
