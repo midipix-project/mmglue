@@ -105,6 +105,12 @@ build/headers.tag:	$(ARCH_HEADERS)
 			touch $@
 
 headers.tag:		build/headers.tag $(ARCH_GEN_H)
+			grep -v '^@@@' build/include/bits/ioctl.h \
+				> build/include/bits/ioctl.h.tmp
+			grep 'struct winsize' $(SOURCE_DIR)/include/sys/ioctl.h \
+				|| sed 's/^@@@//g' build/include/bits/ioctl.h     \
+					> build/include/bits/ioctl.h.tmp
+			mv build/include/bits/ioctl.h.tmp build/include/bits/ioctl.h
 			touch $@
 
 clean-headers:
