@@ -46,6 +46,7 @@ void __init_tls (size_t * auxv)
 
 	T.pt.self	= &T.pt;
 	T.pt.locale	= &libc.global_locale;
+	T.pt.sysinfo	= __sysinfo;
 
 	T.pt.detach_state     = DT_JOINABLE;
 	T.pt.locale           = &libc.global_locale;
