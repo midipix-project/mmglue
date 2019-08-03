@@ -15,7 +15,7 @@ LIBC_EXCL_FILES          = @libc_excl_files@
 PORT_DIR                 = @port_dir@
 
 # alltypes.sed
-ALLTYPES_SED              = @alltypes_sed@
+ALLTYPES_SED             = @alltypes_sed@
 
 # source tree (atomic.h vs. atomic_arch.h)
 CFLAGS_CONFIG           += @libc_source_tree@
