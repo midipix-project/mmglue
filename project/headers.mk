@@ -100,6 +100,7 @@ install-headers:	install-arch-headers install-libc-headers
 
 # build/include
 build/headers.tag:	| build/include/bits/
+build/headers.tag:	build/syscall_h.tag
 build/headers.tag:	$(ARCH_HEADERS)
 			cp $(ARCH_HEADERS) build/include/bits/
 			touch $@
