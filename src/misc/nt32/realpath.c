@@ -3,7 +3,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <errno.h>
-#include "psxglue.h"
+#include "syscall.h"
 
 extern const struct __psx_vtbl *  __psx_vtbl;
 
@@ -13,7 +13,7 @@ char * realpath(const char * restrict filename, char * restrict resolved)
 	char buf[PATH_MAX];
 
 	ecode = filename
-		? __psx_vtbl->fs_rpath(
+		? __syscall(SYS_fs_rpath,
 			AT_FDCWD,filename,
 			O_NONBLOCK|O_CLOEXEC,
 			buf,sizeof(buf))
