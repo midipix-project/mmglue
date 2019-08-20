@@ -334,3 +334,9 @@
 #define __NR_io_pgetevents			333
 #define __NR_rseq				334
 
+
+/* system calls in the range [352..415] are framework-specific */
+#define __NR_fs_rpath			352
+#define __NR_fs_apath			353
+#define __NR_fs_npath			354
+#define __NR_fs_dpath			355
