@@ -340,3 +340,27 @@
 #define __NR_fs_apath			353
 #define __NR_fs_npath			354
 #define __NR_fs_dpath			355
+
+#define __NR_dbg_attach			360
+#define __NR_dbg_detach			361
+
+#define __NR_dbg_spawn			362
+#define __NR_dbg_fork			363
+#define __NR_dbg_suspend		364
+#define __NR_dbg_kill			365
+
+#define __NR_dbg_rbreak			366
+#define __NR_dbg_tbreak			367
+#define __NR_dbg_lbreak			368
+
+#define __NR_dbg_event_query_one	369
+#define __NR_dbg_event_query_all	370
+
+#define __NR_dbg_event_acquire		371
+#define __NR_dbg_event_respond		372
+
+#define __NR_dbg_query_cpid		373
+#define __NR_dbg_query_syspid		374
+
+#define __NR_dbg_common_error		375
+#define __NR_dbg_native_error		376
