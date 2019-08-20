@@ -31,7 +31,6 @@ install-headers: install-target-sys-headers
 
 headers.tag: $(PROJECT_DIR)/arch/$(ARCH)/atomic.h
 headers.tag: $(PROJECT_DIR)/arch/$(ARCH)/peldso.h
-headers.tag: $(PROJECT_DIR)/arch/$(ARCH)/psxdbg.h
 headers.tag: $(PROJECT_DIR)/arch/$(ARCH)/psxglue.h
 headers.tag: $(PROJECT_DIR)/arch/$(ARCH)/psxseh.h
 

@@ -11,7 +11,6 @@ volatile int __thread_list_lock;
 extern const struct __ldso_vtbl * __ldso_vtbl;
 extern const struct __psx_vtbl *  __psx_vtbl;
 extern const struct __seh_vtbl *  __eh_vtbl;
-extern const struct __dbg_vtbl *  __db_vtbl;
 
 static int __pthread_surrogate_init(struct pthread * self);
 
@@ -105,7 +104,6 @@ void __libc_entry_routine(
 	__ldso_vtbl	= ctx.ldso_vtbl;
 	__psx_vtbl	= ctx.psx_vtbl;
 	__eh_vtbl	= ctx.seh_vtbl;
-	__db_vtbl	= ctx.dbg_vtbl;
 
 	__teb_sys_idx	= ctx.teb_sys_idx;
 	__teb_libc_idx	= ctx.teb_libc_idx;

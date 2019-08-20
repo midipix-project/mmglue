@@ -46,7 +46,6 @@ struct __psx_context {
 	void **				sys_vtbl;
 	const struct __psx_vtbl *	psx_vtbl;
 	const struct __seh_vtbl *	seh_vtbl;
-	const struct __dbg_vtbl *	dbg_vtbl;
 	const struct __ldso_vtbl *	ldso_vtbl;
 	unsigned int			teb_sys_idx;
 	unsigned int			teb_libc_idx;
