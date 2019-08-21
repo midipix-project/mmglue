@@ -20,6 +20,10 @@ else
 	prefix=$(dirname "$PKGCONF_INCLUDEDIR")
 	base=$(basename "$PKGCONF_INCLUDEDIR")
 
+	if [ "$prefix" = '/' ]; then
+		prefix=
+	fi
+
 	if [ "$prefix/$base" = "$PKGCONF_PREFIX/$base" ]; then
 		pkgconf_includedir='${prefix}/'"${base}"
 		pkgconf_cflags='-I${includedir}'
@@ -36,6 +40,10 @@ if [ -z "$PKGCONF_LIBDIR" ]; then
 else
 	prefix=$(dirname "$PKGCONF_LIBDIR")
 	base=$(basename "$PKGCONF_LIBDIR")
+
+	if [ "$prefix" = '/' ]; then
+		prefix=
+	fi
 
 	if [ "$prefix/$base" = "$PKGCONF_EXEC_PREFIX/$base" ]; then
 		pkgconf_libdir='${exec_prefix}/'"${base}"
