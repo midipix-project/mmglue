@@ -23,6 +23,7 @@ LDFLAGS_CONFIG += -Wl,--exclude-symbols=_IO_putc_unlocked
 LDFLAGS_CONFIG += -Wl,--exclude-symbols=___errno_location
 
 TARGET_SYS_HEADERS = \
+	$(PROJECT_DIR)/include/sys/cmd.h \
 	$(PROJECT_DIR)/include/sys/debug.h \
 	$(PROJECT_DIR)/include/sys/fs.h \
 	$(PROJECT_DIR)/include/sys/ldso.h \
