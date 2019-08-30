@@ -364,3 +364,6 @@
 
 #define __NR_dbg_common_error		375
 #define __NR_dbg_native_error		376
+
+#define SYS_cmd_args_to_argv		384
+#define SYS_cmd_argv_to_args		385
