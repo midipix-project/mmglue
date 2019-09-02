@@ -26,10 +26,8 @@ extern "C" {
 /*                 including the terminating null pointer.                 */
 /*                                                                         */
 /* return value:                                                           */
-/*   zero upon successful parsing and buffer initialization                */
-/*   negative value returned upon failure, which is the actual value       */
-/*     returned by the underlying system call; accordingly, errno          */
-/*     is _not_ set by the above interface.                                */
+/*   zero upon successful parsing and buffer initialization;               */
+/*   otherwise, -1 shall be returned and errno set to indicate the error.  */
 /*                                                                         */
 /* implementation:                                                         */
 /*   the above interface is async-safe, thread-safe, and re-entrant.       */

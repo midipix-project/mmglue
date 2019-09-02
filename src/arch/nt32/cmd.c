@@ -6,5 +6,5 @@ int __cmd_args_to_argv(
 	char * argbuf, size_t buflen,
 	char ** argv, size_t nptrs)
 {
-	return __syscall(SYS_cmd_args_to_argv,args,argbuf,buflen,argv,nptrs);
+	return syscall(SYS_cmd_args_to_argv,args,argbuf,buflen,argv,nptrs);
 }
