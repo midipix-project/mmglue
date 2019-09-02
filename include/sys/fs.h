@@ -29,10 +29,8 @@ extern "C" {
 /*   buflen:     size of buffer, including null termination.               */
 /*                                                                         */
 /* return value:                                                           */
-/*   zero upon successful resolution and buffer initialization             */
-/*   negative value returned upon failure, which is the actual value       */
-/*     returned by the underlying system call; accordingly, errno          */
-/*     is _not_ set by any of the above interfaces.                        */
+/*   zero upon successful resolution and buffer initialization;            */
+/*   otherwise, -1 shall be returned and errno set to indicate the error.  */
 /*                                                                         */
 /* implementation:                                                         */
 /*   the above interfaces are async-safe, thread-safe, and re-entrant.     */
