@@ -15,9 +15,11 @@ int __dbg_detach(int pfd)
 	return syscall(SYS_dbg_detach,pfd);
 }
 
-int __dbg_spawn(const char * path, char ** argv, char ** envp)
+int __dbg_spawn(const char * path,
+		char ** argv, char ** envp,
+		const struct __strace * strace)
 {
-	return syscall(SYS_dbg_spawn,path,argv,envp);
+	return syscall(SYS_dbg_spawn,path,argv,envp,strace);
 }
 
 int __dbg_fork()

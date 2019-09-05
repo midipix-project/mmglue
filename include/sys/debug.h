@@ -64,6 +64,17 @@ enum __dbg_state {
 #define __DBG_EXCEPTION_SOURCE_KERNEL   0x04
 #define __DBG_EXCEPTION_SOURCE_USER     0x08
 
+/* strace,ldso */
+struct __strace {
+	size_t		size;
+	const char *	loader;
+	int		fdlog;
+	uint32_t	flags;
+	uint32_t	sysmask[16];
+	uint32_t	dbgmask[16];
+	uint32_t	osmask [32];
+};
+
 /* exception record */
 struct __erec {
 	uint32_t        exception_code;
@@ -137,7 +148,7 @@ int __dbg_attach(pid_t);
 int __dbg_detach(int);
 
 /* process creation/suspension/termination --> debug file descriptor */
-int __dbg_spawn(const char *, char **, char **);
+int __dbg_spawn(const char *, char **, char **, const struct __strace *);
 int __dbg_fork(void);
 int __dbg_suspend(int);
 int __dbg_kill(int);
