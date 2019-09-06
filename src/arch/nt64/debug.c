@@ -27,11 +27,6 @@ int __dbg_fork()
 	return syscall(SYS_dbg_fork);
 }
 
-int __dbg_suspend(int pfd)
-{
-	return syscall(SYS_dbg_suspend,pfd);
-}
-
 int __dbg_kill(int pfd)
 {
 	return syscall(SYS_dbg_kill,pfd);
@@ -50,6 +45,16 @@ int __dbg_tbreak(int pfd)
 int __dbg_lbreak(int pfd)
 {
 	return syscall(SYS_dbg_lbreak,pfd);
+}
+
+int __dbg_suspend_thread(int pfd, pid_t tid)
+{
+	return syscall(SYS_dbg_suspend_thread,pfd,tid);
+}
+
+int __dbg_resume_thread(int pfd, pid_t tid)
+{
+	return syscall(SYS_dbg_resume_thread,pfd,tid);
 }
 
 int __dbg_event_query_one(int pfd, struct __dbg_event * evt)

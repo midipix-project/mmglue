@@ -346,24 +346,26 @@
 
 #define __NR_dbg_spawn			362
 #define __NR_dbg_fork			363
-#define __NR_dbg_suspend		364
-#define __NR_dbg_kill			365
+#define __NR_dbg_kill			364
 
-#define __NR_dbg_rbreak			366
-#define __NR_dbg_tbreak			367
-#define __NR_dbg_lbreak			368
+#define __NR_dbg_rbreak			365
+#define __NR_dbg_tbreak			366
+#define __NR_dbg_lbreak			367
 
-#define __NR_dbg_event_query_one	369
-#define __NR_dbg_event_query_all	370
+#define __NR_dbg_suspend_thread		368
+#define __NR_dbg_resume_thread		369
 
-#define __NR_dbg_event_acquire		371
-#define __NR_dbg_event_respond		372
+#define __NR_dbg_event_query_one	370
+#define __NR_dbg_event_query_all	371
 
-#define __NR_dbg_query_cpid		373
-#define __NR_dbg_query_syspid		374
+#define __NR_dbg_event_acquire		372
+#define __NR_dbg_event_respond		373
 
-#define __NR_dbg_common_error		375
-#define __NR_dbg_native_error		376
+#define __NR_dbg_query_cpid		374
+#define __NR_dbg_query_syspid		375
+
+#define __NR_dbg_common_error		376
+#define __NR_dbg_native_error		377
 
 #define SYS_cmd_args_to_argv		384
 #define SYS_cmd_argv_to_args		385
