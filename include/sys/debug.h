@@ -161,6 +161,10 @@ int __dbg_lbreak(int);
 ssize_t __dbg_vm_read(int, void *, size_t, uintptr_t);
 ssize_t __dbg_vm_write(int, const void *, size_t, uintptr_t);
 
+/* thread register context */
+int __dbg_regs_fetch(int, pid_t, mcontext_t *);
+int __dbg_regs_store(int, pid_t, const mcontext_t *);
+
 /* suspend/resume thread; return previous suspend count (negative for an error) */
 int __dbg_suspend_thread(int, pid_t);
 int __dbg_resume_thread(int, pid_t);
