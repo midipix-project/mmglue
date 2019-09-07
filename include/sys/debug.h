@@ -157,6 +157,10 @@ int __dbg_rbreak(int);
 int __dbg_tbreak(int);
 int __dbg_lbreak(int);
 
+/* virtual memory */
+ssize_t __dbg_vm_read(int, void *, size_t, uintptr_t);
+ssize_t __dbg_vm_write(int, const void *, size_t, uintptr_t);
+
 /* suspend/resume thread; return previous suspend count (negative for an error) */
 int __dbg_suspend_thread(int, pid_t);
 int __dbg_resume_thread(int, pid_t);

@@ -47,6 +47,16 @@ int __dbg_lbreak(int pfd)
 	return syscall(SYS_dbg_lbreak,pfd);
 }
 
+ssize_t __dbg_vm_read(int pfd, void * buf, size_t len, uintptr_t addr)
+{
+	return syscall(SYS_dbg_vm_read,pfd,buf,len,addr);
+}
+
+ssize_t __dbg_vm_write(int pfd, const void * buf, size_t len, uintptr_t addr)
+{
+	return syscall(SYS_dbg_vm_write,pfd,buf,len,addr);
+}
+
 int __dbg_suspend_thread(int pfd, pid_t tid)
 {
 	return syscall(SYS_dbg_suspend_thread,pfd,tid);
