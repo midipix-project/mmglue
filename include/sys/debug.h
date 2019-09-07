@@ -152,14 +152,14 @@ int __dbg_spawn(const char *, char **, char **, const struct __strace *);
 int __dbg_fork(void);
 int __dbg_kill(int);
 
-/* suspend/resume thread; return previous suspend count (negative for an error) */
-int __dbg_suspend_thread(int, pid_t);
-int __dbg_resume_thread(int, pid_t);
-
 /* breakpoint via remote break-in, thread context manipulation, or lpc message */
 int __dbg_rbreak(int);
 int __dbg_tbreak(int);
 int __dbg_lbreak(int);
+
+/* suspend/resume thread; return previous suspend count (negative for an error) */
+int __dbg_suspend_thread(int, pid_t);
+int __dbg_resume_thread(int, pid_t);
 
 /**
  * query one (or all) pending debug event(s) for the given debug
