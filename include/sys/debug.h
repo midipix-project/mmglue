@@ -29,6 +29,19 @@ enum __dbg_state {
 	__DBG_STATE_DLL_UNLOAD,
 };
 
+/* debug process/session info */
+enum __dbg_info {
+	__DBG_INFO_IMAGE_RPATH,
+	__DBG_INFO_IMAGE_NPATH,
+	__DBG_INFO_IMAGE_APATH,
+	__DBG_INFO_IMAGE_DPATH,
+	__DBG_INFO_REPORTED_IMAGE_RPATH,
+	__DBG_INFO_REPORTED_IMAGE_APATH,
+	__DBG_INFO_REPORTED_IMAGE_NPATH,
+	__DBG_INFO_REPORTED_IMAGE_DPATH,
+	__DBG_INFO_CAP,
+};
+
 /* debug responses */
 #define __DBG_RESPONSE_CONTINUE                 (0x00010002)
 #define __DBG_RESPONSE_EXCEPTION_HANDLED        (0x00010001)
@@ -164,6 +177,10 @@ ssize_t __dbg_vm_write(int, const void *, size_t, uintptr_t);
 /* thread register context */
 int __dbg_regs_fetch(int, pid_t, mcontext_t *);
 int __dbg_regs_store(int, pid_t, const mcontext_t *);
+
+/* debug information */
+ssize_t __dbg_info_get(int, pid_t, int, void *, size_t);
+ssize_t __dbg_info_set(int, pid_t, int, const void *, size_t);
 
 /* suspend/resume thread; return previous suspend count (negative for an error) */
 int __dbg_suspend_thread(int, pid_t);

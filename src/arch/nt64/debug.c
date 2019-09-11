@@ -67,6 +67,16 @@ int __dbg_regs_store(int pfd, pid_t tid, const mcontext_t * regctx)
 	return syscall(SYS_dbg_regs_store,pfd,tid,regctx);
 }
 
+ssize_t __dbg_info_get(int pfd, pid_t tid, int type, void * buf, size_t len)
+{
+	return syscall(SYS_dbg_info_get,pfd,tid,type,buf,len);
+}
+
+ssize_t __dbg_info_set(int pfd, pid_t tid, int type, const void * buf, size_t len)
+{
+	return syscall(SYS_dbg_info_set,pfd,tid,type,buf,len);
+}
+
 int __dbg_suspend_thread(int pfd, pid_t tid)
 {
 	return syscall(SYS_dbg_suspend_thread,pfd,tid);
