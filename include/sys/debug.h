@@ -163,6 +163,21 @@ struct __dbg_event {
 	const char *    image_dpath;
 };
 
+/* debug loaded module alpha definition */
+struct __dbg_module_info {
+	void *		module_base;
+	void *		module_record;
+
+	char *		module_name;
+	void *		module_ctx;
+
+	int		module_key;
+	uint32_t	module_flags;
+
+	uint64_t	module_qpc;
+	uint64_t	module_reserved;
+};
+
 /* pid (or syspid) --> debug file descriptor */
 int __dbg_attach(pid_t);
 int __dbg_detach(int);
