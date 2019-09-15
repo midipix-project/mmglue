@@ -26,8 +26,6 @@ typedef struct {
 	unsigned int		uc_mx_csr;			/* 0x018 */
 	unsigned int		uc_mx_csr_mask;			/* 0x01c */
 	uc_m128a_t		uc_float_registers[8];		/* 0x020 */
-	uc_m128a_t		uc_xmm_registers[16];		/* 0x0a0 */
-	unsigned char		uc_reserved4[96];		/* 0x1a0 */
 } uc_xsave_fmt_t;
 
 typedef struct {
