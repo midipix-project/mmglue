@@ -341,40 +341,43 @@
 #define __NR_fs_npath			354
 #define __NR_fs_dpath			355
 
-#define __NR_dbg_attach			360
-#define __NR_dbg_detach			361
+#define __NR_dbg_attach			368
+#define __NR_dbg_detach			369
 
-#define __NR_dbg_spawn			362
-#define __NR_dbg_fork			363
-#define __NR_dbg_kill			364
+#define __NR_dbg_spawn			370
+#define __NR_dbg_fork			371
+#define __NR_dbg_kill			372
 
-#define __NR_dbg_rbreak			365
-#define __NR_dbg_tbreak			366
-#define __NR_dbg_lbreak			367
+#define __NR_dbg_rbreak			373
+#define __NR_dbg_tbreak			374
+#define __NR_dbg_lbreak			375
 
-#define __NR_dbg_vm_read		368
-#define __NR_dbg_vm_write		369
+#define __NR_dbg_vm_read		376
+#define __NR_dbg_vm_write		377
 
-#define __NR_dbg_regs_fetch		370
-#define __NR_dbg_regs_store		371
+#define __NR_dbg_regs_fetch		378
+#define __NR_dbg_regs_store		379
 
-#define __NR_dbg_info_get		372
-#define __NR_dbg_info_set		373
+#define __NR_dbg_info_get		380
+#define __NR_dbg_info_set		381
 
-#define __NR_dbg_suspend_thread		374
-#define __NR_dbg_resume_thread		375
+#define __NR_dbg_suspend_thread		382
+#define __NR_dbg_resume_thread		383
 
-#define __NR_dbg_event_query_one	376
-#define __NR_dbg_event_query_all	377
+#define __NR_dbg_create_thread		384
+#define __NR_dbg_abort_thread		385
 
-#define __NR_dbg_event_acquire		378
-#define __NR_dbg_event_respond		379
+#define __NR_dbg_event_query_one	386
+#define __NR_dbg_event_query_all	387
 
-#define __NR_dbg_query_cpid		380
-#define __NR_dbg_query_syspid		381
+#define __NR_dbg_event_acquire		388
+#define __NR_dbg_event_respond		389
 
-#define __NR_dbg_common_error		382
-#define __NR_dbg_native_error		383
+#define __NR_dbg_query_cpid		390
+#define __NR_dbg_query_syspid		391
 
-#define __NR_cmd_args_to_argv		384
-#define __NR_cmd_argv_to_args		385
+#define __NR_dbg_common_error		392
+#define __NR_dbg_native_error		393
+
+#define __NR_cmd_args_to_argv		400
+#define __NR_cmd_argv_to_args		401
