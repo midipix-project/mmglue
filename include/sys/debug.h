@@ -116,11 +116,11 @@ struct __dbg_event {
 	uint64_t        evtkey;
 	uint64_t        evtqpc;
 
-	pid_t           cpid;
-	pid_t           ctid;
-
 	pid_t           syspid;
 	pid_t           systid;
+
+	pid_t           child_syspid;
+	pid_t           child_systid;
 
 	mcontext_t *    thread_context;
 	siginfo_t *     thread_siginfo;
