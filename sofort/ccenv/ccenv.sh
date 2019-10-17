@@ -969,6 +969,7 @@ ccenv_output_defs()
 {
 	ccenv_in="$mb_project_dir/sofort/ccenv/ccenv.in"
 	ccenv_mk="$mb_pwd/ccenv/$ccenv_cfgtype.mk"
+	ccenv_tmp=
 
 	if [ "$ccenv_cc_binfmt" = 'PE' ]; then
 		ccenv_pe="$mb_project_dir/sofort/ccenv/pedefs.in"
@@ -990,7 +991,7 @@ ccenv_output_defs()
 
 		ccenv_in="$ccenv_tmp"
 	else
-		unset ccenv_tmp || :
+		unset ccenv_tmp
 	fi
 
 	ccenv_vars=$(cut -d'=' -f1 "$mb_project_dir/sofort/ccenv/ccenv.vars" \
