@@ -206,33 +206,33 @@ ccenv_set_tool_variants()
 	ccenv_candidates=objdump
 	ccenv_find_tool
 
-	$ccenv_tool --version | grep -i Binutils    \
-			> /dev/null                 \
-		&& ccenv_objdump_bfd="$ccenv_tool"
+	if $ccenv_tool --version | grep -i Binutils > /dev/null; then
+		ccenv_objdump_bfd="$ccenv_tool"
+	fi
 
 	# objdump (llvm)
 	ccenv_candidates=llvm-objdump
 	ccenv_find_tool
 
-	$ccenv_tool --version | grep -i LLVM        \
-			> /dev/null                 \
-		&& ccenv_objdump_llvm="$ccenv_tool"
+	if $ccenv_tool --version | grep -i LLVM > /dev/null; then
+		ccenv_objdump_llvm="$ccenv_tool"
+	fi
 
 	# readelf (bfd)
 	ccenv_candidates=readelf
 	ccenv_find_tool
 
-	$ccenv_tool --version | grep -i Binutils    \
-			> /dev/null                 \
-		&& ccenv_readelf_bfd="$ccenv_tool"
+	if $ccenv_tool --version | grep -i Binutils > /dev/null; then
+		ccenv_readelf_bfd="$ccenv_tool"
+	fi
 
 	# readelf (llvm)
 	ccenv_candidates=llvm-readelf
 	ccenv_find_tool
 
-	$ccenv_tool --version | grep -i LLVM        \
-			> /dev/null                 \
-		&& ccenv_readelf_llvm="$ccenv_tool"
+	if $ccenv_tool --version | grep -i LLVM > /dev/null; then
+		ccenv_readelf_llvm="$ccenv_tool"
+	fi
 
 	# as
 	if [ -n "$ccenv_cc" ]; then
@@ -487,11 +487,12 @@ ccenv_set_cc_underscore()
 	ccenv_fn_name='ZmYaXyWbVe_UuTnSdReQrPsOcNoNrLe'
 	ccenv_fn_code='int %s(void){return 0;}'
 
-	printf "$ccenv_fn_code" $ccenv_fn_name  \
-		| $ccenv_cc -xc - -S -o -       \
-		| grep "^_$ccenv_fn_name:"      \
-			> /dev/null             \
-		&& ccenv_cc_underscore='_'
+	if printf "$ccenv_fn_code" $ccenv_fn_name  \
+			| $ccenv_cc -xc - -S -o -  \
+			| grep "^_$ccenv_fn_name:" \
+				> /dev/null; then
+		ccenv_cc_underscore='_'
+	fi
 
 	return 0
 }
@@ -551,19 +552,21 @@ ccenv_set_cc_binfmt()
 
 	# PE / perk
 	if [ -n "$ccenv_perk" ]; then
-		$ccenv_perk $ccenv_image 2>/dev/null \
-		&& ccenv_cc_binfmt='PE'               \
-		&& ccenv_use_perk=yes
+		if $ccenv_perk $ccenv_image 2>/dev/null; then
+			ccenv_cc_binfmt='PE'
+			ccenv_use_perk=yes
+		fi
 	fi
 
 	# ELF / readelf
 	if [ -n "$ccenv_readelf" ] && [ -z "$ccenv_cc_binfmt" ]; then
-		$ccenv_readelf -h $ccenv_image 2>/dev/null        \
-			| grep 'Magic:' | sed -e 's/[ ]*//g'      \
-			| grep 'Magic:7f454c46'                   \
-				> /dev/null                       \
-		&& ccenv_cc_binfmt='ELF'                          \
-		&& ccenv_use_readelf=yes
+		if $ccenv_readelf -h $ccenv_image 2>/dev/null        \
+				| grep 'Magic:' | sed -e 's/[ ]*//g' \
+				| grep 'Magic:7f454c46'              \
+					> /dev/null; then
+			ccenv_cc_binfmt='ELF'
+			ccenv_use_readelf=yes
+		fi
 	fi
 
 	# a marble of astonishing design:
@@ -577,70 +580,77 @@ ccenv_set_cc_binfmt()
 
 	# PE / readelf
 	if [ -n "$ccenv_readany" ] && [ -z "$ccenv_cc_binfmt" ]; then
-		$ccenv_readany -h $ccenv_image 2>/dev/null        \
-			| grep 'Magic:' | sed -e 's/[ ]*//g'      \
-			| grep 'Magic:MZ'                         \
-				> /dev/null                       \
-		&& ccenv_cc_binfmt='PE'                           \
-		&& ccenv_use_readelf=yes
+		if $ccenv_readany -h $ccenv_image 2>/dev/null        \
+				| grep 'Magic:' | sed -e 's/[ ]*//g' \
+				| grep 'Magic:MZ'                    \
+					> /dev/null; then
+			ccenv_cc_binfmt='PE'
+			ccenv_use_readelf=yes
+		fi
 	fi
 
 	# MACHO-64 / otool
 	if [ -n "$ccenv_otool" ] && [ -z "$ccenv_cc_binfmt" ]; then
-		$ccenv_otool -hv $ccenv_image 2>/dev/null         \
-			| grep -i 'MH_MAGIC_64'                   \
-				> /dev/null                       \
-		&& ccenv_cc_binfmt='MACHO'                        \
-		&& ccenv_use_otool=yes
+		if $ccenv_otool -hv $ccenv_image 2>/dev/null \
+				| grep -i 'MH_MAGIC_64'      \
+					> /dev/null; then
+			ccenv_cc_binfmt='MACHO'
+			ccenv_use_otool=yes
+		fi
 	fi
 
 	# MACHO-32 / otool
 	if [ -n "$ccenv_otool" ] && [ -z "$ccenv_cc_binfmt" ]; then
-		$ccenv_otool -hv $ccenv_image 2>/dev/null         \
-			| grep -i 'MH_MAGIC'                      \
-				> /dev/null                       \
-		&& ccenv_cc_binfmt='MACHO'                        \
-		&& ccenv_use_otool=yes
+		if $ccenv_otool -hv $ccenv_image 2>/dev/null \
+				| grep -i 'MH_MAGIC'         \
+					> /dev/null; then
+			ccenv_cc_binfmt='MACHO'
+			ccenv_use_otool=yes
+		fi
 	fi
 
 	# MACHO-64 / readelf
 	if [ -n "$ccenv_readany" ] && [ -z "$ccenv_cc_binfmt" ]; then
-		$ccenv_readany -h $ccenv_image 2>/dev/null        \
-			| grep -i 'Magic:' | sed -e 's/[ ]*//g'   \
-			| grep -i '(0xfeedfacf)'                  \
-				> /dev/null                       \
-		&& ccenv_cc_binfmt='MACHO'                        \
-		&& ccenv_use_readelf=yes
+		if $ccenv_readany -h $ccenv_image 2>/dev/null             \
+				| grep -i 'Magic:' | sed -e 's/[ ]*//g'   \
+				| grep -i '(0xfeedfacf)'                  \
+					> /dev/null; then
+			ccenv_cc_binfmt='MACHO'
+			ccenv_use_readelf=yes
+		fi
 	fi
 
 	# MACHO-32 / readelf
 	if [ -n "$ccenv_readany" ] && [ -z "$ccenv_cc_binfmt" ]; then
-		$ccenv_readany -h $ccenv_image 2>/dev/null        \
-			| grep -i 'Magic:' | sed -e 's/[ ]*//g'   \
-			| grep -i '(0xcafebabe)'                  \
-				> /dev/null                       \
-		&& ccenv_cc_binfmt='MACHO'                        \
-		&& ccenv_use_readelf=yes
+		if $ccenv_readany -h $ccenv_image 2>/dev/null             \
+				| grep -i 'Magic:' | sed -e 's/[ ]*//g'   \
+				| grep -i '(0xcafebabe)'                  \
+					> /dev/null; then
+			ccenv_cc_binfmt='MACHO'
+			ccenv_use_readelf=yes
+		fi
 	fi
 
 	# MACHO / readobj
 	if [ -n "$ccenv_readobj" ] && [ -z "$ccenv_cc_binfmt" ]; then
-		$ccenv_readobj $ccenv_image 2>/dev/null           \
-			| grep -i 'Format:' | sed 's/ /_/g'       \
-			| grep -i '_Mach-O_'                      \
-				> /dev/null                       \
-		&& ccenv_cc_binfmt='MACHO'                        \
-		&& ccenv_use_readobj=yes
+		if $ccenv_readobj $ccenv_image 2>/dev/null           \
+				| grep -i 'Format:' | sed 's/ /_/g'  \
+				| grep -i '_Mach-O_'                 \
+					> /dev/null; then
+			ccenv_cc_binfmt='MACHO'
+			ccenv_use_readobj=yes
+		fi
 	fi
 
 	# MACHO / objdump (llvm)
 	if [ -n "$ccenv_objdump" ] && [ -z "$ccenv_cc_binfmt" ]; then
-		$ccenv_objdump -section-headers $ccenv_image      \
-				2>/dev/null                       \
-			| grep -i 'file format Mach-O'            \
-				> /dev/null                       \
-		&& ccenv_cc_binfmt='MACHO'                        \
-		&& ccenv_use_objdump=yes
+		if $ccenv_objdump -section-headers $ccenv_image  \
+					2>/dev/null              \
+				| grep -i 'file format Mach-O'   \
+					> /dev/null; then
+			ccenv_cc_binfmt='MACHO'
+			ccenv_use_objdump=yes
+		fi
 	fi
 
 	# MACHO / objdump (bfd)
@@ -654,11 +664,12 @@ ccenv_set_cc_binfmt()
 
 	# PE / objdump (bfd)
 	if [ -n "$ccenv_objdump" ] && [ -z "$ccenv_cc_binfmt" ]; then
-		$ccenv_objdump -h  $ccenv_image 2>/dev/null       \
-			| grep -i 'file format pei-'              \
-				> /dev/null                       \
-		&& ccenv_cc_binfmt='PE'                           \
-		&& ccenv_use_bfd_objdump=yes
+		if $ccenv_objdump -h  $ccenv_image 2>/dev/null \
+				| grep -i 'file format pei-'   \
+					> /dev/null; then
+			ccenv_cc_binfmt='PE'
+			ccenv_use_bfd_objdump=yes
+		fi
 	fi
 }
 
@@ -979,7 +990,7 @@ ccenv_output_defs()
 
 		ccenv_in="$ccenv_tmp"
 	else
-		unset ccenv_tmp
+		unset ccenv_tmp || :
 	fi
 
 	ccenv_vars=$(cut -d'=' -f1 "$mb_project_dir/sofort/ccenv/ccenv.vars" \
