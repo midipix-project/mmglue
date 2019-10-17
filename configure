@@ -243,95 +243,95 @@ common_defaults()
 	fi
 
 	# project
-	[ -z "$mb_nickname" ] 		&& mb_nickname=$mb_package
-	[ -z "$mb_source_dir" ] 	&& mb_source_dir=$mb_project_dir
-	[ -z "$mb_avoid_version" ] 	&& mb_avoid_version='no'
+	[ -n "$mb_nickname" ] 		|| mb_nickname=$mb_package
+	[ -n "$mb_source_dir" ] 	|| mb_source_dir=$mb_project_dir
+	[ -n "$mb_avoid_version" ] 	|| mb_avoid_version='no'
 
 	# pkgconfig
-	[ -z "$mb_pkgname" ]		&& mb_pkgname="$mb_default_pkgname"
-	[ -z "$mb_pkgdesc" ]		&& mb_pkgdesc="$mb_default_pkgdesc"
-	[ -z "$mb_pkgusrc" ]		&& mb_pkgusrc="$mb_default_pkgusrc"
-	[ -z "$mb_pkgrepo" ]		&& mb_pkgrepo="$mb_default_pkgrepo"
-	[ -z "$mb_pkgpsrc" ]		&& mb_pkgpsrc="$mb_default_pkgpsrc"
-	[ -z "$mb_pkgdurl" ]		&& mb_pkgdurl="$mb_default_pkgdurl"
-	[ -z "$mb_pkgdefs" ]		&& mb_pkgdefs="$mb_default_pkgdefs"
-	[ -z "$mb_pkglibs" ]		&& mb_pkglibs="$mb_default_pkglibs"
+	[ -n "$mb_pkgname" ]		|| mb_pkgname="$mb_default_pkgname"
+	[ -n "$mb_pkgdesc" ]		|| mb_pkgdesc="$mb_default_pkgdesc"
+	[ -n "$mb_pkgusrc" ]		|| mb_pkgusrc="$mb_default_pkgusrc"
+	[ -n "$mb_pkgrepo" ]		|| mb_pkgrepo="$mb_default_pkgrepo"
+	[ -n "$mb_pkgpsrc" ]		|| mb_pkgpsrc="$mb_default_pkgpsrc"
+	[ -n "$mb_pkgdurl" ]		|| mb_pkgdurl="$mb_default_pkgdurl"
+	[ -n "$mb_pkgdefs" ]		|| mb_pkgdefs="$mb_default_pkgdefs"
+	[ -n "$mb_pkglibs" ]		|| mb_pkglibs="$mb_default_pkglibs"
 
 	# dirs
-	[ -z "$mb_prefix" ] 		&& [ -z "$mb_prefix_set" ] \
-					&& mb_prefix='/usr/local'
+	[ -n "$mb_prefix" ] 		|| [ -n "$mb_prefix_set" ] \
+					|| mb_prefix='/usr/local'
 
-	[ -z "$mb_exec_prefix" ] 	&& [ -z "$mb_exec_prefix_set" ]	\
-					&& mb_exec_prefix=$mb_prefix
+	[ -n "$mb_exec_prefix" ] 	|| [ -n "$mb_exec_prefix_set" ]	\
+					|| mb_exec_prefix=$mb_prefix
 
-	[ -z "$mb_bindir" ] 		&& [ -z "$mb_bindir_set" ] \
-					&& [ -z "$mb_bindir_basename" ] \
-					&& mb_bindir=$mb_exec_prefix/bin
+	[ -n "$mb_bindir" ] 		|| [ -n "$mb_bindir_set" ] \
+					|| [ -n "$mb_bindir_basename" ] \
+					|| mb_bindir=$mb_exec_prefix/bin
 
-	[ -z "$mb_bindir" ] 		&& [ -z "$mb_bindir_set" ] \
-					&& mb_bindir=$mb_exec_prefix/$mb_bindir_basename
+	[ -n "$mb_bindir" ] 		|| [ -n "$mb_bindir_set" ] \
+					|| mb_bindir=$mb_exec_prefix/$mb_bindir_basename
 
-	[ -z "$mb_sbindir" ] 		&& mb_sbindir=$mb_exec_prefix/sbin
-	[ -z "$mb_libdir" ] 		&& mb_libdir=$mb_exec_prefix/lib
-	[ -z "$mb_includedir" ]		&& mb_includedir=$mb_prefix/include
-	[ -z "$mb_oldincludedir" ]	&& mb_oldincludedir=$mb_prefix/include
-	[ -z "$mb_datarootdir" ] 	&& mb_datarootdir=$mb_prefix/share
-	[ -z "$mb_mandir" ] 		&& mb_mandir=$mb_datarootdir/man
-	[ -z "$mb_docdir" ] 		&& mb_docdir=$mb_datarootdir/doc
-	[ -z "$mb_libexecdir" ]		&& mb_libexecdir=$mb_exec_prefix/libexec
+	[ -n "$mb_sbindir" ] 		|| mb_sbindir=$mb_exec_prefix/sbin
+	[ -n "$mb_libdir" ] 		|| mb_libdir=$mb_exec_prefix/lib
+	[ -n "$mb_includedir" ]		|| mb_includedir=$mb_prefix/include
+	[ -n "$mb_oldincludedir" ]	|| mb_oldincludedir=$mb_prefix/include
+	[ -n "$mb_datarootdir" ] 	|| mb_datarootdir=$mb_prefix/share
+	[ -n "$mb_mandir" ] 		|| mb_mandir=$mb_datarootdir/man
+	[ -n "$mb_docdir" ] 		|| mb_docdir=$mb_datarootdir/doc
+	[ -n "$mb_libexecdir" ]		|| mb_libexecdir=$mb_exec_prefix/libexec
 
-	[ -z "$mb_sysconfdir" ] 	&& mb_sysconfdir=$mb_exec_prefix/etc
-	[ -z "$mb_sharedstatedir" ] 	&& mb_sharedstatedir=$mb_prefix/com
-	[ -z "$mb_localstatedir" ] 	&& mb_localstatedir=$mb_prefix/var
-	[ -z "$mb_runstatedir" ] 	&& mb_runstatedir=$mb_localstatedir/run
-	[ -z "$mb_datarootdir" ] 	&& mb_datarootdir=$mb_prefix/share
-	[ -z "$mb_datadir" ] 		&& mb_datadir=$mb_datarootdir
-	[ -z "$mb_infodir" ] 		&& mb_infodir=$mb_datarootdir/info
-	[ -z "$mb_localedir" ] 		&& mb_localedir=$mb_datarootdir/locale
-	[ -z "$mb_htmldir" ] 		&& mb_htmldir=$mb_docdir
-	[ -z "$mb_dvidir" ] 		&& mb_dvidir=$mb_docdir
-	[ -z "$mb_pdfdir" ] 		&& mb_pdfdir=$mb_docdir
-	[ -z "$mb_psdir" ] 		&& mb_psdir=$mb_docdir
+	[ -n "$mb_sysconfdir" ] 	|| mb_sysconfdir=$mb_exec_prefix/etc
+	[ -n "$mb_sharedstatedir" ] 	|| mb_sharedstatedir=$mb_prefix/com
+	[ -n "$mb_localstatedir" ] 	|| mb_localstatedir=$mb_prefix/var
+	[ -n "$mb_runstatedir" ] 	|| mb_runstatedir=$mb_localstatedir/run
+	[ -n "$mb_datarootdir" ] 	|| mb_datarootdir=$mb_prefix/share
+	[ -n "$mb_datadir" ] 		|| mb_datadir=$mb_datarootdir
+	[ -n "$mb_infodir" ] 		|| mb_infodir=$mb_datarootdir/info
+	[ -n "$mb_localedir" ] 		|| mb_localedir=$mb_datarootdir/locale
+	[ -n "$mb_htmldir" ] 		|| mb_htmldir=$mb_docdir
+	[ -n "$mb_dvidir" ] 		|| mb_dvidir=$mb_docdir
+	[ -n "$mb_pdfdir" ] 		|| mb_pdfdir=$mb_docdir
+	[ -n "$mb_psdir" ] 		|| mb_psdir=$mb_docdir
 
 	# switches
-	[ -z "$mb_cflags_debug" ]	&& mb_cflags_debug=$mb_default_cflags_debug
-	[ -z "$mb_cflags_common" ]	&& mb_cflags_common=$mb_default_cflags_common
-	[ -z "$mb_cflags_cmdline" ]	&& mb_cflags_cmdline=$mb_default_cflags_cmdline
-	[ -z "$mb_cflags_config" ]	&& mb_cflags_config=$mb_default_cflags_config
-	[ -z "$mb_cflags_sysroot" ]	&& mb_cflags_sysroot=$mb_default_cflags_sysroot
-	[ -z "$mb_cflags_os" ]		&& mb_cflags_os=$mb_default_cflags_os
-	[ -z "$mb_cflags_site" ]	&& mb_cflags_site=$mb_default_cflags_site
-	[ -z "$mb_cflags_path" ]	&& mb_cflags_path=$mb_default_cflags_path
-	[ -z "$mb_cflags_strict" ]	&& mb_cflags_strict=$mb_default_cflags_strict
-	[ -z "$mb_cflags_util" ]	&& mb_cflags_util=$mb_default_cflags_util
-	[ -z "$mb_cflags_last" ]	&& mb_cflags_last=$mb_default_cflags_last
-	[ -z "$mb_cflags_once" ]	&& mb_cflags_once=$mb_default_cflags_once
+	[ -n "$mb_cflags_debug" ]	|| mb_cflags_debug=$mb_default_cflags_debug
+	[ -n "$mb_cflags_common" ]	|| mb_cflags_common=$mb_default_cflags_common
+	[ -n "$mb_cflags_cmdline" ]	|| mb_cflags_cmdline=$mb_default_cflags_cmdline
+	[ -n "$mb_cflags_config" ]	|| mb_cflags_config=$mb_default_cflags_config
+	[ -n "$mb_cflags_sysroot" ]	|| mb_cflags_sysroot=$mb_default_cflags_sysroot
+	[ -n "$mb_cflags_os" ]		|| mb_cflags_os=$mb_default_cflags_os
+	[ -n "$mb_cflags_site" ]	|| mb_cflags_site=$mb_default_cflags_site
+	[ -n "$mb_cflags_path" ]	|| mb_cflags_path=$mb_default_cflags_path
+	[ -n "$mb_cflags_strict" ]	|| mb_cflags_strict=$mb_default_cflags_strict
+	[ -n "$mb_cflags_util" ]	|| mb_cflags_util=$mb_default_cflags_util
+	[ -n "$mb_cflags_last" ]	|| mb_cflags_last=$mb_default_cflags_last
+	[ -n "$mb_cflags_once" ]	|| mb_cflags_once=$mb_default_cflags_once
 
-	[ -z "$mb_ldflags_debug" ]	&& mb_ldflags_debug=$mb_default_ldflags_debug
-	[ -z "$mb_ldflags_common" ]	&& mb_ldflags_common=$mb_default_ldflags_common
-	[ -z "$mb_ldflags_cmdline" ]	&& mb_ldflags_cmdline=$mb_default_ldflags_cmdline
-	[ -z "$mb_ldflags_config" ]	&& mb_ldflags_config=$mb_default_ldflags_config
-	[ -z "$mb_ldflags_sysroot" ]	&& mb_ldflags_sysroot=$mb_default_ldflags_sysroot
-	[ -z "$mb_ldflags_path" ]	&& mb_ldflags_path=$mb_default_ldflags_path
-	[ -z "$mb_ldflags_strict" ]	&& mb_ldflags_strict=$mb_default_ldflags_strict
-	[ -z "$mb_ldflags_util" ]	&& mb_ldflags_util=$mb_default_ldflags_util
-	[ -z "$mb_ldflags_last" ]	&& mb_ldflags_last=$mb_default_ldflags_last
-	[ -z "$mb_ldflags_once" ]	&& mb_ldflags_once=$mb_default_ldflags_once
+	[ -n "$mb_ldflags_debug" ]	|| mb_ldflags_debug=$mb_default_ldflags_debug
+	[ -n "$mb_ldflags_common" ]	|| mb_ldflags_common=$mb_default_ldflags_common
+	[ -n "$mb_ldflags_cmdline" ]	|| mb_ldflags_cmdline=$mb_default_ldflags_cmdline
+	[ -n "$mb_ldflags_config" ]	|| mb_ldflags_config=$mb_default_ldflags_config
+	[ -n "$mb_ldflags_sysroot" ]	|| mb_ldflags_sysroot=$mb_default_ldflags_sysroot
+	[ -n "$mb_ldflags_path" ]	|| mb_ldflags_path=$mb_default_ldflags_path
+	[ -n "$mb_ldflags_strict" ]	|| mb_ldflags_strict=$mb_default_ldflags_strict
+	[ -n "$mb_ldflags_util" ]	|| mb_ldflags_util=$mb_default_ldflags_util
+	[ -n "$mb_ldflags_last" ]	|| mb_ldflags_last=$mb_default_ldflags_last
+	[ -n "$mb_ldflags_once" ]	|| mb_ldflags_once=$mb_default_ldflags_once
 
 	# native switches
-	[ -z "$mb_native_cflags" ]	&& mb_native_cflags=$mb_default_native_cflags
-	[ -z "$mb_native_ldflags" ]	&& mb_native_ldflags=$mb_default_native_ldflags
+	[ -n "$mb_native_cflags" ]	|| mb_native_cflags=$mb_default_native_cflags
+	[ -n "$mb_native_ldflags" ]	|| mb_native_ldflags=$mb_default_native_ldflags
 
 	# config
-	[ -z "$mb_all_static" ]		&& mb_all_static='no'
-	[ -z "$mb_all_shared" ]		&& mb_all_shared='no'
-	[ -z "$mb_disable_frontend" ]	&& mb_disable_frontend='no'
-	[ -z "$mb_disable_static" ]	&& mb_disable_static='no'
-	[ -z "$mb_disable_shared" ]	&& mb_disable_shared='no'
+	[ -n "$mb_all_static" ]		|| mb_all_static='no'
+	[ -n "$mb_all_shared" ]		|| mb_all_shared='no'
+	[ -n "$mb_disable_frontend" ]	|| mb_disable_frontend='no'
+	[ -n "$mb_disable_static" ]	|| mb_disable_static='no'
+	[ -n "$mb_disable_shared" ]	|| mb_disable_shared='no'
 
 	# host/target
-	[ -z "$mb_host" ] 		&& mb_host=$mb_target
-	[ -z "$mb_target" ] 		&& mb_target=$mb_host
+	[ -n "$mb_host" ] 		|| mb_host=$mb_target
+	[ -n "$mb_target" ] 		|| mb_target=$mb_host
 
 	# sysroot
 	if [ -n "$mb_sysroot" ]; then
