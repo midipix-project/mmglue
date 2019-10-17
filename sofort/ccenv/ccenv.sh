@@ -53,12 +53,15 @@ ccenv_find_tool()
 	if [ -z "$ccenv_prefixes" ]; then
 		for ccenv_tool in $ccenv_candidates; do
 			if [ -z ${@:-} ]; then
-				command -v "$ccenv_tool" > /dev/null && \
+				if command -v "$ccenv_tool" > /dev/null; then
 					return 0
+				fi
 			else
-				command -v "$ccenv_tool" > /dev/null && \
-					"$ccenv_tool" $@ > /dev/null 2>&1 && \
+				if command -v "$ccenv_tool" > /dev/null; then
+					if "$ccenv_tool" $@ > /dev/null 2>&1; then
 						return 0
+					fi
+				fi
 			fi
 		done
 
@@ -70,12 +73,17 @@ ccenv_find_tool()
 	for ccenv_prefix in $ccenv_prefixes; do
 		for ccenv_candidate in $ccenv_candidates; do
 			ccenv_tool="$ccenv_prefix$ccenv_candidate"
-			command -v "$ccenv_tool" > /dev/null && return 0
+
+			if command -v "$ccenv_tool" > /dev/null; then
+				return 0
+			fi
 		done
 	done
 
 	for ccenv_tool in $ccenv_candidates; do
-		command -v "$ccenv_tool" > /dev/null && return 0
+		if command -v "$ccenv_tool" > /dev/null; then
+			return 0
+		fi
 	done
 
 	ccenv_tool=false
