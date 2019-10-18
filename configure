@@ -468,6 +468,10 @@ config_status()
 
 config_failure()
 {
+	if [ _$mb_success = _yes ]; then
+		return 0
+	fi
+
 	if [ -f Makefile ]; then
 		mb_error='failed to use the generated Makefile.'
 		printf '\n%s: error: %s\n' "${0}" "$mb_error" >&2
@@ -481,6 +485,7 @@ config_failure()
 config_success()
 {
 	trap '' EXIT
+	mb_success=yes
 	exit 0
 }
 
