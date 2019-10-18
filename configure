@@ -4,6 +4,10 @@ set -eu
 
 trap config_failure 1 2 EXIT
 
+# before we begin...
+mb_script="$0"
+mb_path="$PATH"
+
 usage()
 {
 	cat "$mb_project_dir"/config.usage
@@ -44,7 +48,7 @@ warning_msg()
 
 init_vars()
 {
-	mb_project_dir=$(cd "$(dirname $0)" ; pwd)
+	mb_project_dir=$(cd "$(dirname "$mb_script")" ; pwd)
 	mb_pwd=$(pwd)
 
 	mb_custom_cfgdefs_args=''
