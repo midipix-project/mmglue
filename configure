@@ -5,8 +5,9 @@ set -eu
 trap config_failure 1 2 EXIT
 
 # before we begin...
-mb_script="$0"
 mb_path="$PATH"
+mb_script="$0"
+mb_success=no
 
 usage()
 {
