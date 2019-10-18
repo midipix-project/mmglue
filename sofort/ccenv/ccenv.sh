@@ -51,7 +51,7 @@ ccenv_comment()
 ccenv_find_tool()
 {
 	if [ -z "$ccenv_prefixes" ]; then
-		for ccenv_tool in $ccenv_candidates; do
+		for ccenv_tool in $(printf %s "$ccenv_candidates"); do
 			if [ -z ${@:-} ]; then
 				if command -v "$ccenv_tool" > /dev/null; then
 					return 0
@@ -70,8 +70,8 @@ ccenv_find_tool()
 		return 0
 	fi
 
-	for ccenv_prefix in $ccenv_prefixes; do
-		for ccenv_candidate in $ccenv_candidates; do
+	for ccenv_prefix in $(printf %s "$ccenv_prefixes"); do
+		for ccenv_candidate in $(printf %s "$ccenv_candidates"); do
 			ccenv_tool="$ccenv_prefix$ccenv_candidate"
 
 			if command -v "$ccenv_tool" > /dev/null; then
@@ -80,7 +80,7 @@ ccenv_find_tool()
 		done
 	done
 
-	for ccenv_tool in $ccenv_candidates; do
+	for ccenv_tool in $(printf %s "$ccenv_candidates"); do
 		if command -v "$ccenv_tool" > /dev/null; then
 			return 0
 		fi
@@ -98,7 +98,7 @@ ccenv_set_primary_tools()
 	ccenv_hack_tools="addr2line cov elfedit readelf readobj otool"
 	ccenv_peep_tools="perk mdso dlltool windmc windres"
 
-	for __tool in $ccenv_core_tools $ccenv_hack_tools $ccenv_peep_tools; do
+	for __tool in $(printf %s "$ccenv_core_tools $ccenv_hack_tools $ccenv_peep_tools"); do
 		if [ -n "$mb_agnostic" ]; then
 			ccenv_candidates=" $__tool"
 
@@ -1000,7 +1000,7 @@ ccenv_output_defs()
 	ccenv_exvars="ccenv_cfgtype ccenv_makevar_prefix"
 
 	ccenv_sed_substs=" \
-		$(for __var in $ccenv_vars $ccenv_exvars; do \
+		$(for __var in $(printf %s "$ccenv_vars $ccenv_exvars"); do \
 			printf '%s"$%s"%s' "-e 's/@$__var@/'" \
 				"$__var" "'/g' ";              \
 		done)"
@@ -1010,7 +1010,7 @@ ccenv_output_defs()
 		> "$ccenv_mk"
 
 	if [ "$ccenv_cfgtype" = 'host' ]; then
-		for __var in $ccenv_vars; do
+		for __var in $(printf %s "$ccenv_vars"); do
 			ccenv_src_var=$__var
 			ccenv_dst_var=mb_${__var#*ccenv_}
 			ccenv_var_expr='${'$ccenv_src_var':-}'
@@ -1021,7 +1021,7 @@ ccenv_output_defs()
 		mb_host=$ccenv_host
 		mb_cchost=$ccenv_cchost
 	else
-		for __var in $ccenv_vars; do
+		for __var in $(printf %s "$ccenv_vars"); do
 			ccenv_src_var=$__var
 			ccenv_dst_var=mb_native_${__var#*ccenv_}
 			ccenv_var_expr='${'$ccenv_src_var':-}'
