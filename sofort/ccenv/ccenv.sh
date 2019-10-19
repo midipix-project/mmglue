@@ -299,7 +299,7 @@ ccenv_set_cc()
 	ccenv_cc_cmd="$ccenv_cc"
 
 	if [ "$ccenv_cfgtype" = 'native' ]; then
-		ccenv_host=$($ccenv_cc $ccenv_cflags -dumpmachine 2>/dev/null)
+		ccenv_host=$($ccenv_cc $(printf '%s' "$ccenv_cflags") -dumpmachine 2>/dev/null)
 		ccenv_cchost=$ccenv_host
 		return 0
 	fi
@@ -313,7 +313,7 @@ ccenv_set_cc()
 	fi
 
 	if [ -z "$ccenv_host" ]; then
-		ccenv_host=$($ccenv_cc $ccenv_cflags -dumpmachine 2>/dev/null)
+		ccenv_host=$($ccenv_cc $(printf '%s' "$ccenv_cflags") -dumpmachine 2>/dev/null)
 		ccenv_cchost=$ccenv_host
 	else
 		ccenv_tmp=$(mktemp ./tmp_XXXXXXXXXXXXXXXX)
@@ -334,7 +334,7 @@ ccenv_set_cc()
 		rm -f "$ccenv_tmp"
 		unset ccenv_tmp
 
-		ccenv_cchost=$($ccenv_cc $ccenv_cflags -dumpmachine 2>/dev/null)
+		ccenv_cchost=$($ccenv_cc $(printf '%s' "$ccenv_cflags") -dumpmachine 2>/dev/null)
 	fi
 
 	if [ "$ccenv_cchost" != "$ccenv_host" ]; then
