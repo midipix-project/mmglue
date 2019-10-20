@@ -462,7 +462,7 @@ config_host()
 config_status()
 {
 	printf "\n\n"
-	make .display
+	make -j1 .display
 	printf "\nconfiguration completed successfully.\n\n"
 }
 
