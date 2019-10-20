@@ -51,7 +51,7 @@ if [ -z "$srcdir" ] || [ -z "$output" ] || [ -z "$prefix" ]; then
 	usage
 fi
 
-cd "$srcdir"
+cd -- "$srcdir"
 
 gitver=$(git rev-parse --verify HEAD      2>/dev/null) || gitver="unknown"
 cvdate=$(git show -s --format=%ci $gitver 2>/dev/null) || cvdate=$(date)
@@ -59,7 +59,7 @@ cvdate=$(git show -s --format=%ci $gitver 2>/dev/null) || cvdate=$(date)
 vmacro=$(printf '%s' "$prefix"'_GIT_VERSION' | tr '[:lower:]' '[:upper:]')
 dmacro=$(printf '%s' "$prefix"'_GIT_DATE   ' | tr '[:lower:]' '[:upper:]')
 
-cd "$workdir"
+cd -- "$workdir"
 
 
 # three
