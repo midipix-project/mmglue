@@ -51,14 +51,16 @@ ccenv_comment()
 ccenv_find_tool()
 {
 	if [ -z "$ccenv_prefixes" ]; then
-		for ccenv_tool in $(printf %s "$ccenv_candidates"); do
+		for ccenv_candidate in $(printf %s "$ccenv_candidates"); do
 			if [ -z ${@:-} ]; then
-				if command -v "$ccenv_tool" > /dev/null; then
+				if command -v "$ccenv_candidate" > /dev/null; then
+					ccenv_tool="$ccenv_candidate"
 					return 0
 				fi
 			else
-				if command -v "$ccenv_tool" > /dev/null; then
-					if "$ccenv_tool" $@ > /dev/null 2>&1; then
+				if command -v "$ccenv_candidate" > /dev/null; then
+					if "$ccenv_candidate" $@ > /dev/null 2>&1; then
+						ccenv_tool="$ccenv_candidate"
 						return 0
 					fi
 				fi
@@ -80,8 +82,9 @@ ccenv_find_tool()
 		done
 	done
 
-	for ccenv_tool in $(printf %s "$ccenv_candidates"); do
-		if command -v "$ccenv_tool" > /dev/null; then
+	for ccenv_candidate in $(printf %s "$ccenv_candidates"); do
+		if command -v "$ccenv_candidate" > /dev/null; then
+			ccenv_tool="$ccenv_candidate"
 			return 0
 		fi
 	done
