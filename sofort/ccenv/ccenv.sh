@@ -474,10 +474,10 @@ ccenv_set_cc_bits()
 				"$ccenv_internal_type"                      \
 				"$ccenv_internal_guess")
 
-			printf '%s' "$ccenv_internal_str"           \
-					| $ccenv_cc -S -xc - -o -   \
-					  $ccenv_cflags             \
-				> /dev/null 2>/dev/null             \
+			printf '%s' "$ccenv_internal_str"                   \
+					| $ccenv_cc -S -xc - -o -           \
+					  $(printf '%s' "$ccenv_cflags")    \
+				> /dev/null 2>/dev/null                     \
 			&& ccenv_internal_size=$ccenv_internal_guess
 		fi
 	done
