@@ -18,7 +18,7 @@ exit 1
 
 
 # one
-workdir=$(pwd)
+workdir=$(pwd -P)
 srcdir=
 output=
 prefix=

@@ -49,8 +49,8 @@ warning_msg()
 
 init_vars()
 {
-	mb_project_dir=$(cd "$(dirname "$mb_script")" ; pwd)
-	mb_pwd=$(pwd)
+	mb_project_dir=$(cd "$(dirname "$mb_script")" ; pwd -P)
+	mb_pwd=$(pwd -P)
 
 	mb_custom_cfgdefs_args=''
 	mb_custom_cfgdefs_space=''
