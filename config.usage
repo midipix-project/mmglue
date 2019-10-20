@@ -8,6 +8,7 @@ supported switches:
 	--program-prefix
 	--avoid-version
 	--source-dir
+	--srcdir
 
 	--pkgname
 	--pkgdesc

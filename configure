@@ -686,6 +686,9 @@ for arg ; do
 		--source-dir=*)
 			mb_source_dir=${arg#*=}
 			;;
+		--srcdir=*)
+			mb_source_dir=${arg#*=}
+			;;
 
 		# pkgconfig
 		--pkgname=*)
