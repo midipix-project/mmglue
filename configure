@@ -99,24 +99,6 @@ init_vars()
 		. "$mb_config"
 	fi
 
-	# project-specific config definitions
-	if [ _$mb_use_custom_cfgdefs = _yes ]; then
-		cat $sfrt_cfgdefs_in > cfgdefs.mk
-	else
-		printf '%s %s\n\n' \
-				'# this project does not include' \
-				'a custom config step.'           \
-			> cfgdefs.mk
-		cat $sfrt_cfgdefs_in >> cfgdefs.mk
-
-		if [ -f $mb_project_dir/project/cfgdefs.in ]; then
-			cat $mb_project_dir/project/cfgdefs.in >> cfgdefs.mk
-		fi
-	fi
-
-	# user build-time overrides
-	touch usrdefs.mk
-
 	# project
 	mb_nickname=$NICKNAME
 	mb_source_dir=$SOURCE_DIR
@@ -238,6 +220,24 @@ verify_source_directory()
 
 common_defaults()
 {
+	# project-specific config definitions
+	if [ _$mb_use_custom_cfgdefs = _yes ]; then
+		cat $sfrt_cfgdefs_in > cfgdefs.mk
+	else
+		printf '%s %s\n\n' \
+				'# this project does not include' \
+				'a custom config step.'           \
+			> cfgdefs.mk
+		cat $sfrt_cfgdefs_in >> cfgdefs.mk
+
+		if [ -f $mb_project_dir/project/cfgdefs.in ]; then
+			cat $mb_project_dir/project/cfgdefs.in >> cfgdefs.mk
+		fi
+	fi
+
+	# user build-time overrides
+	touch usrdefs.mk
+
 	# git
 	if [ -n "$mb_source_dir" ]; then
 		if [ -d "$mb_source_dir/.git" ]; then
