@@ -38,12 +38,12 @@ usage()
 
 error_msg()
 {
-	printf '%s' "$@" >&2
+	printf '%s\n' "$@" >&2
 }
 
 warning_msg()
 {
-	printf '%s' "$@" >&2
+	printf '%s\n' "$@" >&2
 }
 
 verify_safe_path()
