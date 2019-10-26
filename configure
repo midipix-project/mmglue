@@ -46,11 +46,33 @@ warning_msg()
 	printf '%s' "$@" >&2
 }
 
+verify_safe_path()
+{
+	case "$mb_safe_path_name" in
+		-*)
+			error_msg "$mb_safe_path_desc may not begin with a hyphen."
+			exit 2
+			;;
+
+		*\ *)
+			error_msg "$mb_safe_path_desc may not contain spaces."
+			exit 2
+			;;
+	esac
+}
 
 init_vars()
 {
 	mb_project_dir=$(cd -- "${mb_script%/*}/" ; pwd -P)
 	mb_pwd=$(pwd -P)
+
+	mb_safe_path_desc='project directory'
+	mb_safe_path_name="$mb_project_dir"
+	verify_safe_path
+
+	mb_safe_path_desc='working directory'
+	mb_safe_path_name="$mb_pwd"
+	verify_safe_path
 
 	mb_custom_cfgdefs_args=''
 	mb_custom_cfgdefs_space=''
@@ -741,6 +763,10 @@ for arg ; do
 			fi
 			;;
 	esac
+
+	mb_safe_path_desc='source directory'
+	mb_safe_path_name="$mb_source_dir"
+	verify_safe_path
 done
 
 
