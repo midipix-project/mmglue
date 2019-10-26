@@ -62,17 +62,17 @@ init_vars()
 	sfrt_flag_vars=$sfrt_config_dir/flag.vars
 	sfrt_cfgdefs_in=$sfrt_config_dir/cfgdefs.in
 
-	mb_make_vars=$(cat $sfrt_config_vars \
-		| grep -v -e '^#' -e '^$' | tr '[:lower:]' '[:upper:]')
+	mb_make_vars=$(< "$sfrt_config_vars" \
+		grep -v -e '^#' -e '^$' | tr '[:lower:]' '[:upper:]')
 
-	mb_impl_vars=$(cat $sfrt_config_vars \
-		| grep -v -e '^#' -e '^$' | sed 's/^/mb_/g')
+	mb_impl_vars=$(< "$sfrt_config_vars" \
+		grep -v -e '^#' -e '^$' | sed 's/^/mb_/g')
 
-	mb_proj_vars=$(cat $sfrt_config_vars \
-		| grep -v -e '^#' -e '^$' | sed 's/^/mb_default_/g')
+	mb_proj_vars=$(< "$sfrt_config_vars" \
+		grep -v -e '^#' -e '^$' | sed 's/^/mb_default_/g')
 
-	mb_flag_vars=$(cat $sfrt_flag_vars \
-		| grep -v -e '^#' -e '^$')
+	mb_flag_vars=$(< "$sfrt_flag_vars" \
+		grep -v -e '^#' -e '^$')
 
 	mb_vars="$mb_make_vars $mb_impl_vars $mb_proj_vars $mb_flag_vars"
 
