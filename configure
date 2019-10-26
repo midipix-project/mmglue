@@ -38,12 +38,12 @@ usage()
 
 error_msg()
 {
-	echo "$@" >&2
+	printf '%s' "$@" >&2
 }
 
 warning_msg()
 {
-	echo "$@" >&2
+	printf '%s' "$@" >&2
 }
 
 
@@ -370,7 +370,7 @@ common_defaults()
 config_flags()
 {
 	mb_ldflags_tmp=" $mb_ldflags "
-	mb_ldflags_libs=$(echo "$mb_ldflags_tmp" | sed 's/ -static / /g')
+	mb_ldflags_libs=$(printf '%s' "$mb_ldflags_tmp" | sed 's/ -static / /g')
 
 	if [ "$mb_ldflags_tmp" != "$mb_ldflags_libs" ]; then
 		mb_ldflags="$mb_ldflags_libs"
