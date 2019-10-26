@@ -76,7 +76,7 @@ init_vars()
 
 	mb_vars="$mb_make_vars $mb_impl_vars $mb_proj_vars $mb_flag_vars"
 
-	for mb_var in $(printf "$mb_vars") ; do
+	for mb_var in $(printf '%s' "$mb_vars") ; do
 		mb_expr=$mb_var='${'$mb_var':-}'
 		eval "$mb_expr"
 	done
@@ -395,7 +395,7 @@ config_copy()
 			| grep -v '^#')
 
 	mb_sed_substs=" \
-		$(for __var in $(printf %s "$mb_vars"); do   \
+		$(for __var in $(printf '%s' "$mb_vars"); do   \
 			printf '%s"$%s"%s' "-e 's^@$__var@^'" \
 				"mb_$__var" "'^g' ";           \
 		done)"
@@ -461,9 +461,9 @@ config_host()
 
 config_status()
 {
-	printf "\n\n"
+	printf '\n\n'
 	make -j1 .display
-	printf "\nconfiguration completed successfully.\n\n"
+	printf '\nconfiguration completed successfully.\n\n'
 }
 
 

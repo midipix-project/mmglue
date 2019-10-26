@@ -39,7 +39,7 @@ while getopts "hs:o:p:" opt; do
     		prefix="$OPTARG"
     		;;
 	\?)
-    		printf "Invalid option: -%s" "$OPTARG" >&2
+		printf 'Invalid option: -%s' "$OPTARG" >&2
     		usage
     		;;
 	esac
