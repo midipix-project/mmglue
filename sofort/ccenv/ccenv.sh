@@ -470,8 +470,8 @@ ccenv_set_cc_bits()
 
 	for ccenv_internal_guess in 64 32 128; do
 		if [ -z $ccenv_internal_size ]; then
-			ccenv_internal_str=$(printf '%s' "$ccenv_internal_test"  \
-				"$ccenv_internal_type"                           \
+			ccenv_internal_str=$(printf "$ccenv_internal_test"  \
+				"$ccenv_internal_type"                      \
 				"$ccenv_internal_guess")
 
 			printf '%s' "$ccenv_internal_str"                   \
