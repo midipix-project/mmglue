@@ -122,6 +122,9 @@ struct __dbg_event {
 	pid_t           child_syspid;
 	pid_t           child_systid;
 
+	pid_t           bridge_syspid;
+	pid_t           bridge_systid;
+
 	mcontext_t *    thread_context;
 	siginfo_t *     thread_siginfo;
 
