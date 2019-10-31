@@ -57,6 +57,9 @@ enum __dbg_info {
 #define __DBG_RESPONSE_TERMINATE_PROCESS        (0x40010004)
 #define __DBG_RESPONSE_TERMINATE_THREAD         (0x40010003)
 
+/* debug event attributes */
+#define __DBG_EVENT_ATTR_INTERNAL_BREAKPOINT    (0X00000001)
+
 /* thread types */
 #define __DBG_THREAD_TYPE_UNKNOWN       0x00
 #define __DBG_THREAD_TYPE_PTHREAD       0x01
@@ -115,6 +118,9 @@ struct __dbg_event {
 
 	uint64_t        evtkey;
 	uint64_t        evtqpc;
+
+	uint32_t	evtattr;
+	uint32_t	ctxattr;
 
 	pid_t           syspid;
 	pid_t           systid;
