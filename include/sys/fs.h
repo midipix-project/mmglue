@@ -6,8 +6,14 @@ extern "C" {
 #endif
 
 #define __NEED_size_t
+#define __NEED_mode_t
+#define __NEED_uint32_t
 
 #include <bits/alltypes.h>
+
+/* acceess control entry flags */
+#define __ACE_OBJECT_INHERIT            (0x01)
+#define __ACE_CONTAINER_INHERIT         (0x02)
 
 /***************************************************************************/
 /* int (*__fs_path_fn)(int fdat, const char * path, int options,           */
@@ -41,6 +47,9 @@ int __fs_rpath(int, const char *, int, char *, size_t);
 int __fs_apath(int, const char *, int, char *, size_t);
 int __fs_npath(int, const char *, int, char *, size_t);
 int __fs_dpath(int, const char *, int, char *, size_t);
+
+int __fs_mkdir(int, const char *, mode_t, uint32_t);
+int __fs_chmod(int, const char *, mode_t, int, uint32_t);
 
 #ifdef __cplusplus
 }

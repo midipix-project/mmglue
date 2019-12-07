@@ -24,3 +24,13 @@ int __fs_dpath(int fdat, const char * path, int options,
 {
 	return syscall(SYS_fs_dpath,fdat,path,options,buffer,buflen);
 }
+
+int __fs_mkdir(int fdat, const char * path, mode_t mode, uint32_t ace_flags)
+{
+	return syscall(SYS_fs_mkdir,fdat,path,mode,ace_flags);
+}
+
+int __fs_chmod(int fdat, const char * path, mode_t mode, int flags, uint32_t ace_flags)
+{
+	return syscall(SYS_fs_chmod,fdat,path,mode,flags,ace_flags);
+}
