@@ -341,6 +341,12 @@
 #define __NR_fs_npath			354
 #define __NR_fs_dpath			355
 
+#define __NR_fs_nstat			356
+#define __NR_fs_qstat			357
+
+#define __NR_fs_mkdir			358
+#define __NR_fs_chmod			359
+
 #define __NR_dbg_attach			368
 #define __NR_dbg_detach			369
 
