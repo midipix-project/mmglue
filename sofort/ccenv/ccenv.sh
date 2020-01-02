@@ -48,6 +48,44 @@ ccenv_comment()
 }
 
 
+ccenv_tool_prolog()
+{
+	ccenv_line_dots='......................................'
+	ccenv_tool_desc="=== checking for ${1}"
+	ccenv_tool_dlen="${#ccenv_line_dots}"
+
+	printf "%${ccenv_tool_dlen}.${ccenv_tool_dlen}s" \
+		"${ccenv_tool_desc} ${mb_line_dots}"
+}
+
+
+ccenv_tool_epilog()
+{
+	ccenv_line_dots='................................'
+	ccenv_tool_dlen="$((${#ccenv_line_dots} - ${#1}))"
+
+	printf "%${ccenv_tool_dlen}.${ccenv_tool_dlen}s %s.\n" \
+		"${ccenv_line_dots}" "${1}"
+}
+
+
+ccenv_attr_prolog()
+{
+	ccenv_line_dots='......................................'
+	ccenv_attr_desc="=== detect ${ccenv_cfgtype} ${1}"
+	ccenv_attr_dlen="${#ccenv_line_dots}"
+
+	printf "%${ccenv_attr_dlen}.${ccenv_attr_dlen}s" \
+		"${ccenv_attr_desc} ${ccenv_line_dots}"
+}
+
+
+ccenv_attr_epilog()
+{
+	ccenv_tool_epilog "${1}"
+}
+
+
 ccenv_find_tool()
 {
 	if [ -z "$ccenv_prefixes" ]; then
@@ -102,6 +140,8 @@ ccenv_set_primary_tools()
 	ccenv_peep_tools="perk mdso dlltool windmc windres"
 
 	for __tool in $(printf '%s' "$ccenv_core_tools $ccenv_hack_tools $ccenv_peep_tools"); do
+		ccenv_tool_prolog "$__tool"
+
 		if [ -n "$mb_agnostic" ]; then
 			ccenv_candidates=" $__tool"
 
@@ -146,6 +186,8 @@ ccenv_set_primary_tools()
 			ccenv_find_tool
 			eval ccenv_$__tool="$ccenv_tool"
 		fi
+
+		ccenv_tool_epilog "$ccenv_tool"
 	done
 
 	# windrc
@@ -155,6 +197,7 @@ ccenv_set_primary_tools()
 ccenv_set_tool_variants()
 {
 	# as (asm)
+	ccenv_tool_prolog 'as (asm)'
 	ccenv_candidates=as
 	ccenv_find_tool
 
@@ -165,7 +208,10 @@ ccenv_set_tool_variants()
 		|| ccenv_as_asm="$ccenv_tool"
 	fi
 
+	ccenv_tool_epilog "$ccenv_as_asm"
+
 	# as (ll)
+	ccenv_tool_prolog 'as (ll)'
 	ccenv_candidates=llvm-as
 	ccenv_find_tool
 
@@ -173,7 +219,10 @@ ccenv_set_tool_variants()
 		ccenv_as_ll="$ccenv_tool"
 	fi
 
+	ccenv_tool_epilog "$ccenv_as_ll"
+
 	# as (mc)
+	ccenv_tool_prolog 'as (mc)'
 	ccenv_candidates=llvm-mc
 	ccenv_find_tool
 
@@ -181,7 +230,10 @@ ccenv_set_tool_variants()
 		ccenv_as_mc="$ccenv_tool"
 	fi
 
+	ccenv_tool_epilog "$ccenv_as_mc"
+
 	# ld (bfd)
+	ccenv_tool_prolog 'ld (bfd)'
 	ccenv_candidates=ld.bfd
 	ccenv_find_tool
 
@@ -189,7 +241,10 @@ ccenv_set_tool_variants()
 		ccenv_ld_bfd="$ccenv_tool"
 	fi
 
+	ccenv_tool_epilog "$ccenv_ld_bfd"
+
 	# ld (gold)
+	ccenv_tool_prolog 'ld (gold)'
 	ccenv_candidates=ld.gold
 	ccenv_find_tool
 
@@ -197,7 +252,10 @@ ccenv_set_tool_variants()
 		ccenv_ld_gold="$ccenv_tool"
 	fi
 
+	ccenv_tool_epilog "$ccenv_ld_gold"
+
 	# ld (lld)
+	ccenv_tool_prolog 'ld (lld)'
 	ccenv_candidates=lld
 	ccenv_find_tool
 
@@ -205,7 +263,10 @@ ccenv_set_tool_variants()
 		ccenv_ld_lld="$ccenv_tool"
 	fi
 
+	ccenv_tool_epilog "$ccenv_ld_lld"
+
 	# objdump (bfd)
+	ccenv_tool_prolog 'objdump (bfd)'
 	ccenv_candidates=objdump
 	ccenv_find_tool
 
@@ -213,7 +274,10 @@ ccenv_set_tool_variants()
 		ccenv_objdump_bfd="$ccenv_tool"
 	fi
 
+	ccenv_tool_epilog "$ccenv_objdump_bfd"
+
 	# objdump (llvm)
+	ccenv_tool_prolog 'objdump (llvm)'
 	ccenv_candidates=llvm-objdump
 	ccenv_find_tool
 
@@ -221,7 +285,10 @@ ccenv_set_tool_variants()
 		ccenv_objdump_llvm="$ccenv_tool"
 	fi
 
+	ccenv_tool_epilog "$ccenv_objdump_llvm"
+
 	# readelf (bfd)
+	ccenv_tool_prolog 'readelf (bfd)'
 	ccenv_candidates=readelf
 	ccenv_find_tool
 
@@ -229,13 +296,18 @@ ccenv_set_tool_variants()
 		ccenv_readelf_bfd="$ccenv_tool"
 	fi
 
+	ccenv_tool_epilog "$ccenv_readelf_bfd"
+
 	# readelf (llvm)
+	ccenv_tool_prolog 'readelf (llvm)'
 	ccenv_candidates=llvm-readelf
 	ccenv_find_tool
 
 	if $ccenv_tool --version | grep -i LLVM > /dev/null; then
 		ccenv_readelf_llvm="$ccenv_tool"
 	fi
+
+	ccenv_tool_epilog "$ccenv_readelf_llvm"
 
 	# as
 	if [ -n "$ccenv_cc" ]; then
@@ -289,6 +361,8 @@ ccenv_set_c_compiler_candidates()
 
 ccenv_set_cc()
 {
+	ccenv_tool_prolog 'C compiler'
+
 	if [ -z "$ccenv_cc" ]; then
 		ccenv_set_c_compiler_candidates
 		ccenv_find_tool -dumpmachine
@@ -304,6 +378,7 @@ ccenv_set_cc()
 	if [ "$ccenv_cfgtype" = 'native' ]; then
 		ccenv_host=$($ccenv_cc $(printf '%s' "$ccenv_cflags") -dumpmachine 2>/dev/null)
 		ccenv_cchost=$ccenv_host
+		ccenv_tool_epilog "$ccenv_cc"
 		return 0
 	fi
 
@@ -365,10 +440,14 @@ ccenv_set_cc()
 
 		return 2
 	fi
+
+	ccenv_tool_epilog "$ccenv_cc"
 }
 
 ccenv_set_cpp()
 {
+	ccenv_tool_prolog 'C pre-processor'
+
 	case "$ccenv_cc_cmd" in
 		cc | c99 | c11 | gcc)
 			ccenv_cpp_prefix=
@@ -400,6 +479,7 @@ ccenv_set_cpp()
 
 		* )
 			ccenv_cpp="$ccenv_cc -E"
+			ccenv_tool_epilog "$ccenv_cpp"
 			return 0
 	esac
 
@@ -412,10 +492,14 @@ ccenv_set_cpp()
 	else
 		ccenv_cpp="$ccenv_tool"
 	fi
+
+	ccenv_tool_epilog "$ccenv_cpp"
 }
 
 ccenv_set_cxx()
 {
+	ccenv_tool_prolog 'C++ compiler'
+
 	case "$ccenv_cc_cmd" in
 		cc | c99 | c11 )
 			ccenv_cxx_prefix=
@@ -443,6 +527,7 @@ ccenv_set_cxx()
 
 		* )
 			ccenv_cxx="$ccenv_cc -xc++"
+			ccenv_tool_epilog "$ccenv_cxx"
 			return 0
 	esac
 
@@ -455,15 +540,21 @@ ccenv_set_cxx()
 	else
 		ccenv_cxx="$ccenv_tool"
 	fi
+
+	ccenv_tool_epilog "$ccenv_cxx"
 }
 
 ccenv_set_cc_host()
 {
+	ccenv_attr_prolog 'name'
 	ccenv_cc_host="$ccenv_cchost"
+	ccenv_attr_epilog "$ccenv_cc_host"
 }
 
 ccenv_set_cc_bits()
 {
+	ccenv_attr_prolog 'bits'
+
 	ccenv_internal_size=
 	ccenv_internal_type='void *'
 	ccenv_internal_test='char x[(sizeof(%s) == %s/8) ? 1 : -1];'
@@ -483,10 +574,14 @@ ccenv_set_cc_bits()
 	done
 
 	ccenv_cc_bits=$ccenv_internal_size
+
+	ccenv_attr_epilog "$ccenv_cc_bits"
 }
 
 ccenv_set_cc_underscore()
 {
+	ccenv_attr_prolog 'prepended underscores'
+
 	ccenv_fn_name='ZmYaXyWbVe_UuTnSdReQrPsOcNoNrLe'
 	ccenv_fn_code='int %s(void){return 0;}'
 
@@ -495,7 +590,10 @@ ccenv_set_cc_underscore()
 			| grep "^_$ccenv_fn_name:" \
 				> /dev/null; then
 		ccenv_cc_underscore='_'
+		ccenv_attr_epilog 'yes'
 	fi
+
+	ccenv_attr_epilog 'no'
 
 	return 0
 }
@@ -540,6 +638,11 @@ ccenv_create_freestanding_executable()
 	return 0
 }
 
+ccenv_set_cc_binfmt_error()
+{
+	ccenv_attr_epilog '(unable to create executable)'
+}
+
 ccenv_set_cc_binfmt()
 {
 	ccenv_use_perk=
@@ -549,8 +652,11 @@ ccenv_set_cc_binfmt()
 	ccenv_use_bfd_objdump=
 	ccenv_use_llvm_objdump=
 
+	ccenv_attr_prolog 'binary format'
+
 	ccenv_create_framework_executable               \
 		|| ccenv_create_freestanding_executable \
+		|| ccenv_set_cc_binfmt_error            \
 		|| return 0
 
 	# PE / perk
@@ -674,6 +780,8 @@ ccenv_set_cc_binfmt()
 			ccenv_use_bfd_objdump=yes
 		fi
 	fi
+
+	ccenv_attr_epilog "$ccenv_cc_binfmt"
 }
 
 ccenv_set_os_pe()
@@ -738,6 +846,8 @@ ccenv_set_os_macho()
 
 ccenv_set_os()
 {
+	ccenv_attr_prolog 'os name'
+
 	case "$ccenv_cc_binfmt" in
 		PE )
 			ccenv_set_os_pe ;;
@@ -746,6 +856,7 @@ ccenv_set_os()
 	esac
 
 	if [ -n "$ccenv_os" ]; then
+		ccenv_attr_epilog "$ccenv_os"
 		return 0
 	fi
 
@@ -769,6 +880,8 @@ ccenv_set_os()
 	if [ -z "$ccenv_os" ]; then
 		ccenv_os='anyos'
 	fi
+
+	ccenv_attr_epilog "$ccenv_os"
 }
 
 ccenv_set_os_flags()
@@ -801,6 +914,8 @@ ccenv_set_os_semantics()
 {
 	# binary_format - core_api - ex_api - dependency_resolution
 
+	ccenv_attr_prolog 'os semantics'
+
 	case "$ccenv_os" in
 		linux )
 			ccenv_os_semantics='elf-posix-linux-ldso'
@@ -826,6 +941,7 @@ ccenv_set_os_semantics()
 	esac
 
 	if [ -n "$ccenv_os_semantics" ]; then
+		ccenv_attr_epilog "$ccenv_os_semantics"
 		return 0
 	fi
 
@@ -838,10 +954,14 @@ ccenv_set_os_semantics()
 	else
 		ccenv_os_semantics='unknown-posix-anyos-unknown'
 	fi
+
+	ccenv_attr_epilog "$ccenv_os_semantics"
 }
 
 ccenv_set_os_dso_exrules()
 {
+	ccenv_attr_prolog 'os dso exrules'
+
 	case "$ccenv_os" in
 		midipix )
 			ccenv_os_dso_exrules='pe-mdso'
@@ -853,12 +973,16 @@ ccenv_set_os_dso_exrules()
 				ccenv_os_dso_exrules='default'
 			fi
 	esac
+
+	ccenv_attr_epilog "$ccenv_os_dso_exrules"
 }
 
 ccenv_set_os_dso_linkage()
 {
 	# todo: PIC, PIE, and friends
+	ccenv_attr_prolog 'os linkage'
 	ccenv_os_dso_linkage='default'
+	ccenv_attr_epilog "$ccenv_os_dso_linkage"
 }
 
 ccenv_set_os_dso_patterns_darwin()
@@ -1112,8 +1236,8 @@ ccenv_set_characteristics()
 {
 	ccenv_set_cc_host
 	ccenv_set_cc_bits
-	ccenv_set_cc_underscore
 	ccenv_set_cc_binfmt
+	ccenv_set_cc_underscore
 }
 
 ccenv_set_toolchain_variables()
@@ -1140,12 +1264,18 @@ ccenv_set_toolchain_variables()
 
 ccenv_set_host_variables()
 {
+	output_script_status ${mb_script} \
+		'detect and query host toolchain ==>'
+
 	ccenv_set_toolchain_variables 'host'
 	ccenv_dso_verify
 }
 
 ccenv_set_native_variables()
 {
+	output_script_status ${mb_script} \
+		'detect and query native toolchain ==>'
+
 	if [ _$mb_ccenv_skip_native != _yes ]; then
 		ccenv_set_toolchain_variables 'native'
 	fi

@@ -46,6 +46,32 @@ warning_msg()
 	printf '%s\n' "$@" >&2
 }
 
+output_step_prolog()
+{
+	mb_line_dots='..................................'
+	mb_line_dots="${mb_line_dots}${mb_line_dots}"
+	mb_step_desc="${mb_package} : ${1##*/} : ${2}() "
+	mb_step_dlen="$((${#mb_line_dots} - ${#mb_step_desc}))"
+	printf "%s%${mb_step_dlen}.${mb_step_dlen}s " "${mb_step_desc}" "${mb_line_dots}"
+}
+
+output_step_epilog()
+{
+	printf 'OK.\n'
+}
+
+output_script_status()
+{
+	mb_step_name="${1##*/} : ${2}"
+	mb_step_desc="${mb_package} : ${mb_step_name}"
+	printf "%s\n" "${mb_step_desc}"
+}
+
+output_section_break()
+{
+	printf '...\n'
+}
+
 verify_safe_path()
 {
 	case "$mb_safe_path_name" in
@@ -120,6 +146,9 @@ init_vars()
 	else
 		. "$mb_config"
 	fi
+
+	# step prolog
+	output_step_prolog ${mb_script} 'init_vars'
 
 	# project
 	mb_nickname=$NICKNAME
@@ -208,11 +237,16 @@ init_vars()
 
 	mb_native_pe_subsystem=$NATIVE_PE_SUBSYSTEM
 	mb_native_pe_image_base=$NATIVE_PE_IMAGE_BASE
+
+	# step epilog
+	output_step_epilog
 }
 
 
 verify_build_directory()
 {
+	output_step_prolog ${mb_script} 'verify_build_directory'
+
 	if [ "$mb_project_dir" = "$mb_pwd" ]; then
 		if [ _$mb_require_out_of_tree = _yes ]; then
 			error_msg "$mb_package: out-of-tree builds are required."
@@ -224,11 +258,15 @@ verify_build_directory()
 	fi
 
 	rm -f Makefile Makefile.host Makefile.tmp Makefile.failed
+
+	output_step_epilog
 }
 
 
 verify_source_directory()
 {
+	output_step_prolog ${mb_script} 'verify_source_directory'
+
 	if [ -z "$mb_source_dir" ]; then
 		if [ _$mb_require_source_dir = _yes ]; then
 			error_msg "$mb_package: specifying an external source directory is required."
@@ -237,11 +275,16 @@ verify_source_directory()
 			exit 1
 		fi
 	fi
+
+	output_step_epilog
 }
 
 
 common_defaults()
 {
+	# step prolog
+	output_step_prolog ${mb_script} 'common_defaults'
+
 	# project-specific config definitions
 	if [ _$mb_use_custom_cfgdefs = _yes ]; then
 		cat $sfrt_cfgdefs_in > cfgdefs.mk
@@ -386,11 +429,17 @@ common_defaults()
 	# inherited cflags & ldflags
 	mb_cflags_cmdline="$mb_cflags_cmdline $mb_cflags"
 	mb_ldflags_cmdline="$mb_ldflags_cmdline $mb_ldflags"
+
+	# step epilog
+	output_step_epilog
 }
 
 
 config_flags()
 {
+	# step prolog
+	output_step_prolog ${mb_script} 'config_flags'
+
 	mb_ldflags_tmp=" $mb_ldflags "
 	mb_ldflags_libs=$(printf '%s' "$mb_ldflags_tmp" | sed 's/ -static / /g')
 
@@ -408,11 +457,16 @@ config_flags()
 	if [ _$mb_ldstrict = _yes ]; then
 		mb_ldflags_strict='-Wl,--no-undefined'
 	fi
+
+	# step epilog
+	output_step_epilog
 }
 
 
 config_copy()
 {
+	output_step_prolog ${mb_script} 'config_copy'
+
 	mb_vars=$(cut -d'=' -f1 $sfrt_config_vars \
 			| grep -v '^#')
 
@@ -426,6 +480,8 @@ config_copy()
 		$mb_project_dir/Makefile.in    \
 			| sed -e 's/[[:blank:]]*$//g' \
 			> $mb_pwd/Makefile.tmp
+
+	output_step_epilog
 }
 
 
@@ -435,28 +491,45 @@ config_ccenv()
 	touch ./ccenv/host.mk
 	touch ./ccenv/native.mk
 
+	output_section_break
 	ccenv_set_host_variables
+
+	output_section_break
 	ccenv_set_native_variables
 
+	output_section_break
 	config_copy
 }
 
 config_custom()
 {
 	if [ _$mb_use_custom_cfgdefs = _yes ]; then
+		output_section_break
+		output_script_status ${mb_script} \
+			'invoking project-specific cfgdefs.sh ==>'
+
 		eval . $mb_project_dir/project/config/cfgdefs.sh \
 			"$mb_custom_cfgdefs_args"
+
+		output_section_break
 		config_copy
 	fi
 
 	if [ _$mb_use_custom_usrdefs = _yes ]; then
+		output_section_break
+		output_script_status ${mb_scirpt} \
+			'invoking project-specific usrdefs.sh ==>'
+
 		. $mb_project_dir/project/usrdefs.sh
+		output_section_break
 	fi
 }
 
 
 config_cfghost()
 {
+	output_step_prolog ${mb_script} 'config_cfghost'
+
 	if [ -z "$mb_cfghost" ]; then
 		mb_cfghost=$mb_cchost
 	fi
@@ -467,12 +540,18 @@ config_cfghost()
 
 	rm  $mb_pwd/Makefile.tmp
 	mv  $mb_pwd/Makefile.host $mb_pwd/Makefile
+
+	output_step_epilog
 }
 
 
 config_host()
 {
-	make -s host.tag && return 0
+	output_step_prolog ${mb_script} 'config_host'
+
+	make -s host.tag             \
+		&& output_step_epilog \
+		&& return 0
 
 	error_msg "configure was able to generate a Makefile for the selected host,"
 	error_msg "however the host-targeting compiler was found to be missing"
@@ -483,9 +562,9 @@ config_host()
 
 config_status()
 {
-	printf '\n\n'
-	make -j1 .display
-	printf '\nconfiguration completed successfully.\n\n'
+	output_script_status ${mb_script} \
+		'configuration completed successfully.'
+	printf '\n'
 }
 
 
