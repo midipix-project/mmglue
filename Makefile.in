@@ -254,6 +254,8 @@ version.tag:	$(GIT_REFERENCE_INDEX) dirs.tag
 		touch version.tag
 
 distclean:	clean
+		rm -f ccenv/host.mk
+		rm -f ccenv/native.mk
 		rm -f cfgdefs.mk
 		rm -f usrdefs.mk
 		rm -f Makefile
