@@ -1213,7 +1213,15 @@ ccenv_common_init()
 
 	if [ $ccenv_cfgtype = 'host' ]; then
 		ccenv_tflags=
-		ccenv_cflags=$(make -s -f "$mb_pwd/Makefile.tmp" .display-cflags)
+		ccenv_cflags=
+
+		ccenv_cflags="$ccenv_cflags $mb_cflags_debug   $mb_cflags_config"
+		ccenv_cflags="$ccenv_cflags $mb_cflags_sysroot $mb_cflags_common"
+		ccenv_cflags="$ccenv_cflags $mb_cflags_cmdline $mb_cflags"
+		ccenv_cflags="$ccenv_cflags $mb_cflags_path    $mb_cflags_os"
+		ccenv_cflags="$ccenv_cflags $mb_cflags_site    $mb_cflags_strict"
+		ccenv_cflags="$ccenv_cflags $mb_cflags_last    $mb_cflags_once"
+
 		ccenv_cc="$mb_user_cc"
 		ccenv_cpp="$mb_user_cpp"
 		ccenv_cxx="$mb_user_cxx"
@@ -1260,6 +1268,8 @@ ccenv_set_toolchain_variables()
 
 	ccenv_output_defs
 	ccenv_clean_up
+
+	eval ccenv_${ccenv_cfgtype}_cc="$ccenv_cc"
 }
 
 ccenv_set_host_variables()
