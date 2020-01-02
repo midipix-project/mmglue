@@ -34,8 +34,15 @@ cfgtest_comment()
 
 cfgtest_target_section()
 {
-	mb_cfgtest_cc=$(make -s -f "$mb_pwd/Makefile.tmp" .display-cc)
-	mb_cfgtest_cflags=$(make -s -f "$mb_pwd/Makefile.tmp" .display-cflags)
+	mb_cfgtest_cflags=
+	mb_cfgtest_cflags="$mb_cfgtest_cflags $mb_cflags_debug   $mb_cflags_config"
+	mb_cfgtest_cflags="$mb_cfgtest_cflags $mb_cflags_sysroot $mb_cflags_common"
+	mb_cfgtest_cflags="$mb_cfgtest_cflags $mb_cflags_cmdline $mb_cflags"
+	mb_cfgtest_cflags="$mb_cfgtest_cflags $mb_cflags_path    $mb_cflags_os"
+	mb_cfgtest_cflags="$mb_cfgtest_cflags $mb_cflags_site    $mb_cflags_strict"
+	mb_cfgtest_cflags="$mb_cfgtest_cflags $mb_cflags_last    $mb_cflags_once"
+
+	mb_cfgtest_cc="$ccenv_host_cc"
 	mb_cfgtest_cfgtype='target'
 
 	cfgtest_comment 'target-specific tests'
