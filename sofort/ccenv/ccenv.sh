@@ -54,6 +54,8 @@ ccenv_tool_prolog()
 	ccenv_tool_desc="=== checking for ${1}"
 	ccenv_tool_dlen="${#ccenv_line_dots}"
 
+	printf '\n%s\n' '________________________' >&3
+	printf "ccenv: checking for ${1}\n\n" >&3
 	printf "%${ccenv_tool_dlen}.${ccenv_tool_dlen}s" \
 		"${ccenv_tool_desc} ${mb_line_dots}"
 }
@@ -66,6 +68,14 @@ ccenv_tool_epilog()
 
 	printf "%${ccenv_tool_dlen}.${ccenv_tool_dlen}s %s.\n" \
 		"${ccenv_line_dots}" "${1}"
+
+	if [ "${1}" = 'false' ]; then
+		printf '\n\nccenv: not (yet) found.\n' >&3
+	else
+		printf "\n\nccenv : found $(command -v ${1}).\n" >&3
+	fi
+
+	printf '%s\n' '------------------------' >&3
 }
 
 
@@ -87,12 +97,22 @@ ccenv_attr_prolog()
 
 	printf "%${ccenv_attr_dlen}.${ccenv_attr_dlen}s" \
 		"${ccenv_attr_desc} ${ccenv_line_dots}"
+
+	printf '\n%s\n' '________________________' >&3
+	printf "ccenv: detecting ${1}\n\n" >&3
 }
 
 
 ccenv_attr_epilog()
 {
-	ccenv_tool_epilog "${1}"
+	ccenv_line_dots='................................'
+	ccenv_tool_dlen="$((${#ccenv_line_dots} - ${#1}))"
+
+	printf "%${ccenv_tool_dlen}.${ccenv_tool_dlen}s %s.\n" \
+		"${ccenv_line_dots}" "${1}"
+
+	printf '\n\nccenv: detected result: %s\n' "${1}" >&3
+	printf '%s\n' '------------------------' >&3
 }
 
 
@@ -107,7 +127,7 @@ ccenv_find_tool()
 				fi
 			else
 				if command -v "$ccenv_candidate" > /dev/null; then
-					if "$ccenv_candidate" $@ > /dev/null 2>&1; then
+					if "$ccenv_candidate" $@ > /dev/null 2>&3; then
 						ccenv_tool="$ccenv_candidate"
 						return 0
 					fi
@@ -386,7 +406,7 @@ ccenv_set_cc()
 	ccenv_cc_cmd="$ccenv_cc"
 
 	if [ "$ccenv_cfgtype" = 'native' ]; then
-		ccenv_host=$($ccenv_cc $(printf '%s' "$ccenv_cflags") -dumpmachine 2>/dev/null)
+		ccenv_host=$($ccenv_cc $(printf '%s' "$ccenv_cflags") -dumpmachine 2>&3)
 		ccenv_cchost=$ccenv_host
 		ccenv_tool_epilog "$ccenv_cc"
 		return 0
@@ -401,7 +421,7 @@ ccenv_set_cc()
 	fi
 
 	if [ -z "$ccenv_host" ]; then
-		ccenv_host=$($ccenv_cc $(printf '%s' "$ccenv_cflags") -dumpmachine 2>/dev/null)
+		ccenv_host=$($ccenv_cc $(printf '%s' "$ccenv_cflags") -dumpmachine 2>&3)
 		ccenv_cchost=$ccenv_host
 	else
 		ccenv_tmp=$(mktemp ./tmp_XXXXXXXXXXXXXXXX)
@@ -416,16 +436,19 @@ ccenv_set_cc()
 			if [ -z "$ccenv_errors" ]; then
 				ccenv_tflags="--target=$ccenv_host"
 				ccenv_cc="$ccenv_cc $ccenv_tflags"
+			else
+				printf '%s' "$ccenv_errors" >&3
 			fi
 		fi
 
 		rm -f "$ccenv_tmp"
 		unset ccenv_tmp
 
-		ccenv_cchost=$($ccenv_cc $(printf '%s' "$ccenv_cflags") -dumpmachine 2>/dev/null)
+		ccenv_cchost=$($ccenv_cc $(printf '%s' "$ccenv_cflags") -dumpmachine 2>&3)
 	fi
 
 	if [ "$ccenv_cchost" != "$ccenv_host" ]; then
+		printf 'error!\n' >&2
 		printf 'ccenv:\n' >&2
 		printf 'ccenv: ccenv_host:   %s \n' $ccenv_host >&2
 		printf 'ccenv: ccenv_cchost: %s \n' $ccenv_cchost >&2
@@ -578,7 +601,7 @@ ccenv_set_cc_bits()
 			printf '%s' "$ccenv_internal_str"                   \
 					| $ccenv_cc -S -xc - -o -           \
 					  $(printf '%s' "$ccenv_cflags")    \
-				> /dev/null 2>/dev/null                     \
+				> /dev/null 2>&3                            \
 			&& ccenv_internal_size=$ccenv_internal_guess
 		fi
 	done
@@ -671,7 +694,7 @@ ccenv_set_cc_binfmt()
 
 	# PE / perk
 	if [ -n "$ccenv_perk" ]; then
-		if $ccenv_perk $ccenv_image 2>/dev/null; then
+		if $ccenv_perk $ccenv_image 2>&3; then
 			ccenv_cc_binfmt='PE'
 			ccenv_use_perk=yes
 		fi
@@ -679,7 +702,7 @@ ccenv_set_cc_binfmt()
 
 	# ELF / readelf
 	if [ -n "$ccenv_readelf" ] && [ -z "$ccenv_cc_binfmt" ]; then
-		if $ccenv_readelf -h $ccenv_image 2>/dev/null        \
+		if $ccenv_readelf -h $ccenv_image 2>&3               \
 				| grep 'Magic:' | sed -e 's/[ ]*//g' \
 				| grep 'Magic:7f454c46'              \
 					> /dev/null; then
@@ -699,7 +722,7 @@ ccenv_set_cc_binfmt()
 
 	# PE / readelf
 	if [ -n "$ccenv_readany" ] && [ -z "$ccenv_cc_binfmt" ]; then
-		if $ccenv_readany -h $ccenv_image 2>/dev/null        \
+		if $ccenv_readany -h $ccenv_image 2>&3               \
 				| grep 'Magic:' | sed -e 's/[ ]*//g' \
 				| grep 'Magic:MZ'                    \
 					> /dev/null; then
@@ -710,7 +733,7 @@ ccenv_set_cc_binfmt()
 
 	# MACHO-64 / otool
 	if [ -n "$ccenv_otool" ] && [ -z "$ccenv_cc_binfmt" ]; then
-		if $ccenv_otool -hv $ccenv_image 2>/dev/null \
+		if $ccenv_otool -hv $ccenv_image 2>&3        \
 				| grep -i 'MH_MAGIC_64'      \
 					> /dev/null; then
 			ccenv_cc_binfmt='MACHO'
@@ -720,7 +743,7 @@ ccenv_set_cc_binfmt()
 
 	# MACHO-32 / otool
 	if [ -n "$ccenv_otool" ] && [ -z "$ccenv_cc_binfmt" ]; then
-		if $ccenv_otool -hv $ccenv_image 2>/dev/null \
+		if $ccenv_otool -hv $ccenv_image 2>&3        \
 				| grep -i 'MH_MAGIC'         \
 					> /dev/null; then
 			ccenv_cc_binfmt='MACHO'
@@ -730,7 +753,7 @@ ccenv_set_cc_binfmt()
 
 	# MACHO-64 / readelf
 	if [ -n "$ccenv_readany" ] && [ -z "$ccenv_cc_binfmt" ]; then
-		if $ccenv_readany -h $ccenv_image 2>/dev/null             \
+		if $ccenv_readany -h $ccenv_image 2>&3                    \
 				| grep -i 'Magic:' | sed -e 's/[ ]*//g'   \
 				| grep -i '(0xfeedfacf)'                  \
 					> /dev/null; then
@@ -741,7 +764,7 @@ ccenv_set_cc_binfmt()
 
 	# MACHO-32 / readelf
 	if [ -n "$ccenv_readany" ] && [ -z "$ccenv_cc_binfmt" ]; then
-		if $ccenv_readany -h $ccenv_image 2>/dev/null             \
+		if $ccenv_readany -h $ccenv_image 2>&3                    \
 				| grep -i 'Magic:' | sed -e 's/[ ]*//g'   \
 				| grep -i '(0xcafebabe)'                  \
 					> /dev/null; then
@@ -752,7 +775,7 @@ ccenv_set_cc_binfmt()
 
 	# MACHO / readobj
 	if [ -n "$ccenv_readobj" ] && [ -z "$ccenv_cc_binfmt" ]; then
-		if $ccenv_readobj $ccenv_image 2>/dev/null           \
+		if $ccenv_readobj $ccenv_image 2>&3                  \
 				| grep -i 'Format:' | sed 's/ /_/g'  \
 				| grep -i '_Mach-O_'                 \
 					> /dev/null; then
@@ -764,7 +787,7 @@ ccenv_set_cc_binfmt()
 	# MACHO / objdump (llvm)
 	if [ -n "$ccenv_objdump" ] && [ -z "$ccenv_cc_binfmt" ]; then
 		if $ccenv_objdump -section-headers $ccenv_image  \
-					2>/dev/null              \
+					2>&3                     \
 				| grep -i 'file format Mach-O'   \
 					> /dev/null; then
 			ccenv_cc_binfmt='MACHO'
@@ -774,7 +797,7 @@ ccenv_set_cc_binfmt()
 
 	# MACHO / objdump (bfd)
 	if [ -n "$ccenv_objdump" ] && [ -z "$ccenv_cc_binfmt" ]; then
-		$ccenv_objdump -h  $ccenv_image 2>/dev/null       \
+		$ccenv_objdump -h  $ccenv_image 2>&3              \
 			| grep -i 'file format Mach-O'            \
 				> /dev/null                       \
 		&& ccenv_cc_binfmt='MACHO'                        \
@@ -783,7 +806,7 @@ ccenv_set_cc_binfmt()
 
 	# PE / objdump (bfd)
 	if [ -n "$ccenv_objdump" ] && [ -z "$ccenv_cc_binfmt" ]; then
-		if $ccenv_objdump -h  $ccenv_image 2>/dev/null \
+		if $ccenv_objdump -h  $ccenv_image 2>&3        \
 				| grep -i 'file format pei-'   \
 					> /dev/null; then
 			ccenv_cc_binfmt='PE'
@@ -1183,7 +1206,7 @@ ccenv_dso_verify()
 	rm -f a.out
 
 	printf '%s' "$ccenv_str" | $ccenv_cmd \
-		> /dev/null 2>/dev/null       \
+		> /dev/null 2>&3              \
 	|| mb_disable_shared=yes
 
 	rm -f a.out
@@ -1285,7 +1308,7 @@ ccenv_set_toolchain_variables()
 ccenv_set_host_variables()
 {
 	output_script_status ${mb_script} \
-		'detect and query host toolchain ==>'
+		'detect and query host toolchain'
 
 	ccenv_set_toolchain_variables 'host'
 	ccenv_dso_verify
@@ -1294,7 +1317,7 @@ ccenv_set_host_variables()
 ccenv_set_native_variables()
 {
 	output_script_status ${mb_script} \
-		'detect and query native toolchain ==>'
+		'detect and query native toolchain'
 
 	if [ _$mb_ccenv_skip_native != _yes ]; then
 		ccenv_set_toolchain_variables 'native'

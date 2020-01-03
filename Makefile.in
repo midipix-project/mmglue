@@ -258,6 +258,7 @@ distclean:	clean
 		rm -f ccenv/native.mk
 		rm -f cfgdefs.mk
 		rm -f usrdefs.mk
+		rm -f config.log
 		rm -f Makefile
 		rmdir build ccenv bin lib 2>&1 || true
 
