@@ -69,6 +69,16 @@ ccenv_tool_epilog()
 }
 
 
+ccenv_tool_variant_epilog()
+{
+	ccenv_expr=${1}='${'${1}':-false}'
+	eval "$ccenv_expr"
+
+	ccenv_expr='${'${1}'}'
+	eval ccenv_tool_epilog "$ccenv_expr"
+}
+
+
 ccenv_attr_prolog()
 {
 	ccenv_line_dots='......................................'
@@ -208,7 +218,7 @@ ccenv_set_tool_variants()
 		|| ccenv_as_asm="$ccenv_tool"
 	fi
 
-	ccenv_tool_epilog "$ccenv_as_asm"
+	ccenv_tool_variant_epilog 'ccenv_as_asm'
 
 	# as (ll)
 	ccenv_tool_prolog 'as (ll)'
@@ -219,7 +229,7 @@ ccenv_set_tool_variants()
 		ccenv_as_ll="$ccenv_tool"
 	fi
 
-	ccenv_tool_epilog "$ccenv_as_ll"
+	ccenv_tool_variant_epilog 'ccenv_as_ll'
 
 	# as (mc)
 	ccenv_tool_prolog 'as (mc)'
@@ -230,7 +240,7 @@ ccenv_set_tool_variants()
 		ccenv_as_mc="$ccenv_tool"
 	fi
 
-	ccenv_tool_epilog "$ccenv_as_mc"
+	ccenv_tool_variant_epilog 'ccenv_as_mc'
 
 	# ld (bfd)
 	ccenv_tool_prolog 'ld (bfd)'
@@ -241,7 +251,7 @@ ccenv_set_tool_variants()
 		ccenv_ld_bfd="$ccenv_tool"
 	fi
 
-	ccenv_tool_epilog "$ccenv_ld_bfd"
+	ccenv_tool_variant_epilog 'ccenv_ld_bfd'
 
 	# ld (gold)
 	ccenv_tool_prolog 'ld (gold)'
@@ -252,7 +262,7 @@ ccenv_set_tool_variants()
 		ccenv_ld_gold="$ccenv_tool"
 	fi
 
-	ccenv_tool_epilog "$ccenv_ld_gold"
+	ccenv_tool_variant_epilog 'ccenv_ld_gold'
 
 	# ld (lld)
 	ccenv_tool_prolog 'ld (lld)'
@@ -263,7 +273,7 @@ ccenv_set_tool_variants()
 		ccenv_ld_lld="$ccenv_tool"
 	fi
 
-	ccenv_tool_epilog "$ccenv_ld_lld"
+	ccenv_tool_variant_epilog 'ccenv_ld_lld'
 
 	# objdump (bfd)
 	ccenv_tool_prolog 'objdump (bfd)'
@@ -274,7 +284,7 @@ ccenv_set_tool_variants()
 		ccenv_objdump_bfd="$ccenv_tool"
 	fi
 
-	ccenv_tool_epilog "$ccenv_objdump_bfd"
+	ccenv_tool_variant_epilog 'ccenv_objdump_bfd'
 
 	# objdump (llvm)
 	ccenv_tool_prolog 'objdump (llvm)'
@@ -285,7 +295,7 @@ ccenv_set_tool_variants()
 		ccenv_objdump_llvm="$ccenv_tool"
 	fi
 
-	ccenv_tool_epilog "$ccenv_objdump_llvm"
+	ccenv_tool_variant_epilog 'ccenv_objdump_llvm'
 
 	# readelf (bfd)
 	ccenv_tool_prolog 'readelf (bfd)'
@@ -296,7 +306,7 @@ ccenv_set_tool_variants()
 		ccenv_readelf_bfd="$ccenv_tool"
 	fi
 
-	ccenv_tool_epilog "$ccenv_readelf_bfd"
+	ccenv_tool_variant_epilog 'ccenv_readelf_bfd'
 
 	# readelf (llvm)
 	ccenv_tool_prolog 'readelf (llvm)'
@@ -307,7 +317,7 @@ ccenv_set_tool_variants()
 		ccenv_readelf_llvm="$ccenv_tool"
 	fi
 
-	ccenv_tool_epilog "$ccenv_readelf_llvm"
+	ccenv_tool_variant_epilog 'ccenv_readelf_llvm'
 
 	# as
 	if [ -n "$ccenv_cc" ]; then
