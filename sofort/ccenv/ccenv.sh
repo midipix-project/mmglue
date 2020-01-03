@@ -556,7 +556,7 @@ ccenv_set_cxx()
 
 ccenv_set_cc_host()
 {
-	ccenv_attr_prolog 'name'
+	ccenv_attr_prolog 'system'
 	ccenv_cc_host="$ccenv_cchost"
 	ccenv_attr_epilog "$ccenv_cc_host"
 }
