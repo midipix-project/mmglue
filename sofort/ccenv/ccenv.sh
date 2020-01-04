@@ -404,6 +404,7 @@ ccenv_set_cc()
 	fi
 
 	ccenv_cc_cmd="$ccenv_cc"
+	ccenv_errors=
 
 	if [ "$ccenv_cfgtype" = 'native' ]; then
 		ccenv_host=$($ccenv_cc $(printf '%s' "$ccenv_cflags") -dumpmachine 2>&3)
