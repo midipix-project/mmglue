@@ -594,12 +594,6 @@ config_failure()
 
 	printf 'configure info: exiting due to an error.\n' >&3
 
-	if [ -f Makefile ]; then
-		mb_error='failed to use the generated Makefile.'
-		printf '\n%s: error: %s\n' "${0}" "$mb_error" >&2
-		mv Makefile Makefile.failed
-	fi
-
 	exit 2
 }
 
