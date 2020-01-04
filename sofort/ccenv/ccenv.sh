@@ -429,7 +429,7 @@ ccenv_set_cc()
 		ccenv_cmd="$ccenv_cc --target=$ccenv_host -E -xc -"
 
 		if [ -z "$mb_user_cc" ]; then
-			$ccenv_cmd < /dev/null > /dev/null \
+			$(printf %s "$ccenv_cmd") < /dev/null > /dev/null \
 				2>"$ccenv_tmp" || true
 
 			ccenv_errors=$(cat "$ccenv_tmp")
@@ -1206,7 +1206,7 @@ ccenv_dso_verify()
 
 	rm -f a.out
 
-	printf '%s' "$ccenv_str" | $ccenv_cmd \
+	printf '%s' "$ccenv_str" | $(printf %s "$ccenv_cmd") \
 		> /dev/null 2>&3              \
 	|| mb_disable_shared=yes
 
