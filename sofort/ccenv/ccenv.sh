@@ -1309,7 +1309,7 @@ ccenv_set_toolchain_variables()
 ccenv_set_host_variables()
 {
 	output_script_status ${mb_script} \
-		'detect and query host toolchain'
+		'detect and query host (targeted) system'
 
 	ccenv_set_toolchain_variables 'host'
 	ccenv_dso_verify
@@ -1318,7 +1318,7 @@ ccenv_set_host_variables()
 ccenv_set_native_variables()
 {
 	output_script_status ${mb_script} \
-		'detect and query native toolchain'
+		'detect and query native (local build) system'
 
 	if [ _$mb_ccenv_skip_native != _yes ]; then
 		ccenv_set_toolchain_variables 'native'
