@@ -50,14 +50,14 @@ ccenv_comment()
 
 ccenv_tool_prolog()
 {
-	ccenv_line_dots='......................................'
+	ccenv_line_dots='.....................................'
 	ccenv_tool_desc="=== checking for ${1}"
 	ccenv_tool_dlen="${#ccenv_line_dots}"
 
 	printf '\n%s\n' '________________________' >&3
 	printf "ccenv: checking for ${1}\n\n" >&3
 	printf "%${ccenv_tool_dlen}.${ccenv_tool_dlen}s" \
-		"${ccenv_tool_desc} ${mb_line_dots}"
+		"${ccenv_tool_desc}  ${mb_line_dots}"
 }
 
 
@@ -66,7 +66,7 @@ ccenv_tool_epilog()
 	ccenv_line_dots='................................'
 	ccenv_tool_dlen="$((${#ccenv_line_dots} - ${#1}))"
 
-	printf "%${ccenv_tool_dlen}.${ccenv_tool_dlen}s %s.\n" \
+	printf "%${ccenv_tool_dlen}.${ccenv_tool_dlen}s  %s.\n" \
 		"${ccenv_line_dots}" "${1}"
 
 	if [ "${1}" = 'false' ]; then
@@ -91,8 +91,8 @@ ccenv_tool_variant_epilog()
 
 ccenv_attr_prolog()
 {
-	ccenv_line_dots='......................................'
-	ccenv_attr_desc="=== detect ${ccenv_cfgtype} ${1}"
+	ccenv_line_dots=' .....................................'
+	ccenv_attr_desc=" == detect ${ccenv_cfgtype} ${1}"
 	ccenv_attr_dlen="${#ccenv_line_dots}"
 
 	printf "%${ccenv_attr_dlen}.${ccenv_attr_dlen}s" \
@@ -106,9 +106,9 @@ ccenv_attr_prolog()
 ccenv_attr_epilog()
 {
 	ccenv_line_dots='................................'
-	ccenv_tool_dlen="$((${#ccenv_line_dots} - ${#1}))"
+	ccenv_tool_dlen="$((${#ccenv_line_dots} - 1 - ${#1}))"
 
-	printf "%${ccenv_tool_dlen}.${ccenv_tool_dlen}s %s.\n" \
+	printf "%${ccenv_tool_dlen}.${ccenv_tool_dlen}s  %s.\n" \
 		"${ccenv_line_dots}" "${1}"
 
 	printf '\n\nccenv: detected result: %s\n' "${1}" >&3
