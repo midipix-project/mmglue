@@ -1,15 +1,15 @@
 # cfgtest.sh: sofort's config test framework,
 # for use from within a project's custom cfgdefs.sh.
 
-# in the common scenario, target-specific tests are preceded
-# by a single invocation of cfgtest_target_section, whereas
+# in the common scenario, host-specific tests are preceded
+# by a single invocation of cfgtest_host_section, whereas
 # native (build) system tests are preceded by the invocation
 # of cfgtest_native_section.
 
 # cfgdefs fraework variables:
 # mb_cfgtest_cc:      the compiler used for the current test
 # mb_cfgtest_cflags:  the compiler flags used for the current test
-# mb_cfgtest_cfgtype: the type of the current test (target/native)
+# mb_cfgtest_cfgtype: the type of the current test (host/native)
 # mb_cfgtest_makevar: the make variable affected by the current test
 # mb_cfgtest_headers: headers for ad-hoc inclusion with the current test
 
@@ -32,7 +32,7 @@ cfgtest_comment()
 }
 
 
-cfgtest_target_section()
+cfgtest_host_section()
 {
 	mb_cfgtest_cflags=
 	mb_cfgtest_cflags="$mb_cfgtest_cflags $mb_cflags_debug   $mb_cflags_config"
@@ -43,9 +43,9 @@ cfgtest_target_section()
 	mb_cfgtest_cflags="$mb_cfgtest_cflags $mb_cflags_last    $mb_cflags_once"
 
 	mb_cfgtest_cc="$ccenv_host_cc"
-	mb_cfgtest_cfgtype='target'
+	mb_cfgtest_cfgtype='host'
 
-	cfgtest_comment 'target-specific tests'
+	cfgtest_comment 'host-specific tests'
 }
 
 
@@ -78,7 +78,7 @@ cfgtest_makevar_append()
 
 cfgtest_cflags_append()
 {
-	if [ $mb_cfgtest_cfgtype = 'target' ]; then
+	if [ $mb_cfgtest_cfgtype = 'host' ]; then
 		mb_internal_makevar='CFLAGS_CONFIG'
 	else
 		mb_internal_makevar='NATIVE_CFLAGS'
@@ -94,7 +94,7 @@ cfgtest_cflags_append()
 
 cfgtest_ldflags_append()
 {
-	if [ $mb_cfgtest_cfgtype = 'target' ]; then
+	if [ $mb_cfgtest_cfgtype = 'host' ]; then
 		mb_internal_makevar='LDFLAGS_CONFIG'
 	else
 		mb_internal_makevar='NATIVE_LDFLAGS'
