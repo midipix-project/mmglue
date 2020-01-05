@@ -73,7 +73,7 @@ output_script_status()
 
 output_section_break()
 {
-	printf '...\n'
+	printf ' ..\n'
 }
 
 verify_safe_path()

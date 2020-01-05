@@ -51,7 +51,7 @@ ccenv_comment()
 ccenv_tool_prolog()
 {
 	ccenv_line_dots='.....................................'
-	ccenv_tool_desc="=== checking for ${1}"
+	ccenv_tool_desc=" == checking for ${1}"
 	ccenv_tool_dlen="${#ccenv_line_dots}"
 
 	printf '\n%s\n' '________________________' >&3
