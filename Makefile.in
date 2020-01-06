@@ -93,6 +93,12 @@ DISABLE_STATIC          = @disable_static@
 USE_CUSTOM_CFGDEFS      = @use_custom_cfgdefs@
 USE_CUSTOM_USRDEFS      = @use_custom_usrdefs@
 
+.cflags-host:
+	@printf '%s' "$(CFLAGS)"
+
+.cflags-native:
+	@printf '%s' "$(NATIVE_CFLAGS)"
+
 .SUFFIXES:
 
 all:
