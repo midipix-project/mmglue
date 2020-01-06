@@ -432,14 +432,53 @@ cfgtest_code_snippet()
 
 cfgtest_library_presence()
 {
-	printf 'int main(void){return 0;}'                \
-			| $mb_cfgtest_cc -o a.out -xc -   \
-			  $mb_cfgtest_cflags              \
-			  $@                              \
-                > /dev/null 2>/dev/null                   \
+	cfgtest_libs=
+	cfgtest_spc=
+
+	for cfgtest_lib in ${@}; do
+		cfgtest_libs="$cfgtest_libs$cfgtest_spc$cfgtest_lib"
+		cfgtest_spc=' '
+	done
+
+	if [ "${1}" = "$cfgtest_libs" ]; then
+		cfgtest_prolog 'library' "${1#*-l}"
+	else
+		cfgtest_prolog 'lib module' '(see config.log)'
+	fi
+
+	cfgtest_code_snippet='int main(void){return 0;}'
+
+	printf 'printf %s "%s" \\\n' "'%s'" "$cfgtest_code_snippet" >&3
+	printf '| %s -o a.out -xc -' "$mb_cfgtest_cc"  >&3
+
+	for cfgtest_cflag in $mb_cfgtest_cflags; do
+		printf ' \\\n\t%s' "$cfgtest_cflag" >&3
+	done
+
+	for cfgtest_lib in ${@}; do
+		printf ' \\\n\t%s' "$cfgtest_lib" >&3
+	done
+
+	printf '\n\n' >&3
+
+	cfgtest_cmd=$(printf '%s -o a.out -xc - %s' \
+		"$mb_cfgtest_cc" "$mb_cfgtest_cflags")
+
+	cfgtest_cmd="$cfgtest_cmd $cfgtest_libs"
+
+	printf '%s' "$cfgtest_code_snippet"          \
+		| $(printf '%s' "$cfgtest_cmd")      \
+		> /dev/null 2>&3                     \
+	|| cfgtest_epilog 'library' '-----'          \
 	|| return 1
 
 	rm -f a.out
+
+	printf 'cfgtest: `%s'"'"' was accepted by the linker driver.\n' \
+		"$cfgtest_libs" >&3
+	printf '%s\n' '------------------------' >&3
+
+	cfgtest_epilog 'library' '(present)'
 
 	return 0
 }
