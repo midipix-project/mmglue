@@ -284,15 +284,6 @@ clean:		clean-implib
 		rm -f build/$(PACKAGE).pc
 
 
-.display:	.display-project .display-pkgconf .display-env \
-		.display-tools   .display-flags                \
-		.display-dirs    .display-build                \
-		.display-config
-
-.conf:		PAGER ?= less
-.conf:
-		$(MAKE) .display | $(PAGER)
-
 .PHONY:		package-app \
 		all install shared static app \
 		shared-objs shared-lib \
