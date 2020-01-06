@@ -75,6 +75,10 @@ cfgtest_epilog()
 		"${cfgtest_line_dots}" "${1}"
 
 	if [ "${1}" = '-----' ]; then
+		printf '\n\ncfgtest: header is missing or cannot be found.\n' >&3
+		printf '%s\n' '------------------------' >&3
+		return 1
+	elif [ "${1}" = '(error)' ]; then
 		printf '\n\ncfgtest: interface is missing or cannot be used.\n' >&3
 		printf '%s\n' '------------------------' >&3
 		return 1
@@ -213,18 +217,38 @@ cfgtest_header_absence()
 
 cfgtest_interface_presence()
 {
-	mb_internal_cflags=''
+	cfgtest_prolog 'interface' "${1}"
+
+	mb_internal_cflags=
 
 	for mb_header in $mb_cfgtest_headers; do
 		mb_internal_cflags="$mb_internal_cflags --include=$mb_header"
 	done
 
-	printf 'void * addr = &%s;' "$@"                  \
-			| $mb_cfgtest_cc -S -xc - -o -    \
-			  $mb_cfgtest_cflags              \
-			  $mb_internal_cflags             \
-                > /dev/null 2>/dev/null                   \
-	|| return 1
+	cfgtest_code_snippet=$(printf 'void * addr = &%s;' "${1}")
+
+	printf 'printf %s "%s" \\\n' "'%s'" "$cfgtest_code_snippet" >&3
+	printf '| %s -S -xc - -o -' "$mb_cfgtest_cc"  >&3
+
+	for cfgtest_cflag in $mb_cfgtest_cflags; do
+		printf ' \\\n\t%s' "$cfgtest_cflag" >&3
+	done
+
+	for cfgtest_cflag in $mb_internal_cflags; do
+		printf ' \\\n\t%s' "$cfgtest_cflag" >&3
+	done
+
+	printf '\n\n' >&3
+
+	cfgtest_cmd=$(printf '%s -S -xc - -o - %s %s'  \
+		"$mb_cfgtest_cc" "$mb_cfgtest_cflags" \
+		"$mb_internal_cflags")
+
+	printf '%s' "$cfgtest_code_snippet"     \
+		| $(printf '%s' "$cfgtest_cmd") \
+                > /dev/null 2>&3                \
+       || cfgtest_epilog '(error)'              \
+       || return
 
 	mb_internal_str=$(printf '%s%s' '-DHAVE_' "$@"  \
 			| sed -e 's/\./_/g'             \
@@ -235,6 +259,12 @@ cfgtest_interface_presence()
 	else
 		cfgtest_makevar_append "$mb_internal_str"
 	fi
+
+	printf 'cfgtest: %s interface `%s'"'"' is available.\n' \
+		"$mb_cfgtest_cfgtype" "${1}" >&3
+	printf '%s\n' '------------------------' >&3
+
+	cfgtest_epilog "${1}"
 
 	return 0
 }
