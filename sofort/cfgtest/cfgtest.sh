@@ -78,11 +78,30 @@ cfgtest_epilog()
 		printf '\n\ncfgtest: %s is missing or cannot be found.\n' "${1}" >&3
 		printf '%s\n' '------------------------' >&3
 		return 1
+	elif [ "${1}" = 'size-of-type' ] && [ "${2}" = '(error)' ]; then
+		printf '\n\ncfgtest: could not determine size of type.\n' >&3
+		printf '%s\n' '------------------------' >&3
+		return 1
 	elif [ "${2}" = '(error)' ]; then
 		printf '\n\ncfgtest: %s is not defined or cannot be used.\n' "${1}" >&3
 		printf '%s\n' '------------------------' >&3
 		return 1
 	fi
+}
+
+
+cfgtest_entity_size_prolog()
+{
+	cfgtest_line_dots='.......................'
+	cfgtest_line_dots="${cfgtest_line_dots}${cfgtest_line_dots}"
+	cfgtest_tool_desc=" == checking size of ${mb_cfgtest_cfgtype} type: ${@}"
+	cfgtest_tool_dlen="${#cfgtest_line_dots}"
+
+	printf '\n%s\n' '________________________' >&3
+	printf "cfgtest: checking size of ${mb_cfgtest_cfgtype} type: ${@}\n\n" >&3
+
+	printf "%${cfgtest_tool_dlen}.${cfgtest_tool_dlen}s" \
+		"${cfgtest_tool_desc}  ${mb_line_dots}"
 }
 
 
@@ -335,6 +354,8 @@ cfgtest_decl_presence()
 
 cfgtest_type_size()
 {
+	cfgtest_entity_size_prolog "$@"
+
 	mb_internal_cflags=''
 	mb_internal_size=''
 	mb_internal_test='char x[(sizeof(%s) == %s) ? 1 : -1];'
@@ -362,6 +383,7 @@ cfgtest_type_size()
 
 	# unrecognized type, or type size not within range
 	if [ -z $mb_internal_size ]; then
+		cfgtest_epilog 'size-of-type' '(error)'
 		return 1
 	fi
 
@@ -377,6 +399,12 @@ cfgtest_type_size()
 	else
 		cfgtest_makevar_append "$mb_internal_str"
 	fi
+
+	printf 'cfgtest: size of type `%s'"'"' determined to be %s\n' \
+		"${@}" "$mb_internal_size" >&3
+	printf '%s\n' '------------------------' >&3
+
+	cfgtest_epilog 'size-of-type' "$mb_internal_size"
 
 	return 0
 }
