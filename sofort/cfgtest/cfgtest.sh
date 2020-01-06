@@ -69,17 +69,17 @@ cfgtest_prolog()
 cfgtest_epilog()
 {
 	cfgtest_line_dots='.......................'
-	cfgtest_tool_dlen="$((${#cfgtest_line_dots} - ${#1}))"
+	cfgtest_tool_dlen="$((${#cfgtest_line_dots} - ${#2}))"
 
 	printf "%${cfgtest_tool_dlen}.${cfgtest_tool_dlen}s  %s.\n" \
-		"${cfgtest_line_dots}" "${1}"
+		"${cfgtest_line_dots}" "${2}"
 
-	if [ "${1}" = '-----' ]; then
-		printf '\n\ncfgtest: header is missing or cannot be found.\n' >&3
+	if [ "${2}" = '-----' ]; then
+		printf '\n\ncfgtest: %s is missing or cannot be found.\n' "${1}" >&3
 		printf '%s\n' '------------------------' >&3
 		return 1
-	elif [ "${1}" = '(error)' ]; then
-		printf '\n\ncfgtest: interface is missing or cannot be used.\n' >&3
+	elif [ "${2}" = '(error)' ]; then
+		printf '\n\ncfgtest: %s is not defined or cannot be used.\n' "${1}" >&3
 		printf '%s\n' '------------------------' >&3
 		return 1
 	fi
@@ -151,10 +151,10 @@ cfgtest_header_presence()
 		"$mb_cfgtest_cc" "$mb_cfgtest_cflags" \
 		'--include='"${1}")
 
-	$(printf '%s' "$cfgtest_cmd")   \
-		< /dev/null             \
-		> /dev/null 2>&3        \
-	|| cfgtest_epilog '-----'       \
+	$(printf '%s' "$cfgtest_cmd")    \
+		< /dev/null               \
+		> /dev/null 2>&3           \
+	|| cfgtest_epilog 'header' '-----'  \
 	|| return
 
 	mb_internal_str=$(printf '%s%s' '-DHAVE_' "${1}"  \
@@ -171,7 +171,7 @@ cfgtest_header_presence()
 		"$mb_cfgtest_cfgtype" "${1}" >&3
 	printf '%s\n' '------------------------' >&3
 
-	cfgtest_epilog "${1}"
+	cfgtest_epilog 'header' "${1}"
 }
 
 
@@ -191,10 +191,10 @@ cfgtest_header_absence()
 		"$mb_cfgtest_cc" "$mb_cfgtest_cflags" \
 		'--include='"${1}")
 
-	$(printf '%s' "$cfgtest_cmd")   \
-		< /dev/null            \
-		> /dev/null 2>&3      \
-	&& cfgtest_epilog "${1}"     \
+	$(printf '%s' "$cfgtest_cmd")  \
+		< /dev/null             \
+		> /dev/null 2>&3         \
+	&& cfgtest_epilog 'header' "${1}" \
 	&& return
 
 	mb_internal_str=$(printf '%s%s' '-DHAVE_NO_' "$@" \
@@ -211,7 +211,7 @@ cfgtest_header_absence()
 		"$mb_cfgtest_cfgtype" "${1}" >&3
 	printf '%s\n' '------------------------' >&3
 
-	cfgtest_epilog '-----'
+	cfgtest_epilog 'header' '-----'
 }
 
 
@@ -247,7 +247,7 @@ cfgtest_interface_presence()
 	printf '%s' "$cfgtest_code_snippet"     \
 		| $(printf '%s' "$cfgtest_cmd") \
                 > /dev/null 2>&3                \
-       || cfgtest_epilog '(error)'              \
+       || cfgtest_epilog 'interface' '(error)'  \
        || return
 
 	mb_internal_str=$(printf '%s%s' '-DHAVE_' "$@"  \
@@ -264,7 +264,7 @@ cfgtest_interface_presence()
 		"$mb_cfgtest_cfgtype" "${1}" >&3
 	printf '%s\n' '------------------------' >&3
 
-	cfgtest_epilog "${1}"
+	cfgtest_epilog 'interface' "${1}"
 
 	return 0
 }
@@ -272,23 +272,44 @@ cfgtest_interface_presence()
 
 cfgtest_decl_presence()
 {
-	mb_internal_cflags=''
+	cfgtest_prolog 'decl' "${1}"
+
+	mb_internal_cflags=
 
 	for mb_header in $mb_cfgtest_headers; do
 		mb_internal_cflags="$mb_internal_cflags --include=$mb_header"
 	done
 
-	printf 'void * any = (void *)%s;' "$@"            \
-			| $mb_cfgtest_cc -S -xc - -o -    \
-			  $mb_cfgtest_cflags              \
-			  $mb_internal_cflags             \
-                > /dev/null 2>/dev/null                   \
-	|| return 1
+	cfgtest_code_snippet=$(printf 'void * any = (void *)(%s);' "${1}")
+
+	printf 'printf %s "%s" \\\n' "'%s'" "$cfgtest_code_snippet" >&3
+	printf '| %s -S -xc - -o -' "$mb_cfgtest_cc"  >&3
+
+	for cfgtest_cflag in $mb_cfgtest_cflags; do
+		printf ' \\\n\t%s' "$cfgtest_cflag" >&3
+	done
+
+	for cfgtest_cflag in $mb_internal_cflags; do
+		printf ' \\\n\t%s' "$cfgtest_cflag" >&3
+	done
+
+	printf '\n\n' >&3
+
+	cfgtest_cmd=$(printf '%s -S -xc - -o - %s %s' \
+		"$mb_cfgtest_cc" "$mb_cfgtest_cflags" \
+		"$mb_internal_cflags")
+
+	printf '%s' "$cfgtest_code_snippet"     \
+		| $(printf '%s' "$cfgtest_cmd") \
+                > /dev/null 2>&3                \
+       || cfgtest_epilog 'decl' '(error)'     \
+       || return
 
 	# does the argument solely consist of the macro or enum member name?
 	mb_internal_str=$(printf '%s' "$@" | tr -d '[a-z][A-Z][0-9][_]')
 
 	if [ -n "$mb_internal_str" ]; then
+		cfgtest_epilog 'decl' '(defined)'
 		return 0
 	fi
 
@@ -301,6 +322,12 @@ cfgtest_decl_presence()
 	else
 		cfgtest_makevar_append "$mb_internal_str"
 	fi
+
+	printf 'cfgtest: `%s'"'"' is defined for the %s system.\n' \
+		"${1}" "$mb_cfgtest_cfgtype" >&3
+	printf '%s\n' '------------------------' >&3
+
+	cfgtest_epilog 'decl' '(defined)'
 
 	return 0
 }
