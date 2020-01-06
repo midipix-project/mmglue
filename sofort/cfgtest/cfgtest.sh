@@ -34,16 +34,9 @@ cfgtest_comment()
 
 cfgtest_host_section()
 {
-	mb_cfgtest_cflags=
-	mb_cfgtest_cflags="$mb_cfgtest_cflags $mb_cflags_debug   $mb_cflags_config"
-	mb_cfgtest_cflags="$mb_cfgtest_cflags $mb_cflags_sysroot $mb_cflags_common"
-	mb_cfgtest_cflags="$mb_cfgtest_cflags $mb_cflags_cmdline $mb_cflags"
-	mb_cfgtest_cflags="$mb_cfgtest_cflags $mb_cflags_path    $mb_cflags_os"
-	mb_cfgtest_cflags="$mb_cfgtest_cflags $mb_cflags_site    $mb_cflags_strict"
-	mb_cfgtest_cflags="$mb_cfgtest_cflags $mb_cflags_last    $mb_cflags_once"
-
 	mb_cfgtest_cc="$ccenv_host_cc"
 	mb_cfgtest_cfgtype='host'
+	mb_cfgtest_cflags=$(make -s -f "$mb_pwd/Makefile.tmp" .cflags-host)
 
 	cfgtest_comment 'host-specific tests'
 }
@@ -52,8 +45,8 @@ cfgtest_host_section()
 cfgtest_native_section()
 {
 	mb_cfgtest_cc="$mb_native_cc"
-	mb_cfgtest_cflags="$mb_native_cflags"
 	mb_cfgtest_cfgtype='native'
+	mb_cfgtest_cflags=$(make -s -f "$mb_pwd/Makefile.tmp" .cflags-native)
 
 	cfgtest_comment 'native system tests'
 }
