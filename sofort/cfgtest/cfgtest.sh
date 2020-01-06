@@ -52,6 +52,36 @@ cfgtest_native_section()
 }
 
 
+cfgtest_prolog()
+{
+	cfgtest_line_dots='.......................'
+	cfgtest_line_dots="${cfgtest_line_dots}${cfgtest_line_dots}"
+	cfgtest_tool_desc=" == trying ${mb_cfgtest_cfgtype} ${1}: ${2}"
+	cfgtest_tool_dlen="${#cfgtest_line_dots}"
+
+	printf '\n%s\n' '________________________' >&3
+	printf "cfgtest: probing for ${mb_cfgtest_cfgtype} ${1}: ${2}\n\n" >&3
+	printf "%${cfgtest_tool_dlen}.${cfgtest_tool_dlen}s" \
+		"${cfgtest_tool_desc}  ${mb_line_dots}"
+}
+
+
+cfgtest_epilog()
+{
+	cfgtest_line_dots='.......................'
+	cfgtest_tool_dlen="$((${#cfgtest_line_dots} - ${#1}))"
+
+	printf "%${cfgtest_tool_dlen}.${cfgtest_tool_dlen}s  %s.\n" \
+		"${cfgtest_line_dots}" "${1}"
+
+	if [ "${1}" = '-----' ]; then
+		printf '\n\ncfgtest: interface is missing or cannot be used.\n' >&3
+		printf '%s\n' '------------------------' >&3
+		return 1
+	fi
+}
+
+
 cfgtest_makevar_append()
 {
 	mb_internal_str='+='
@@ -103,14 +133,27 @@ cfgtest_ldflags_append()
 
 cfgtest_header_presence()
 {
-	$mb_cfgtest_cc -E -xc -             \
-			$mb_cfgtest_cflags  \
-			--include="$@"      \
-		< /dev/null                 \
-		> /dev/null 2>/dev/null     \
+	cfgtest_prolog 'header' "${1}"
+
+	printf '%s -E -xc - \\\n' "$mb_cfgtest_cc"  >&3
+
+	for cfgtest_cflag in $mb_cfgtest_cflags; do
+		printf '\t%s \\\n' "$cfgtest_cflag" >&3
+	done
+
+	printf '\t%s\n\n' '--include='"${1}" >&3
+
+	cfgtest_cmd=$(printf '%s -E -xc - %s %s'     \
+		"$mb_cfgtest_cc" "$mb_cfgtest_cflags" \
+		'--include='"${1}")
+
+	$(printf '%s' "$cfgtest_cmd")   \
+		< /dev/null             \
+		> /dev/null 2>&3        \
+	|| cfgtest_epilog '-----'       \
 	|| return
 
-	mb_internal_str=$(printf '%s%s' '-DHAVE_' "$@"    \
+	mb_internal_str=$(printf '%s%s' '-DHAVE_' "${1}"  \
 			| sed -e 's/\./_/g' -e 's@/@_@g'  \
 			| tr "[:lower:]" "[:upper:]")
 
@@ -119,16 +162,35 @@ cfgtest_header_presence()
 	else
 		cfgtest_makevar_append "$mb_internal_str"
 	fi
+
+	printf 'cfgtest: %s header <%s> was found and may be included.\n' \
+		"$mb_cfgtest_cfgtype" "${1}" >&3
+	printf '%s\n' '------------------------' >&3
+
+	cfgtest_epilog "${1}"
 }
 
 
 cfgtest_header_absence()
 {
-	$mb_cfgtest_cc -E -xc -             \
-			$mb_cfgtest_cflags  \
-			--include="$@"      \
-		< /dev/null                 \
-		> /dev/null 2>/dev/null     \
+	cfgtest_prolog 'header absence' "${1}"
+
+	printf '%s -E -xc - \\\n' "$mb_cfgtest_cc"  >&3
+
+	for cfgtest_cflag in $mb_cfgtest_cflags; do
+		printf '\t%s \\\n' "$cfgtest_cflag" >&3
+	done
+
+	printf '\t%s\n\n' '--include='"${1}" >&3
+
+	cfgtest_cmd=$(printf '%s -E -xc - %s %s'     \
+		"$mb_cfgtest_cc" "$mb_cfgtest_cflags" \
+		'--include='"${1}")
+
+	$(printf '%s' "$cfgtest_cmd")   \
+		< /dev/null            \
+		> /dev/null 2>&3      \
+	&& cfgtest_epilog "${1}"     \
 	&& return
 
 	mb_internal_str=$(printf '%s%s' '-DHAVE_NO_' "$@" \
@@ -140,6 +202,12 @@ cfgtest_header_absence()
 	else
 		cfgtest_makevar_append "$mb_internal_str"
 	fi
+
+	printf 'cfgtest: %s header <%s> may not be included.\n' \
+		"$mb_cfgtest_cfgtype" "${1}" >&3
+	printf '%s\n' '------------------------' >&3
+
+	cfgtest_epilog '-----'
 }
 
 
