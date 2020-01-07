@@ -430,6 +430,33 @@ cfgtest_code_snippet()
 }
 
 
+cfgtest_code_snippet_asm()
+{
+	mb_internal_cflags=''
+	mb_internal_test="$@"
+
+	cfgtest_tmp=$(mktemp ./tmp_XXXXXXXXXXXXXXXX)
+	cfgtest_ret=1
+
+	for mb_header in $mb_cfgtest_headers; do
+		mb_internal_cflags="$mb_internal_cflags --include=$mb_header"
+	done
+
+	printf '%s' "$mb_internal_test"                 \
+			| $mb_cfgtest_cc -c -xc -       \
+			  -o $cfgtest_tmp               \
+			  $mb_cfgtest_cflags            \
+			  $mb_internal_cflags           \
+		> /dev/null 2>/dev/null                 \
+	&& cfgtest_ret=0
+
+	rm -f "$cfgtest_tmp"
+	unset cfgtest_tmp
+
+	return $cfgtest_ret
+}
+
+
 cfgtest_library_presence()
 {
 	cfgtest_libs=
