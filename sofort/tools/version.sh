@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# version.sh: detect git repository info, output defs as a C header.
+# this file is covered by COPYING.SOFORT.
+
 set -eu
 
 usage()

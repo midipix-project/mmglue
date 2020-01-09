@@ -1,3 +1,6 @@
+# pe-version.mk: handling of PE shared library versioning schemes.
+# this file is covered by COPYING.SOFORT.
+
 ifeq ($(AVOID_VERSION),yes)
 
 package-implib-soname:

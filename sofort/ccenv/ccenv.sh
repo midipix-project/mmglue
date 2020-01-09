@@ -1,6 +1,8 @@
 # ccenv.sh: sofort's tool-finding bits,
 # invoked from within the project-agnostic configure script.
 
+# this file is covered by COPYING.SOFORT.
+
 # invocation and names of binary tools:
 # agnostic names (ar, nm, objdump, ...);
 # target-prefixed agnostic names (x86_64-nt64-midipix-ar, ...);

@@ -1,3 +1,6 @@
+# pkgconf.mk: rules for pkgconf manifest generation.
+# this file is covered by COPYING.SOFORT.
+
 ifeq ($(PKGCONF),no)
 
 install-pkgconf:

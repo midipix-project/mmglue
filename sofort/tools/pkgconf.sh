@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# pkgconf.sh: generate a pkgconf manifest file.
+# this file is covered by COPYING.SOFORT.
+
 set -eu
 
 # prefix, exec_prefix

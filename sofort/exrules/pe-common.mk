@@ -1,3 +1,6 @@
+# pe-common.mk: common PE shared library rules.
+# this file is covered by COPYING.SOFORT.
+
 DSO_REF_VER      = $(IMPLIB_VER)
 DSO_REF_SONAME   = $(IMPLIB_SONAME)
 DSO_REF_SOLINK   = $(IMPLIB_SOLINK)

@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# project-agnostic ./configure script, written by hand.
+# this file is covered by COPYING.SOFORT.
+
 set -eu
 
 trap config_failure 1 2 EXIT

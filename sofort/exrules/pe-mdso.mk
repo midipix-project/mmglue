@@ -1,3 +1,6 @@
+# pe-mdso.mk: PE shared library rules for targets using mdso.
+# this file is covered by COPYING.SOFORT.
+
 include $(PROJECT_DIR)/sofort/exrules/pe-common.mk
 
 $(IMPLIB_VER):		$(IMPLIB_DEF)

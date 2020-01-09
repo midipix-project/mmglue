@@ -1,3 +1,6 @@
+# default.mk: default shared library rules.
+# this file is covered by COPYING.SOFORT.
+
 DSO_REF_VER      = $(SHARED_LIB)
 DSO_REF_SONAME   = $(SHARED_SONAME)
 DSO_REF_SOLINK   = $(SHARED_SOLINK)

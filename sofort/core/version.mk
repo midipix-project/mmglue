@@ -1,3 +1,6 @@
+# version.mk: handling of shared library versioning schemes.
+# this file is covered by COPYING.SOFORT.
+
 include $(PROJECT_DIR)/project/tagver.mk
 
 CFLAGS_VERSION	+= -D$(VER_NAMESPACE)_TAG_VER_MAJOR=$(VER_MAJOR)

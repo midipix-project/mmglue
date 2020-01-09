@@ -1,3 +1,6 @@
+# flavor.mk: top-level handling of build flavors.
+# this file is covered by COPYING.SOFORT.
+
 ifneq ($(OS_DSO_EXRULES),)
 include $(PROJECT_DIR)/sofort/exrules/$(OS_DSO_EXRULES).mk
 endif
