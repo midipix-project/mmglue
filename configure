@@ -288,6 +288,13 @@ verify_source_directory()
 {
 	output_step_prolog ${mb_script} 'verify_source_directory'
 
+	if [ _"$mb_source_dir" != _${mb_source_dir##* } ]; then
+		error_msg "source directory path contains spaces, aborting."
+		exit 1
+	fi
+
+	eval mb_source_dir=$(printf '%s' "$mb_source_dir")
+
 	if [ -z "$mb_source_dir" ]; then
 		if [ _$mb_require_source_dir = _yes ]; then
 			error_msg "$mb_package: specifying an external source directory is required."
