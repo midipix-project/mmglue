@@ -1,6 +1,8 @@
 # cfgtest.sh: sofort's config test framework,
 # for use from within a project's custom cfgdefs.sh.
 
+# this file is covered by COPYING.SOFORT.
+
 # in the common scenario, host-specific tests are preceded
 # by a single invocation of cfgtest_host_section, whereas
 # native (build) system tests are preceded by the invocation
