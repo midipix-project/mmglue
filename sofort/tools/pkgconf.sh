@@ -94,6 +94,20 @@ else
 	pkgconf_durl="Distro:      ${PKGCONF_DURL}"
 fi
 
+# bug reports (optional)
+if [ -z "${PKGCONF_BUGS}" ]; then
+	pkgconf_bugs='#'
+else
+	pkgconf_bugs="Bug reports: ${PKGCONF_BUGS}"
+fi
+
+# project home page (optional)
+if [ -z "${PKGCONF_HOME}" ]; then
+	pkgconf_home='#'
+else
+	pkgconf_home="Home page:   ${PKGCONF_HOME}"
+fi
+
 
 # output (without trailing spaces)
 cat << _EOF | grep -v '^#' | sed 's/[ \t]*$//'
@@ -110,6 +124,8 @@ Version:     ${PKGCONF_VERSION}
 $pkgconf_repo
 $pkgconf_psrc
 $pkgconf_durl
+$pkgconf_bugs
+$pkgconf_home
 
 Cflags:      $pkgconf_cflags
 Libs:        $pkgconf_ldflags

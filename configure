@@ -352,6 +352,8 @@ common_defaults()
 	[ -n "$mb_pkgrepo" ]		|| mb_pkgrepo="$mb_default_pkgrepo"
 	[ -n "$mb_pkgpsrc" ]		|| mb_pkgpsrc="$mb_default_pkgpsrc"
 	[ -n "$mb_pkgdurl" ]		|| mb_pkgdurl="$mb_default_pkgdurl"
+	[ -n "$mb_pkgbugs" ]		|| mb_pkgbugs="$mb_default_pkgbugs"
+	[ -n "$mb_pkghome" ]		|| mb_pkghome="$mb_default_pkghome"
 	[ -n "$mb_pkgdefs" ]		|| mb_pkgdefs="$mb_default_pkgdefs"
 	[ -n "$mb_pkglibs" ]		|| mb_pkglibs="$mb_default_pkglibs"
 
@@ -852,6 +854,14 @@ for arg ; do
 
 		--pkgdurl=*)
 			mb_pkgdurl=${arg#*=}
+			;;
+
+		--pkgbugs=*)
+			mb_pkgbugs=${arg#*=}
+			;;
+
+		--pkghome=*)
+			mb_pkghome=${arg#*=}
 			;;
 
 		--pkgdefs=*)
