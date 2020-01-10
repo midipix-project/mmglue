@@ -529,6 +529,11 @@ config_ccenv()
 	config_copy
 }
 
+config_custom_cfgdefs()
+{
+	. $mb_project_dir/project/config/cfgdefs.sh
+}
+
 config_custom()
 {
 	if [ _$mb_use_custom_cfgdefs = _yes ]; then
@@ -536,8 +541,7 @@ config_custom()
 		output_script_status ${mb_script} \
 			'invoking project-specific cfgdefs.sh'
 
-		eval . $mb_project_dir/project/config/cfgdefs.sh \
-			"$mb_custom_cfgdefs_args"
+		eval config_custom_cfgdefs "$mb_custom_cfgdefs_args"
 
 		output_section_break
 		config_copy
