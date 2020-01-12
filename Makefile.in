@@ -20,6 +20,16 @@ PKGHOME			= @pkghome@
 PKGDEFS			= @pkgdefs@
 PKGLIBS			= @pkglibs@
 
+RAWBALL			= @rawball@
+RAWBALL_URL		= @rawball_url@
+RAWBALL_SHA256		= @rawball_sha256@
+MODBALL			= @modball@
+MODBALL_URL		= @modball_url@
+MODBALL_SHA256		= @modball_sha256@
+SRCBALL			= @srcball@
+SRCBALL_URL		= @srcball_url@
+SRCBALL_SHA256		= @srcball_sha256@
+
 BUILD 			= @build@
 HOST 			= @host@
 CCHOST 			= @cchost@

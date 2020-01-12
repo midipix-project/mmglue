@@ -19,6 +19,16 @@ supported switches:
 	--pkgdefs
 	--pkglibs
 
+	--rawball
+	--rawball-url
+	--rawball-sha256
+	--modball
+	--modball-url
+	--modball-sha256
+	--srcball
+	--srcball-url
+	--srcball-sha256
+
 	--prefix
 	--exec-prefix
 	--bindir

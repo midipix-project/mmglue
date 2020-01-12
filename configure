@@ -168,6 +168,11 @@ init_vars()
 		. "$mb_config"
 	fi
 
+	# srcinfo
+	if [ -n "$SOURCE_DIR" ]; then
+		mb_source_dir_set=yes
+	fi
+
 	# step prolog
 	output_step_prolog ${mb_script} 'init_vars'
 
@@ -308,6 +313,133 @@ verify_source_directory()
 }
 
 
+verify_source_info()
+{
+	output_step_prolog ${mb_script} 'verify_source_info'
+
+	if [ "${mb_source_dir_set:-}" = yes ]; then
+		if [ -n "$mb_rawball" ] || [ -n "$mb_modball" ] || [ -n "$mb_srcball" ]; then
+			error_msg "$mb_package: conflicting arguments: --rawball/--modball/--srcball arguments"
+			error_msg "may not be used together with an explicit source-dir argument or variable."
+			exit 1
+		fi
+	fi
+
+	if [ -n "$mb_srcball" ]; then
+		eval mb_srcball=$(printf '%s' "$mb_srcball")
+
+		if [ -n "$mb_rawball" ] || [ -n "$mb_modball" ]; then
+			error_msg "$mb_package: conflicting arguments: --rawball and/or --modball arguments"
+			error_msg "may not be used together with an explicitly --srcball argument."
+			exit 1
+		fi
+
+		if [ -z "$mb_srcball_sha256" ]; then
+			error_msg "$mb_package: --srcball-sha256 must be provided"
+			error_msg "in conjunction with --srcball."
+			exit 1
+		fi
+
+		mb_srcball_sha256_test=$(sha256sum "$mb_srcball")
+		mb_srcball_sha256_test="${mb_srcball_sha256_test%% *}"
+
+		if [ "$mb_srcball_sha256_test" != "$mb_srcball_sha256" ]; then
+			error_msg "$mb_package: sha256 signature of srcball $mb_srcball does not match!"
+			exit 1
+		fi
+
+		mb_srcball_topdir=$(xz -c -d "$mb_srcball" | pax | sed -n '1,1p')
+		mb_source_dir="./srctree/$mb_package/${mb_srcball_topdir%/}"
+
+		mb_srcball_dirname=$(cd -- "${mb_srcball%/*}" ; pwd -P)
+		mb_srcball_basename=${mb_srcball##*/}
+		mb_srcball="$mb_srcball_dirname/$mb_srcball_basename"
+
+		mkdir -p "./srctree/$mb_package"
+		mb_dummy=$(cd -- "./srctree/$mb_package"; xz -c -d "$mb_srcball" | pax -r)
+		mb_source_dir=$(cd -- $mb_source_dir; pwd -P)
+	fi
+
+	if [ -z "$mb_rawball" ] && [ -n "$mb_modball" ]; then
+		error_msg "$mb_package: conflicting arguments: --modball argument may only be used"
+		error_msg "together with an explicit --rawball argument."
+		exit 1
+	fi
+
+	if [ -n "$mb_modball" ]; then
+		eval mb_modball=$(printf '%s' "$mb_modball")
+
+		if [ -z "$mb_modball_sha256" ]; then
+			error_msg "$mb_package: --modball-sha256 must be provided"
+			error_msg "in conjunction with --modball."
+			exit 1
+		fi
+
+		mb_modball_sha256_test=$(sha256sum "$mb_modball")
+		mb_modball_sha256_test="${mb_modball_sha256_test%% *}"
+
+		if [ "$mb_modball_sha256_test" != "$mb_modball_sha256" ]; then
+			error_msg "$mb_package: sha256 signature of modball $mb_modball does not match!"
+			exit 1
+		fi
+	fi
+
+	if [ -n "$mb_rawball" ]; then
+		eval mb_rawball=$(printf '%s' "$mb_rawball")
+
+		if [ -z "$mb_rawball_sha256" ]; then
+			error_msg "$mb_package: --rawball-sha256 must be provided."
+			error_msg "in conjunction with --rawball."
+			exit 1
+		fi
+
+		mb_rawball_sha256_test=$(sha256sum "$mb_rawball")
+		mb_rawball_sha256_test="${mb_rawball_sha256_test%% *}"
+
+		if [ "$mb_rawball_sha256_test" != "$mb_rawball_sha256" ]; then
+			error_msg "$mb_package: sha256 signature of rawball $mb_rawball does not match!"
+			exit 1
+		fi
+
+		mb_rawball_topdir=$(xz -c -d "$mb_rawball" | pax | sed -n '1,1p')
+		mb_source_dir="./srctree/$mb_package/${mb_rawball_topdir%/}"
+
+		mb_rawball_dirname=$(cd -- "${mb_rawball%/*}" ; pwd -P)
+		mb_rawball_basename=${mb_rawball##*/}
+		mb_rawball="$mb_rawball_dirname/$mb_rawball_basename"
+
+		mkdir -p "./srctree/$mb_package"
+		mb_dummy=$(cd -- "./srctree/$mb_package"; xz -c -d "$mb_rawball" | pax -r)
+		mb_source_dir=$(cd -- $mb_source_dir; pwd -P)
+	fi
+
+	if [ -n "$mb_modball" ]; then
+		mb_modball_dirname=$(cd -- "${mb_modball%/*}" ; pwd -P)
+		mb_modball_basename=${mb_modball##*/}
+		mb_modball="$mb_modball_dirname/$mb_modball_basename"
+
+		mb_modball_topdir="./modtree/$mb_package/$mb_modball_sha256"
+		mkdir -p "$mb_modball_topdir"
+		mb_modball_topdir=$(cd -- $mb_modball_topdir; pwd -P)
+		mb_dummy=$(cd -- "$mb_modball_topdir"; xz -c -d "$mb_modball" | pax -r)
+
+		if [ -d "$mb_modball_topdir/overlay" ]; then
+			mb_dummy=$(cd -- "$mb_modball_topdir/overlay"; \
+				cp -p -P -R . "$mb_source_dir")
+		fi
+
+		if [ -d "$mb_modball_topdir/patches" ]; then
+			mb_dummy=$(cd -- "$mb_source_dir";                        \
+				for p in $mb_modball_topdir/patches/*.patch; do  \
+					patch -p1 < $p;                         \
+				done);
+		fi
+	fi
+
+	output_step_epilog
+}
+
+
 common_defaults()
 {
 	# step prolog
@@ -356,6 +488,17 @@ common_defaults()
 	[ -n "$mb_pkghome" ]		|| mb_pkghome="$mb_default_pkghome"
 	[ -n "$mb_pkgdefs" ]		|| mb_pkgdefs="$mb_default_pkgdefs"
 	[ -n "$mb_pkglibs" ]		|| mb_pkglibs="$mb_default_pkglibs"
+
+	# srcinfo
+	[ -n "$mb_rawball" ]		|| mb_rawball="$mb_default_rawball"
+	[ -n "$mb_rawball_url" ]	|| mb_rawball_url="$mb_default_rawball_url"
+	[ -n "$mb_rawball_sha256" ]	|| mb_rawball_sha256="$mb_default_rawball_sha256"
+	[ -n "$mb_modball" ]		|| mb_modball="$mb_default_modball"
+	[ -n "$mb_modball_url" ]	|| mb_modball_url="$mb_default_modball_url"
+	[ -n "$mb_modball_sha256" ]	|| mb_modball_sha256="$mb_default_modball_sha256"
+	[ -n "$mb_srcball" ]		|| mb_srcball="$mb_default_srcball"
+	[ -n "$mb_srcball_url" ]	|| mb_srcball_url="$mb_default_srcball_url"
+	[ -n "$mb_srcball_sha256" ]	|| mb_srcball_sha256="$mb_default_srcball_sha256"
 
 	# dirs
 	[ -n "$mb_prefix" ] 		|| [ -n "$mb_prefix_set" ] \
@@ -826,9 +969,11 @@ for arg ; do
 			;;
 		--source-dir=*)
 			mb_source_dir=${arg#*=}
+			mb_source_dir_set=yes
 			;;
 		--srcdir=*)
 			mb_source_dir=${arg#*=}
+			mb_source_dir_set=yes
 			;;
 
 		# pkgconfig
@@ -872,6 +1017,43 @@ for arg ; do
 			mb_pkglibs=${arg#*=}
 			;;
 
+		# srcinfo
+		--rawball=*)
+			mb_rawball=${arg#*=}
+			;;
+
+		--rawball-url=*)
+			mb_rawball_url=${arg#*=}
+			;;
+
+		--rawball-sha256=*)
+			mb_rawball_sha256=${arg#*=}
+			;;
+
+		--modball=*)
+			mb_modball=${arg#*=}
+			;;
+
+		--modball-url=*)
+			mb_modball_url=${arg#*=}
+			;;
+
+		--modball-sha256=*)
+			mb_modball_sha256=${arg#*=}
+			;;
+
+		--srcball=*)
+			mb_srcball=${arg#*=}
+			;;
+
+		--srcball-url=*)
+			mb_srcball_url=${arg#*=}
+			;;
+
+		--srcball-sha256=*)
+			mb_srcball_sha256=${arg#*=}
+			;;
+
 		# compatibility
 		--enable-dependency-tracking)
 			;;
@@ -900,6 +1082,7 @@ done
 
 # three: validation
 verify_source_directory
+verify_source_info
 
 if ! [ -z "$mb_program_prefix" ]; then
 	error_msg "--program-prefix is not yet fully support (must be null)."
