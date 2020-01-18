@@ -11,6 +11,12 @@ void __hidden __libc_loader_init(void * __main, int flags);
 
 void __hidden _start(void)
 {
+	const unsigned short fmode = 0x37f;
+
+	__asm__ __volatile__ (
+		"fldcw %0"
+		: : "m" (*&fmode));
+
 	__libc_loader_init(
 		main,
 		__crtopt_posix
