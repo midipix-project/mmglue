@@ -124,6 +124,12 @@ init_vars()
 	mb_custom_cfgdefs_args=''
 	mb_custom_cfgdefs_space=''
 
+	mb_srcinfo='$(PROJECT_DIR)/project/srcdist/srcinfo.in'
+	mb_srcsite='localhost'
+
+	mb_pgprkey='!!VARIABLE_NOT_SET!!'
+	mb_pgpskey='!!VARIABLE_NOT_SET!!'
+
 	sfrt_impl_dir=$mb_project_dir/sofort
 	sfrt_config_dir=$sfrt_impl_dir/config
 	sfrt_core_dir=$sfrt_impl_dir/core
@@ -1018,6 +1024,22 @@ for arg ; do
 			;;
 
 		# srcinfo
+		--srcinfo=*)
+			mb_srcinfo=${arg#*=}
+			;;
+
+		--srcsite=*)
+			mb_srcsite=${arg#*=}
+			;;
+
+		--pgprkey=*)
+			mb_pgprkey=${arg#*=}
+			;;
+
+		--pgpskey=*)
+			mb_pgpskey=${arg#*=}
+			;;
+
 		--rawball=*)
 			mb_rawball=${arg#*=}
 			;;

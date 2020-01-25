@@ -20,6 +20,12 @@ PKGHOME			= @pkghome@
 PKGDEFS			= @pkgdefs@
 PKGLIBS			= @pkglibs@
 
+SRCINFO			= @srcinfo@
+SRCSITE			= @srcsite@
+
+PGPRKEY			= @pgprkey@
+PGPSKEY			= @pgpskey@
+
 RAWBALL			= @rawball@
 RAWBALL_URL		= @rawball_url@
 RAWBALL_SHA256		= @rawball_sha256@

@@ -19,6 +19,12 @@ supported switches:
 	--pkgdefs
 	--pkglibs
 
+	--srcinfo
+	--srcsite
+
+	--pgprkey
+	--pgpskey
+
 	--rawball
 	--rawball-url
 	--rawball-sha256
