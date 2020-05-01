@@ -51,6 +51,9 @@ int __fs_dpath(int, const char *, int, char *, size_t);
 int __fs_mkdir(int, const char *, mode_t, uint32_t);
 int __fs_chmod(int, const char *, mode_t, int, uint32_t);
 
+int __fs_tmpfile(int);
+int __fs_tmpdir(int);
+
 #ifdef __cplusplus
 }
 #endif

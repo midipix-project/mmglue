@@ -347,6 +347,9 @@
 #define __NR_fs_mkdir			358
 #define __NR_fs_chmod			359
 
+#define __NR_fs_tmpfile			360
+#define __NR_fs_tmpdir			361
+
 #define __NR_dbg_attach			368
 #define __NR_dbg_detach			369
 

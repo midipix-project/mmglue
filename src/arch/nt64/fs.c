@@ -34,3 +34,13 @@ int __fs_chmod(int fdat, const char * path, mode_t mode, int flags, uint32_t ace
 {
 	return syscall(SYS_fs_chmod,fdat,path,mode,flags,ace_flags);
 }
+
+int __fs_tmpfile(int flags)
+{
+	return syscall(SYS_fs_tmpfile,flags);
+}
+
+int __fs_tmpdir(int flags)
+{
+	return syscall(SYS_fs_tmpdir,flags);
+}
