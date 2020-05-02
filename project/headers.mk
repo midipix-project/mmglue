@@ -1,3 +1,5 @@
+-include $(PROJECT_DIR)/project/os/$(OS).mk
+
 # build/version.h
 build/version.h:$(wildcard $(SOURCE_DIR)/VERSION $(SOURCE_DIR)/.git/index) dirs.tag
 		printf '#define VERSION "%s"\n' \
@@ -65,8 +67,9 @@ dst_bits_h     += $(src_bits_h:build/include/%=$(DESTDIR)$(INCLUDEDIR)/%)
 src_header_dirs = $(filter %/,$(wildcard $(SOURCE_DIR)/include/*/))
 dst_header_dirs = $(src_header_dirs:$(SOURCE_DIR)/include/%=$(DESTDIR)$(INCLUDEDIR)/%)
 
-src_c_headers   = $(sort $(wildcard $(SOURCE_DIR)/include/*.h))
-src_c_headers  += $(sort $(wildcard $(SOURCE_DIR)/include/*/*.h))
+src_c_headers_  = $(sort $(wildcard $(SOURCE_DIR)/include/*.h))
+src_c_headers_ += $(sort $(wildcard $(SOURCE_DIR)/include/*/*.h))
+src_c_headers   = $(filter-out $(OS_EXCLUDE_LIBC_HEADERS), $(src_c_headers_))
 
 dst_c_headers   = $(subst $(SOURCE_DIR)/include/,  \
 		          $(DESTDIR)$(INCLUDEDIR)/, \
