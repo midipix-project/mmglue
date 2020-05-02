@@ -94,12 +94,6 @@ $(DESTDIR)$(INCLUDEDIR)/%.h: $(SOURCE_DIR)/include/%.h
 			chmod 0644 $@.tmp
 			mv $@.tmp $@
 
-install-arch-headers:	headers.tag $(ARCH_GEN_H) $(src_bits_h) $(dst_bits_h)
-
-install-libc-headers:	headers.tag $(dst_header_dirs) $(dst_c_headers)
-
-install-headers:	install-arch-headers install-libc-headers
-
 
 # build/include
 build/headers.tag:	| build/include/bits/
@@ -116,6 +110,12 @@ headers.tag:		build/headers.tag $(ARCH_GEN_H)
 					> build/include/bits/ioctl.h.tmp
 			mv build/include/bits/ioctl.h.tmp build/include/bits/ioctl.h
 			touch $@
+
+install-arch-headers:	headers.tag $(ARCH_GEN_H) $(src_bits_h) $(dst_bits_h)
+
+install-libc-headers:	headers.tag $(dst_header_dirs) $(dst_c_headers)
+
+install-headers:	install-arch-headers install-libc-headers
 
 clean-headers:
 		rm -f $(ARCH_GEN_H)
