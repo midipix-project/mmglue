@@ -5,4 +5,4 @@
 .globl	__stdio_exit_needed
 
 __stdio_exit_needed:
-	jmpq __stdio_exit
+	jmp __stdio_exit
