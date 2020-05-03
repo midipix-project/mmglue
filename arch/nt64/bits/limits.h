@@ -9,6 +9,8 @@
 #define LLONG_MAX       __LLONG_MAX
 #endif
 
-#define _MIDIPIX_ABI    20170101
-#define _MIDIPIX_XFI    20170101
-#define _MIDIPIX_GDI    20170101
+#define NAME_MAX        765
+
+#define _MIDIPIX_ABI    20200501
+#define _MIDIPIX_XFI    20200501
+#define _MIDIPIX_GDI    20200501
