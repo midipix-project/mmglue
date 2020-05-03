@@ -103,6 +103,11 @@ build/headers.tag:	$(ARCH_HEADERS)
 			touch $@
 
 headers.tag:		build/headers.tag $(ARCH_GEN_H)
+			grep 'struct msghdr {' $(SOURCE_DIR)/include/sys/socket.h \
+				|| cat $(PORT_DIR)/arch/$(ARCH)/bits/socket.h.in   \
+					> build/include/bits/socket.h               \
+				|| cat $(PORT_DIR)/arch/$(ARCH)/bits/socket.h        \
+					> build/include/bits/socket.h
 			grep -v '^@@@' build/include/bits/ioctl.h \
 				> build/include/bits/ioctl.h.tmp
 			grep 'struct winsize' $(SOURCE_DIR)/include/sys/ioctl.h \
