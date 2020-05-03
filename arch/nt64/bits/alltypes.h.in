@@ -2,6 +2,9 @@
 #define _Int64 long
 #define _Reg long
 
+#define __LONG_MAX     0x7fffffffffffffffL
+#define __LLONG_MAX    0x7fffffffffffffffLL
+
 #ifndef __BYTE_ORDER__
 #define __BYTE_ORDER__ 1234
 #endif
