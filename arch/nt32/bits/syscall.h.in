@@ -163,8 +163,8 @@
 #define __NR_sync					162
 #define __NR_acct					163
 #define __NR_settimeofday			164
-#define __NR_mount					165
-#define __NR_umount2				166
+#define __NR_mount__
+#define __NR_umount2__
 #define __NR_swapon					167
 #define __NR_swapoff				168
 #define __NR_reboot					169
