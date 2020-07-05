@@ -1,6 +1,7 @@
 libc_src_dirs       = $(SOURCE_DIR)/src/*/
 libc_src_dirs      += $(SOURCE_DIR)/crt/
 libc_src_dirs      += $(SOURCE_DIR)/ldso/
+libc_src_dirs      += $(SOURCE_DIR)/$(MALLOC_SUBDIR)/
 
 ifeq ($(PORT_DIR),$(PROJECT_DIR))
 libc_src_dirs      += $(PROJECT_DIR)/src/*/
@@ -64,6 +65,7 @@ libc_tree_dirs      = $(subst $(SOURCE_DIR)/,./,             \
 
 libc_tree_dirs     += ./crt/  ./crt/$(ARCH)/
 libc_tree_dirs     += ./ldso/ ./ldso/$(ARCH)/
+libc_tree_dirs     += $(MALLOC_SUBDIR)
 
 
 # depend on all headers

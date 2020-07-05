@@ -23,6 +23,9 @@ CFLAGS_CONFIG           += @libc_source_tree@
 # libgcc, libgcc_eh
 LIBC_DEPS               += @libc_deps@
 
+# mallocng */
+MALLOC_SUBDIR            = @malloc_subdir@
+
 # syscall.h
 build/syscall_h.tag:     build/@libc_syscall_arch@
 

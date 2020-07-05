@@ -126,6 +126,16 @@ cfgdefs_set_libc_cflags()
 }
 
 
+cfgdefs_set_malloc_options()
+{
+	if [ -d $mb_source_dir/src/malloc/mallocng ]; then
+		malloc_subdir='src/malloc/mallocng'
+	else
+		malloc_subdir='src/malloc/oldmalloc'
+	fi
+}
+
+
 cfgdefs_output_custom_defs()
 {
 	sed \
@@ -140,6 +150,7 @@ cfgdefs_output_custom_defs()
 			-e 's/@libc_syscall_arch@/'"$libc_syscall_arch"'/g' \
 			-e 's/@libc_td_tid_addr@/'"$libc_td_tid_addr"'/g'    \
 			-e 's!@alltypes_sed@!'"$alltypes_sed"'!g'             \
+			-e 's!@malloc_subdir@!'"$malloc_subdir"'!g'            \
 		"$mb_project_dir/project/config/cfgdefs.in"         \
 	| sed -e 's/[ \t]*$//g'                                     \
 			>> "$mb_pwd/cfgdefs.mk"
@@ -157,6 +168,9 @@ cfgdefs_set_libc_options
 
 # libc (variant-specific) cflags
 cfgdefs_set_libc_cflags
+
+# malloc implementation variant
+cfgdefs_set_malloc_options
 
 # cfgdefs.in --> cfgdefs.mk
 cfgdefs_output_custom_defs
