@@ -7,7 +7,7 @@
 
 __sigsetjmp:
 sigsetjmp:
-	test  %rdx,%rdx		# save signal mask?
+	test  %edx,%edx		# save signal mask?
 	jnz   1f		# yes: save mask
 	jmp   setjmp		# no:  setjmp
 
