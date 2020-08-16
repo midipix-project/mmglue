@@ -122,7 +122,9 @@ ccenv_find_tool()
 {
 	if [ -z "$ccenv_prefixes" ]; then
 		for ccenv_candidate in $(printf '%s' "$ccenv_candidates"); do
-			if [ -z ${@:-} ]; then
+			ccenv_cmd_args="${@:-}"
+
+			if [ -z "$ccenv_cmd_args" ]; then
 				if command -v "$ccenv_candidate" > /dev/null; then
 					ccenv_tool="$ccenv_candidate"
 					return 0
