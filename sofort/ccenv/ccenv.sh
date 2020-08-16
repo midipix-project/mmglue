@@ -688,6 +688,7 @@ ccenv_create_framework_executable()
 	printf 'int main(void){return 0;}'  \
 		| $ccenv_cc -xc -           \
 			-o $ccenv_image     \
+			2>/dev/null         \
 	|| return 1
 
 	return 0
