@@ -24,6 +24,7 @@ OS_LIB_SUFFIXED_SUFFIX          = @ccenv_os_lib_suffixed_suffix@
 CC_HOST                         = @ccenv_cc_host@
 CC_BITS                         = @ccenv_cc_bits@
 
+CC_ARFMT                        = @ccenv_cc_arfmt@
 CC_BINFMT                       = @ccenv_cc_binfmt@
 CC_UNDERSCORE                   = @ccenv_cc_underscore@
 

@@ -226,6 +226,48 @@ ccenv_set_primary_tools()
 
 	# windrc
 	ccenv_windrc="$ccenv_windres"
+
+	# archive format preamble
+	ccenv_libgcc_a_header=$(od -b -N8 $($ccenv_cc -print-file-name=libgcc.a) | head -n1)
+	ccenv_cc_arfmt='common'
+
+	# ar (big)
+	ccenv_bigaf_header=$(printf '%s\n' '<bigaf>' | od -b | head -n1)
+
+	if [ "$ccenv_libgcc_a_header" = "$ccenv_bigaf_header" ]; then
+		ccenv_cc_arfmt='bigaf'
+
+		for __tool in $(printf '%s' "$ccenv_core_tools"); do
+			ccenv_var_name=ccenv_$__tool
+			ccenv_var_expr='${'$ccenv_var_name':-}'
+			eval ccenv_var_val="$ccenv_var_expr"
+
+			if [ "$ccenv_var_val" != false ]; then
+				ccenv_var_val="$ccenv_var_val -X64"
+				ccenv_var_expr='${ccenv_var_val:-}'
+				eval ccenv_$__tool="$ccenv_var_expr"
+			fi
+		done
+	fi
+
+	# ar (small)
+	ccenv_aiaff_header=$(printf '%s\n' '<aiaff>' | od -b | head -n1)
+
+	if [ "$ccenv_libgcc_a_header" = "$ccenv_aiaff_header" ]; then
+		ccenv_cc_arfmt='aiaff'
+
+		for __tool in $(printf '%s' "$ccenv_core_tools"); do
+			ccenv_var_name=ccenv_$__tool
+			ccenv_var_expr='${'$ccenv_var_name':-}'
+			eval ccenv_var_val="$ccenv_var_expr"
+
+			if [ "$ccenv_var_val" != false ]; then
+				ccenv_var_val="$ccenv_var_val -X32"
+				ccenv_var_expr='${ccenv_var_val:-}'
+				eval ccenv_$__tool="$ccenv_var_expr"
+			fi
+		done
+	fi
 }
 
 ccenv_set_tool_variants()
