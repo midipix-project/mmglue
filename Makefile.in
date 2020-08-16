@@ -114,6 +114,9 @@ DISABLE_STATIC          = @disable_static@
 USE_CUSTOM_CFGDEFS      = @use_custom_cfgdefs@
 USE_CUSTOM_USRDEFS      = @use_custom_usrdefs@
 
+SHARED_LIB_CMD          = @shared_lib_cmd@
+SHARED_LIB_LDFLAGS      = @shared_lib_ldflags@
+
 .cflags-host:
 	@printf '%s' "$(CFLAGS)"
 
@@ -160,7 +163,7 @@ src/%.o: 	$(SOURCE_DIR)/src/%.c $(ALL_HEADERS) host.tag tree.tag
 		$(CC) -c -o $@ $< $(CFLAGS_STATIC)
 
 lib/%$(OS_LIB_PREFIXED_SUFFIX)$(VER_XYZ)$(OS_LIB_SUFFIXED_SUFFIX):
-		$(CC) -shared -o $@ $^ $(LDFLAGS_SHARED)
+		$(SHARED_LIB_CMD) $@ $^ $(SHARED_LIB_LDFLAGS)
 
 lib/%$(OS_ARCHIVE_EXT):
 		mkdir -p lib

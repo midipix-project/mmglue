@@ -1087,6 +1087,20 @@ ccenv_set_os_dso_format()
 			;;
 	esac
 
+	if [ "$ccenv_cfgtype" = 'host' ]; then
+		case "$ccenv_cc_sofmt" in
+			bigaf | aiaff )
+				mb_shared_lib_cmd='$(AR) -rcs'
+				mb_shared_lib_ldflags=
+				;;
+
+			* )
+				mb_shared_lib_cmd='$(CC) -shared -o'
+				mb_shared_lib_ldflags='$(LDFLAGS_SHARED)'
+				;;
+		esac
+	fi
+
 	ccenv_attr_epilog "$ccenv_cc_sofmt"
 }
 
