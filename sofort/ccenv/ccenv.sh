@@ -238,7 +238,7 @@ ccenv_set_tool_variants()
 	if [ "$ccenv_tool" = false ]; then
 		ccenv_as_asm=
 	else
-		$ccenv_tool --help | grep -i '.bc assembler' \
+		$ccenv_tool --help 2>&1 | grep -i '.bc assembler' \
 		|| ccenv_as_asm="$ccenv_tool"
 	fi
 
