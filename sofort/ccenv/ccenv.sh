@@ -1039,6 +1039,57 @@ ccenv_set_os_semantics()
 	ccenv_attr_epilog "$ccenv_os_semantics"
 }
 
+ccenv_set_os_dso_format()
+{
+	ccenv_attr_prolog 'os dso format'
+
+	case "$ccenv_cc_arfmt" in
+		common )
+			ccenv_cc_sofmt="$ccenv_cc_binfmt"
+			;;
+
+		bigaf )
+			ccenv_libgcc_s_a_header=$(od -b -N8             \
+				$($ccenv_cc -print-file-name=libgcc_s.a) \
+					2>/dev/null                       \
+					| head -n1)
+
+			ccenv_libgcc_s_so_header=$(od -b -N8             \
+				$($ccenv_cc -print-file-name=libgcc_s.so) \
+					2>/dev/null                        \
+					| head -n1)
+
+			if [ "$ccenv_libgcc_s_a_header" = "$ccenv_bigaf_header" ]; then
+				ccenv_cc_sofmt='bigaf'
+			elif [ "$ccenv_libgcc_s_so_header" = "$ccenv_bigaf_header" ]; then
+				ccenv_cc_sofmt='bigaf'
+			else
+				ccenv_cc_sofmt="$ccenv_cc_binfmt"
+			fi
+			;;
+
+		aiaff )
+			ccenv_libgcc_s_a_header=$(od -b -N8               \
+				$($ccenv_cc -print-file-name=libgcc_s.a) \
+					| head -n1)
+
+			ccenv_libgcc_s_so_header=$(od -b -N8               \
+				$($ccenv_cc -print-file-name=libgcc_s.so) \
+					| head -n1)
+
+			if [ "$ccenv_libgcc_s_a_header" = "$ccenv_aiaff_header" ]; then
+				ccenv_cc_sofmt='aiaff'
+			elif [ "$ccenv_libgcc_s_so_header" = "$ccenv_aiaff_header" ]; then
+				ccenv_cc_sofmt='aiaff'
+			else
+				ccenv_cc_sofmt="$ccenv_cc_binfmt"
+			fi
+			;;
+	esac
+
+	ccenv_attr_epilog "$ccenv_cc_sofmt"
+}
+
 ccenv_set_os_dso_exrules()
 {
 	ccenv_attr_prolog 'os dso exrules'
@@ -1335,6 +1386,7 @@ ccenv_set_toolchain_variables()
 	ccenv_set_os
 	ccenv_set_os_flags
 	ccenv_set_os_semantics
+	ccenv_set_os_dso_format
 	ccenv_set_os_dso_exrules
 	ccenv_set_os_dso_linkage
 	ccenv_set_os_dso_patterns
