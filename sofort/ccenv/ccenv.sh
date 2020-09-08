@@ -1253,13 +1253,13 @@ ccenv_output_defs()
 
 		ccenv_tmp=$(mktemp ./tmp_XXXXXXXXXXXXXXXX)
 
-		sed                             \
+		sed                                      \
 				-e 's/^[[:space:]]*$/@/g' \
-				-e 's/^/NATIVE_/' \
-				-e 's/NATIVE_@//g' \
-				-e 's/NATIVE_#/#/g' \
-				-e 's/       =/=/g'  \
-				-e 's/       +=/+=/g' \
+				-e 's/^/NATIVE_/'          \
+				-e 's/NATIVE_@//g'          \
+				-e 's/NATIVE_#/#/g'          \
+				-e 's/       =/=/g'           \
+				-e 's/       +=/+=/g'          \
 			$ccenv_in > "$ccenv_tmp"
 
 		ccenv_in="$ccenv_tmp"
