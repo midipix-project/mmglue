@@ -68,6 +68,11 @@ ccenv_tool_epilog()
 	ccenv_line_dots='................................'
 	ccenv_tool_dlen="$((${#ccenv_line_dots} - ${#1}))"
 
+	case ${ccenv_tool_dlen} in
+		0 | -* )
+			ccenv_tool_dlen='3' ;;
+	esac
+
 	printf "%${ccenv_tool_dlen}.${ccenv_tool_dlen}s  %s.\n" \
 		"${ccenv_line_dots}" "${1}"
 
@@ -109,6 +114,11 @@ ccenv_attr_epilog()
 {
 	ccenv_line_dots='................................'
 	ccenv_tool_dlen="$((${#ccenv_line_dots} - 1 - ${#1}))"
+
+	case ${ccenv_tool_dlen} in
+		0 | -* )
+			ccenv_tool_dlen='3' ;;
+	esac
 
 	printf "%${ccenv_tool_dlen}.${ccenv_tool_dlen}s  %s.\n" \
 		"${ccenv_line_dots}" "${1}"
