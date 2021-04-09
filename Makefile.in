@@ -121,6 +121,14 @@ SHARED_LIB_LDFLAGS      = @shared_lib_ldflags@
 
 VERSION_OPT             = @version_opt@
 
+SHARED_LIBRARY_OPT      = @shared_library_opt@
+STATIC_LIBRARY_OPT      = @static_library_opt@
+
+APP_FRONTEND_OPT        = @app_frontend_opt@
+APP_LINKING_OPT         = @app_linking_opt@
+
+INSTALL_HEADERS_OPT     = @install_headers_opt@
+
 .cflags-host:
 	@printf '%s' "$(CFLAGS)"
 

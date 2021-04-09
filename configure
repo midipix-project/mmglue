@@ -657,6 +657,40 @@ config_opts()
 	else
 		mb_version_opt='used'
 	fi
+
+	if [ "$mb_custom_install_headers" = 'yes' ]; then
+		mb_install_headers_opt='custom'
+	else
+		mb_install_headers_opt='default'
+	fi
+
+	if [ "$mb_disable_static" = 'yes' ]; then
+		mb_static_library_opt='disabled'
+	else
+		mb_static_library_opt='enabled'
+	fi
+
+	if [ "$mb_disable_shared" = 'yes' ]; then
+		mb_shared_library_opt='disabled'
+	else
+		mb_shared_library_opt='enabled'
+	fi
+
+	if [ "$mb_disable_frontend" = 'yes' ]; then
+		mb_app_frontend_opt='disabled'
+	else
+		mb_app_frontend_opt='enabled'
+	fi
+
+	if [ "$mb_all_static" = 'yes' ]; then
+		mb_app_linking_opt='all_static'
+
+	elif [ "$mb_all_shared" = 'yes' ]; then
+		mb_app_linking_opt='all_shared'
+
+	else
+		mb_app_linking_opt='default'
+	fi
 }
 
 config_copy()
