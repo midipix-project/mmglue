@@ -1,12 +1,6 @@
 # pkgconf.mk: rules for pkgconf manifest generation.
 # this file is covered by COPYING.SOFORT.
 
-ifeq ($(PKGCONF),no)
-
-install-pkgconf:
-
-else
-
 PKGCONF_VERSION = $(VER_MAJOR).$(VER_MINOR).$(VER_PATCH)
 
 build/$(PACKAGE).pc: .pkgconf dirs.tag
@@ -41,5 +35,3 @@ install-shared: install-pkgconf
 install-static: install-pkgconf
 
 .PHONY: .pkgconf install-pkgconf
-
-endif
