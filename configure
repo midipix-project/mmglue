@@ -135,6 +135,7 @@ init_vars()
 	sfrt_core_dir=$sfrt_impl_dir/core
 	sfrt_config_vars=$sfrt_config_dir/config.vars
 	sfrt_flag_vars=$sfrt_config_dir/flag.vars
+	sfrt_opt_vars=$sfrt_config_dir/opt.vars
 	sfrt_cfgdefs_in=$sfrt_config_dir/cfgdefs.in
 
 	mb_make_vars=$(< "$sfrt_config_vars" \
@@ -649,11 +650,20 @@ config_flags()
 }
 
 
+config_opts()
+{
+	if [ "$mb_avoid_version" = 'yes' ]; then
+		mb_version_opt='none'
+	else
+		mb_version_opt='used'
+	fi
+}
+
 config_copy()
 {
 	output_step_prolog ${mb_script} 'config_copy'
 
-	mb_vars=$(cut -d'=' -f1 $sfrt_config_vars \
+	mb_vars=$(cut -d'=' -f1 "$sfrt_config_vars" "$sfrt_opt_vars" \
 			| grep -v '^#')
 
 	mb_sed_substs=" \
@@ -1129,6 +1139,7 @@ common_defaults
 
 # five: config
 config_flags
+config_opts
 config_copy
 config_ccenv
 config_custom

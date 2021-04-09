@@ -119,6 +119,8 @@ USE_CUSTOM_USRDEFS      = @use_custom_usrdefs@
 SHARED_LIB_CMD          = @shared_lib_cmd@
 SHARED_LIB_LDFLAGS      = @shared_lib_ldflags@
 
+VERSION_OPT             = @version_opt@
+
 .cflags-host:
 	@printf '%s' "$(CFLAGS)"
 
