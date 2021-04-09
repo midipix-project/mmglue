@@ -36,6 +36,8 @@ SRCBALL			= @srcball@
 SRCBALL_URL		= @srcball_url@
 SRCBALL_SHA256		= @srcball_sha256@
 
+MAKE                    = @make@
+
 BUILD 			= @build@
 HOST 			= @host@
 CCHOST 			= @cchost@

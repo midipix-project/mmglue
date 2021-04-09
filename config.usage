@@ -59,6 +59,8 @@ supported switches:
 	--pdfdir
 	--psdir
 
+	--make
+
 	--build
 	--host
 	--cchost
@@ -123,6 +125,8 @@ supported variables:
 	CC
 	CPP
 	CXX
+
+	MAKE
 
 	BUILD
 	HOST
