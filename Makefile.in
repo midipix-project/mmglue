@@ -41,7 +41,7 @@ SRCBALL_URL		= @srcball_url@
 SRCBALL_SHA256		= @srcball_sha256@
 
 MAKE                    = @make@
-MAKEMODE                = posix
+MAKEMODE                = @makemode@
 
 BUILD 			= @build@
 HOST 			= @host@

@@ -214,6 +214,7 @@ init_vars()
 
 	# make
 	mb_make=$MAKE
+	mb_makemode=$MAKEMODE
 
 	# build
 	mb_build=$BUILD
@@ -608,6 +609,10 @@ common_defaults()
 		mb_make='make'
 	fi
 
+	if [ -z "$mb_makemode" ]; then
+		mb_makemode='posix'
+	fi
+
 	# shell
 	if [ -z "$mb_shell" ]; then
 		mb_shell='/bin/sh'
@@ -941,6 +946,10 @@ for arg ; do
 		#make
 		--make=*)
 			mb_make=${arg#*=}
+			;;
+
+		--makemode=*)
+			mb_makemode=${arg#*=}
 			;;
 
 		# build

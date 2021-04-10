@@ -60,6 +60,7 @@ supported switches:
 	--psdir
 
 	--make
+	--makemode
 
 	--build
 	--host
@@ -127,6 +128,7 @@ supported variables:
 	CXX
 
 	MAKE
+	MAKEMODE
 
 	BUILD
 	HOST
