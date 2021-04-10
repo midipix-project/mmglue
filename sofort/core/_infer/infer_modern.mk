@@ -17,3 +17,6 @@ lib/%$(OS_ARCHIVE_EXT):
 		mkdir -p lib
 		rm -f $@
 		$(AR) rcs $@ $^
+
+srcs.tag:
+		touch $@

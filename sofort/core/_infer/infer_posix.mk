@@ -17,3 +17,11 @@ $(STATIC_LIB):
 		mkdir -p lib
 		rm -f $@
 		$(AR) rcs $@ $(STATIC_OBJS)
+
+srcs.tag:	tree.tag
+
+srcs.tag:
+	$(PROJECT_DIR)/sofort/tools/srctree.sh \
+		--srctree=$(SOURCE_DIR) --      \
+		$(COMMON_SRCS) $(APP_SRCS)
+	touch $@

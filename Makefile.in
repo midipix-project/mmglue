@@ -244,6 +244,10 @@ app-objs:	dirs $(APP_OBJS)
 
 
 
+$(APP_SRCS):	srcs.tag
+
+$(COMMON_SRCS):	srcs.tag
+
 $(APP_OBJS):	$(ALL_HEADERS) host.tag tree.tag
 
 $(SHARED_OBJS):	$(ALL_HEADERS) host.tag tree.tag
@@ -300,6 +304,7 @@ distclean:	clean
 
 clean:		clean-implib
 		rm -f tree.tag
+		rm -f srcs.tag
 		rm -f dirs.tag
 		rm -f host.tag
 		rm -f host.tmp
