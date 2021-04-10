@@ -8,4 +8,10 @@ DSO_REF_SOLINK   = $(SHARED_SOLINK)
 LDFLAGS_SHARED  += -Wl,-soname
 LDFLAGS_SHARED  += -Wl,$(DSO_SONAME)
 
+implib:
+
+install-implib:
+
+clean-implib:
+
 .PHONY:         $(IMPLIB_DEF) $(IMPLIB_VER) $(IMPLIB_SONAME) $(IMPLIB_SOLINK)
