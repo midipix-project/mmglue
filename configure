@@ -611,6 +611,15 @@ common_defaults()
 
 	if [ -z "$mb_makemode" ]; then
 		mb_makemode='posix'
+
+		printf '%s\n%s\n%s\n\n%s\n\n'        \
+				'ifeq (a,b)'          \
+				'VAR = val'            \
+				'endif'                 \
+				'all:'                   \
+			| ${mb_make} -s -f - 2>/dev/null  \
+		&& mb_makemode='modern'
+
 	fi
 
 	# shell
