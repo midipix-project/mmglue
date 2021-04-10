@@ -1372,6 +1372,7 @@ ccenv_common_init()
 		ccenv_cflags=$(${mb_make} -s -f "$mb_pwd/Makefile.tmp" \
 			OS_DSO_EXRULES=default                          \
 			OS_SONAME=symlink                                \
+			OS_ARCHIVE_EXT='.a'                               \
 			.cflags-host)
 
 		ccenv_cc="$mb_user_cc"
@@ -1385,6 +1386,7 @@ ccenv_common_init()
 		ccenv_cflags=$(${mb_make} -s -f "$mb_pwd/Makefile.tmp" \
 			OS_DSO_EXRULES=default                          \
 			OS_SONAME=symlink                                \
+			OS_ARCHIVE_EXT='.a'                               \
 			.cflags-native)
 
 		ccenv_cc="$mb_native_cc"

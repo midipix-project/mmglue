@@ -9,7 +9,7 @@ ARCH_LOBJS	   += $(ARCH_SRCS:.c=.lo)
 ARCH_OBJS	   += $(ARCH_SRCS:.c=.o)
 
 APP_LOBJS	   += $(APP_SRCS:.c=.lo)
-APP_OBJS	   += $(APP_SRCS:.c=.o)
+APP_OBJS	   += $(APP_SRCS:.c=.ao)
 
 SHARED_OBJS	   += $(COMMON_LOBJS) $(ARCH_LOBJS)
 STATIC_OBJS	   += $(COMMON_OBJS)  $(ARCH_OBJS)

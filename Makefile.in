@@ -1,6 +1,10 @@
 # Makefile.in: primary common build logic.
 # this file is covered by COPYING.SOFORT.
 
+.POSIX:
+
+.SUFFIXES: .a .c .s .o .lo .ao
+
 PACKAGE 		= @package@
 NICKNAME 		= @nickname@
 PROJECT_DIR 		= @project_dir@
@@ -37,6 +41,7 @@ SRCBALL_URL		= @srcball_url@
 SRCBALL_SHA256		= @srcball_sha256@
 
 MAKE                    = @make@
+MAKEMODE                = posix
 
 BUILD 			= @build@
 HOST 			= @host@
@@ -129,13 +134,6 @@ APP_LINKING_OPT         = @app_linking_opt@
 
 INSTALL_HEADERS_OPT     = @install_headers_opt@
 
-.cflags-host:
-	@printf '%s' "$(CFLAGS)"
-
-.cflags-native:
-	@printf '%s' "$(NATIVE_CFLAGS)"
-
-.SUFFIXES:
 
 all:
 install:
@@ -144,6 +142,13 @@ static:
 
 install-extras:
 install-app-extras:
+
+.cflags-host:
+	@printf '%s' "$(CFLAGS)"
+
+.cflags-native:
+	@printf '%s' "$(NATIVE_CFLAGS)"
+
 
 include ./ccenv/host.mk
 include ./ccenv/native.mk
@@ -155,6 +160,7 @@ include $(PROJECT_DIR)/sofort/core/defs.mk
 include $(PROJECT_DIR)/sofort/core/pkgconf.mk
 include $(PROJECT_DIR)/sofort/core/version.mk
 include $(PROJECT_DIR)/sofort/core/flavor.mk
+include $(PROJECT_DIR)/sofort/core/infer.mk
 
 include $(PROJECT_DIR)/project/osforce.mk
 include $(PROJECT_DIR)/project/tree.mk
@@ -164,24 +170,6 @@ include $(PROJECT_DIR)/project/common.mk
 include $(PROJECT_DIR)/project/arch.mk
 include $(PROJECT_DIR)/project/extras.mk
 include $(PROJECT_DIR)/project/overrides.mk
-
-
-$(APP_SRCS:%.c=%.o): CFLAGS_STATIC = $(CFLAGS_APP)
-
-src/%.lo: 	$(SOURCE_DIR)/src/%.c $(ALL_HEADERS) host.tag tree.tag
-		$(CC) -c -o $@ $< $(CFLAGS_SHARED)
-
-src/%.o: 	$(SOURCE_DIR)/src/%.c $(ALL_HEADERS) host.tag tree.tag
-		$(CC) -c -o $@ $< $(CFLAGS_STATIC)
-
-lib/%$(OS_LIB_PREFIXED_SUFFIX)$(VER_XYZ)$(OS_LIB_SUFFIXED_SUFFIX):
-		$(SHARED_LIB_CMD) $@ $^ $(SHARED_LIB_LDFLAGS)
-
-lib/%$(OS_ARCHIVE_EXT):
-		mkdir -p lib
-		rm -f $@
-		$(AR) rcs $@ $^
-
 
 
 all:		package-shared package-static app
@@ -256,8 +244,14 @@ app-objs:	dirs $(APP_OBJS)
 
 
 
+$(APP_OBJS):	$(ALL_HEADERS) host.tag tree.tag
+
+$(SHARED_OBJS):	$(ALL_HEADERS) host.tag tree.tag
+
+$(STATIC_OBJS):	$(ALL_HEADERS) host.tag tree.tag
+
+
 $(SHARED_LIB):	$(SHARED_OBJS)
-$(SHARED_LIB):	LDFLAGS_SHARED += $(LDFLAGS_IMPLIB)
 
 $(STATIC_LIB):	$(STATIC_OBJS)
 
@@ -265,7 +259,7 @@ $(APP):		$(PACKAGE_APP)
 
 $(DEFAULT_APP):	$(STATIC_OBJS) $(APP_OBJS)
 		rm -f app.tag
-		$(CC) -o $@ $^ $(LDFLAGS_APP)
+		$(CC) -o $@ $(STATIC_OBJS) $(APP_OBJS) $(LDFLAGS_APP)
 
 $(SHARED_APP):	$(DSO_REF_SOLINK) $(APP_OBJS) $(SHARED_SOLINK)
 		rm -f app.tag
@@ -273,7 +267,7 @@ $(SHARED_APP):	$(DSO_REF_SOLINK) $(APP_OBJS) $(SHARED_SOLINK)
 
 $(STATIC_APP):	$(STATIC_OBJS) $(APP_OBJS)
 		rm -f app.tag
-		$(CC) -static -o $@ $^ $(LDFLAGS_STATIC)
+		$(CC) -static -o $@ $(STATIC_OBJS) $(APP_OBJS) $(LDFLAGS_STATIC)
 
 
 dirs: 		dirs.tag
