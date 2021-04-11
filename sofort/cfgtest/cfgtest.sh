@@ -40,6 +40,15 @@ cfgtest_host_section()
 	mb_cfgtest_cfgtype='host'
 	mb_cfgtest_cflags=$(make -s -f "$mb_pwd/Makefile.tmp" .cflags-host)
 
+	mb_cfgtest_ldflags="$mb_ldflags_cmdline"
+	mb_cfgtest_ldflags="$mb_cfgtest_ldflags $mb_ldflags_debug"
+	mb_cfgtest_ldflags="$mb_cfgtest_ldflags $mb_ldflags_common"
+	mb_cfgtest_ldflags="$mb_cfgtest_ldflags $mb_ldflags_strict"
+	mb_cfgtest_ldflags="$mb_cfgtest_ldflags $mb_ldflags_config"
+	mb_cfgtest_ldflags="$mb_cfgtest_ldflags $mb_ldflags_sysroot"
+	mb_cfgtest_ldflags="$mb_cfgtest_ldflags $mb_ldflags_path"
+	mb_cfgtest_ldflags="$mb_cfgtest_ldflags $mb_ldflags_last"
+
 	cfgtest_comment 'host-specific tests'
 }
 
@@ -49,6 +58,7 @@ cfgtest_native_section()
 	mb_cfgtest_cc="$mb_native_cc"
 	mb_cfgtest_cfgtype='native'
 	mb_cfgtest_cflags=$(make -s -f "$mb_pwd/Makefile.tmp" .cflags-native)
+	mb_cfgtest_ldflags="$mb_native_ldflags"
 
 	cfgtest_comment 'native system tests'
 }
@@ -490,14 +500,9 @@ cfgtest_library_presence()
 
 	printf '\n\n' >&3
 
-	cfgtest_cmd=$(printf '%s -o a.out -xc - %s' \
-		"$mb_cfgtest_cc" "$mb_cfgtest_cflags")
-
-	if [ "$mb_cfgtest_cfgtype" = 'native' ]; then
-		cfgtest_cmd="$cfgtest_cmd ${mb_native_ldflags} $cfgtest_libs"
-	else
-		cfgtest_cmd="$cfgtest_cmd -L${mb_libdir} $cfgtest_libs"
-	fi
+	cfgtest_cmd=$(printf '%s -o a.out -xc - %s %s %s' \
+		"$mb_cfgtest_cc" "$mb_cfgtest_cflags"      \
+		"$mb_cfgtest_ldflags" "$cfgtest_libs")
 
 	printf '%s' "$cfgtest_code_snippet"          \
 		| $(printf '%s' "$cfgtest_cmd")      \
