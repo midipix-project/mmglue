@@ -3,6 +3,8 @@
 
 PKGCONF_VERSION = $(VER_MAJOR).$(VER_MINOR).$(VER_PATCH)
 
+.pkgconf:
+
 build/$(PACKAGE).pc: .pkgconf dirs.tag
 
 build/$(PACKAGE).pc:
