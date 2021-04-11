@@ -631,6 +631,9 @@ common_defaults()
 	mb_cflags_cmdline="$mb_cflags_cmdline $mb_cflags"
 	mb_ldflags_cmdline="$mb_ldflags_cmdline $mb_ldflags"
 
+	# add the prefix's library directory to the linker library path
+	mb_ldflags_last="$mb_ldflags_last -L$mb_libdir"
+
 	# step epilog
 	output_step_epilog
 }
