@@ -493,7 +493,7 @@ cfgtest_library_presence()
 	cfgtest_cmd=$(printf '%s -o a.out -xc - %s' \
 		"$mb_cfgtest_cc" "$mb_cfgtest_cflags")
 
-	cfgtest_cmd="$cfgtest_cmd $cfgtest_libs"
+	cfgtest_cmd="$cfgtest_cmd -L${mb_libdir} $cfgtest_libs"
 
 	printf '%s' "$cfgtest_code_snippet"          \
 		| $(printf '%s' "$cfgtest_cmd")      \
