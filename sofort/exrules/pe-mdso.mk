@@ -3,8 +3,8 @@
 
 include $(PROJECT_DIR)/sofort/exrules/pe-common.mk
 
-$(IMPLIB_VER):		$(IMPLIB_DEF)
-			$(MDSO) -m $(CC_BITS) -i $(IMPLIB_VER) -n $(DSO_VER) -l $(DSO_LIBPATH) $<
+$(IMPLIB_VER):	$(IMPLIB_DEF)
+		$(MDSO) -m $(CC_BITS) -i $(IMPLIB_VER) -n $(DSO_VER) -l $(DSO_LIBPATH) $(IMPLIB_DEF)
 
 include $(PROJECT_DIR)/sofort/exrules/_pe/pe_mdso_version_$(VERSION_OPT).mk
 
