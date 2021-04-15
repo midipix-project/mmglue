@@ -170,9 +170,16 @@ init_vars()
 
 	# config.project
 	if [ -z "$mb_config" ]; then
-		. $mb_project_dir/config.project
-	else
-		. "$mb_config"
+		mb_config="$mb_project_dir/config.project"
+	fi
+
+	. "$mb_config"
+
+	# package
+	if [ -z "$mb_package" ]; then
+		error_msg "$mb_script: incomplete information in $mb_config."
+		error_msg "$mb_script: \$mb_package not set."
+		exit 1
 	fi
 
 	# srcinfo
