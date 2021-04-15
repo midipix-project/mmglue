@@ -537,7 +537,7 @@ common_defaults()
 	[ -n "$mb_oldincludedir" ]	|| mb_oldincludedir=$mb_prefix/include
 	[ -n "$mb_datarootdir" ] 	|| mb_datarootdir=$mb_prefix/share
 	[ -n "$mb_mandir" ] 		|| mb_mandir=$mb_datarootdir/man
-	[ -n "$mb_docdir" ] 		|| mb_docdir=$mb_datarootdir/doc
+	[ -n "$mb_docdir" ] 		|| mb_docdir=$mb_datarootdir/doc/$mb_package
 	[ -n "$mb_libexecdir" ]		|| mb_libexecdir=$mb_exec_prefix/libexec
 
 	[ -n "$mb_sysconfdir" ] 	|| mb_sysconfdir=$mb_exec_prefix/etc
