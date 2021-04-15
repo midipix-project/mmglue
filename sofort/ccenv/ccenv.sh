@@ -834,7 +834,8 @@ ccenv_set_cc_binfmt()
 	# MACHO / readobj
 	if [ -n "$ccenv_readobj" ] && [ -z "$ccenv_cc_binfmt" ]; then
 		if $ccenv_readobj $ccenv_image 2>&3                  \
-				| grep -i 'Format:' | sed 's/ /_/g'  \
+				| grep -i 'Format:'                  \
+				| sed  -e 's/ /_/g'                  \
 				| grep -i '_Mach-O_'                 \
 					> /dev/null; then
 			ccenv_cc_binfmt='MACHO'
