@@ -604,16 +604,25 @@ ccenv_set_cxx()
 			ccenv_candidates="clang++" ;;
 
 		*-gcc )
-			ccenv_cpp_prefix=${ccenv_cc_cmd%-gcc*}-
-			ccenv_candidates="${ccenv_cpp_prefix}g++" ;;
+			ccenv_cxx_prefix=${ccenv_cc_cmd%-gcc*}-
+			ccenv_candidates="${ccenv_cxx_prefix}g++" ;;
 
 		*-clang )
-			ccenv_cpp_prefix=${ccenv_cc_cmd%-clang*}-
-			ccenv_candidates="${ccenv_cpp_prefix}clang++" ;;
+			ccenv_cxx_prefix=${ccenv_cc_cmd%-clang*}-
+			ccenv_candidates="${ccenv_cxx_prefix}clang++" ;;
 
-		*cc )
-			ccenv_cxx_prefix=${ccenv_cc_cmd%cc*}
-			ccenv_candidates="${ccenv_cpp_prefix}++" ;;
+		/*cc | /*c99 | /*c11 )
+			ccenv_cxx_prefix=${ccenv_cc_cmd%/*}
+			ccenv_candidates="${ccenv_cxx_prefix}/cxx"
+			ccenv_candidates="${ccenv_candidates} ${ccenv_cxx_prefix}/c++" ;;
+
+		/*gcc )
+			ccenv_cxx_prefix=${ccenv_cc_cmd%/*}
+			ccenv_candidates="${ccenv_cxx_prefix}/g++" ;;
+
+		/*clang )
+			ccenv_cxx_prefix=${ccenv_cc_cmd%/*}
+			ccenv_candidates="${ccenv_cxx_prefix}/clang++" ;;
 
 		* )
 			ccenv_cxx="$ccenv_cc -xc++"
