@@ -1271,7 +1271,8 @@ ccenv_output_defs()
 				-e 's/NATIVE_#/#/g'          \
 				-e 's/       =/=/g'           \
 				-e 's/       +=/+=/g'          \
-			$ccenv_in > "$ccenv_tmp"
+			$(printf '%s ' $ccenv_in)               \
+				> "$ccenv_tmp"
 
 		ccenv_in="$ccenv_tmp"
 	else
