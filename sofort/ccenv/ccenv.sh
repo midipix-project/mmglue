@@ -1279,19 +1279,29 @@ ccenv_output_defs()
 		unset ccenv_tmp
 	fi
 
+	ccenv_var_defs=
+	ccenv_sed_substs=
+
 	ccenv_vars=$(cut -d'=' -f1 "$mb_project_dir/sofort/ccenv/ccenv.vars" \
-			| grep -v '^#')
+		| grep -v '^#');
 
 	ccenv_exvars="ccenv_cfgtype ccenv_makevar_prefix"
 
-	ccenv_sed_substs=" \
-		$(for __var in $(printf '%s' "$ccenv_vars $ccenv_exvars"); do \
-			printf '%s"$%s"%s' "-e 's/@$__var@/'" \
-				"$__var" "'/g' ";              \
-		done)"
+	for __var in $(printf '%s' "$ccenv_vars $ccenv_exvars"); do
+		ccenv_sed_subst=$(printf '%s %s%s%s' \
+				'-e' "'s^@$__var@"    \
+				"^___${__var}___"      \
+				"^g'")
 
-	eval sed $ccenv_sed_substs $ccenv_in   \
-			| sed -e 's/[[:blank:]]*$//g' \
+		ccenv_sed_substs="$ccenv_sed_substs $ccenv_sed_subst"
+
+		ccenv_var_def=$(printf '%s%s="${%s}"' "-D" "___${__var}___" "${__var}")
+		eval ccenv_var_defs='"$ccenv_var_defs "$ccenv_var_def'
+	done
+
+	eval sed $ccenv_sed_substs $(printf '%s ' $ccenv_in) \
+			| eval m4 $ccenv_var_defs -           \
+			| sed -e 's/[[:blank:]]*$//g'          \
 		> "$ccenv_mk"
 
 	if [ "$ccenv_cfgtype" = 'host' ]; then
