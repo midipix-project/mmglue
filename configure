@@ -715,19 +715,28 @@ config_copy()
 {
 	output_step_prolog ${mb_script} 'config_copy'
 
+	mb_var_defs=
+	mb_sed_substs=
+
 	mb_vars=$(cut -d'=' -f1 "$sfrt_config_vars" "$sfrt_opt_vars" \
-			| grep -v '^#')
+		| grep -v '^#');
 
-	mb_sed_substs=" \
-		$(for __var in $(printf '%s' "$mb_vars"); do   \
-			printf '%s"$%s"%s' "-e 's^@$__var@^'" \
-				"mb_$__var" "'^g' ";           \
-		done)"
+	for __var in $(printf '%s' "$mb_vars"); do
+		mb_sed_subst=$(printf '%s %s%s%s'  \
+				'-e' "'s^@$__var@"  \
+				"^___${__var}___"    \
+				"^g'")
 
-	eval sed $mb_sed_substs \
-		$mb_project_dir/Makefile.in    \
-			| sed -e 's/[[:blank:]]*$//g' \
-			> $mb_pwd/Makefile.tmp
+		mb_sed_substs="$mb_sed_substs $mb_sed_subst"
+
+		mb_var_def=$(printf '%s%s="${%s}"' "-D" "___${__var}___" "mb_${__var}")
+		eval mb_var_defs='"$mb_var_defs "$mb_var_def'
+	done
+
+	eval sed $mb_sed_substs $mb_project_dir/Makefile.in \
+			| eval m4 $mb_var_defs -             \
+			| sed -e 's/[[:blank:]]*$//g'         \
+		> $mb_pwd/Makefile.tmp
 
 	output_step_epilog
 }
