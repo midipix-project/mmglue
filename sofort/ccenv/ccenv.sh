@@ -1390,11 +1390,13 @@ ccenv_common_init()
 
 	if [ $ccenv_cfgtype = 'host' ]; then
 		ccenv_tflags=
-		ccenv_cflags=$(${mb_make} -s -f "$mb_pwd/Makefile.tmp" \
+		ccenv_cflags=$(${mb_make} -n -f "$mb_pwd/Makefile.tmp" \
 			OS_DSO_EXRULES=default                          \
 			OS_SONAME=symlink                                \
 			OS_ARCHIVE_EXT='.a'                               \
 			.cflags-host)
+
+		ccenv_cflags="${ccenv_cflags#*: }"
 
 		ccenv_cc="$mb_user_cc"
 		ccenv_cpp="$mb_user_cpp"
@@ -1404,11 +1406,13 @@ ccenv_common_init()
 		ccenv_pe_image_base="$mb_pe_image_base"
 	else
 		ccenv_tflags=
-		ccenv_cflags=$(${mb_make} -s -f "$mb_pwd/Makefile.tmp" \
+		ccenv_cflags=$(${mb_make} -n -f "$mb_pwd/Makefile.tmp" \
 			OS_DSO_EXRULES=default                          \
 			OS_SONAME=symlink                                \
 			OS_ARCHIVE_EXT='.a'                               \
 			.cflags-native)
+
+		ccenv_cflags="${ccenv_cflags#*: }"
 
 		ccenv_cc="$mb_native_cc"
 		ccenv_cpp="$mb_native_cpp"

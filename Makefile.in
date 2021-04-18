@@ -144,10 +144,10 @@ install-extras:
 install-app-extras:
 
 .cflags-host:
-	@printf '%s' "$(CFLAGS)"
+	@true : $(CFLAGS)
 
 .cflags-native:
-	@printf '%s' "$(NATIVE_CFLAGS)"
+	@true : $(NATIVE_CFLAGS)
 
 
 include ./ccenv/host.mk
