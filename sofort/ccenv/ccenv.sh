@@ -463,7 +463,7 @@ ccenv_set_cc()
 	ccenv_errors=
 
 	if [ "$ccenv_cfgtype" = 'native' ]; then
-		ccenv_host=$($ccenv_cc $(printf '%s' "$ccenv_cflags") -dumpmachine 2>&3)
+		ccenv_host=$(eval $ccenv_cc $(printf '%s' "$ccenv_cflags") -dumpmachine 2>&3)
 		ccenv_cchost=$ccenv_host
 		ccenv_tool_epilog "$ccenv_cc"
 		return 0
@@ -665,7 +665,7 @@ ccenv_set_cc_bits()
 				"$ccenv_internal_guess")
 
 			printf '%s' "$ccenv_internal_str"                   \
-					| $ccenv_cc -S -xc - -o -           \
+					| eval $ccenv_cc -S -xc - -o -      \
 					  $(printf '%s' "$ccenv_cflags")    \
 				> /dev/null 2>&3                            \
 			&& ccenv_internal_size=$ccenv_internal_guess
