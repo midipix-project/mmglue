@@ -184,10 +184,10 @@ cfgtest_header_presence()
 		"$mb_cfgtest_cc" "$mb_cfgtest_cflags" \
 		'--include='"${1}")
 
-	$(printf '%s' "$cfgtest_cmd")    \
-		< /dev/null               \
-		> /dev/null 2>&3           \
-	|| cfgtest_epilog 'header' '-----'  \
+	eval $(printf '%s' "$cfgtest_cmd") \
+		< /dev/null                 \
+		> /dev/null 2>&3             \
+	|| cfgtest_epilog 'header' '-----'    \
 	|| return
 
 	mb_internal_str=$(printf '%s%s' '-DHAVE_' "${1}"  \
@@ -224,10 +224,10 @@ cfgtest_header_absence()
 		"$mb_cfgtest_cc" "$mb_cfgtest_cflags" \
 		'--include='"${1}")
 
-	$(printf '%s' "$cfgtest_cmd")  \
-		< /dev/null             \
-		> /dev/null 2>&3         \
-	&& cfgtest_epilog 'header' "${1}" \
+	eval $(printf '%s' "$cfgtest_cmd") \
+		< /dev/null                 \
+		> /dev/null 2>&3             \
+	&& cfgtest_epilog 'header' "${1}"     \
 	&& return
 
 	mb_internal_str=$(printf '%s%s' '-DHAVE_NO_' "$@" \
@@ -273,14 +273,14 @@ cfgtest_interface_presence()
 
 	printf '\n\n' >&3
 
-	cfgtest_cmd=$(printf '%s -S -xc - -o - %s %s'  \
-		"$mb_cfgtest_cc" "$mb_cfgtest_cflags" \
+	cfgtest_cmd=$(printf '%s -S -xc - -o - %s %s' \
+		"$mb_cfgtest_cc" "$mb_cfgtest_cflags"  \
 		"$mb_internal_cflags")
 
-	printf '%s' "$cfgtest_code_snippet"     \
-		| $(printf '%s' "$cfgtest_cmd") \
-                > /dev/null 2>&3                \
-       || cfgtest_epilog 'interface' '(error)'  \
+	printf '%s' "$cfgtest_code_snippet"         \
+		| eval $(printf '%s' "$cfgtest_cmd") \
+                > /dev/null 2>&3                      \
+       || cfgtest_epilog 'interface' '(error)'         \
        || return
 
 	mb_internal_str=$(printf '%s%s' '-DHAVE_' "$@"  \
@@ -332,10 +332,10 @@ cfgtest_decl_presence()
 		"$mb_cfgtest_cc" "$mb_cfgtest_cflags" \
 		"$mb_internal_cflags")
 
-	printf '%s' "$cfgtest_code_snippet"     \
-		| $(printf '%s' "$cfgtest_cmd") \
-                > /dev/null 2>&3                \
-       || cfgtest_epilog 'decl' '(error)'     \
+	printf '%s' "$cfgtest_code_snippet"         \
+		| eval $(printf '%s' "$cfgtest_cmd") \
+                > /dev/null 2>&3                      \
+       || cfgtest_epilog 'decl' '(error)'              \
        || return
 
 	# does the argument solely consist of the macro or enum member name?
@@ -386,11 +386,11 @@ cfgtest_type_size()
 				"$mb_internal_type"                     \
 				"$mb_internal_guess")
 
-			printf '%s' "$mb_internal_str"                  \
-					| $mb_cfgtest_cc -S -xc - -o -  \
-					  $mb_cfgtest_cflags            \
-					  $mb_internal_cflags           \
-				> /dev/null 2>/dev/null                 \
+			printf '%s' "$mb_internal_str"                      \
+					| eval $mb_cfgtest_cc -S -xc - -o - \
+					  $mb_cfgtest_cflags                \
+					  $mb_internal_cflags               \
+				> /dev/null 2>/dev/null                     \
 			&& mb_internal_size=$mb_internal_guess
 		fi
 	done
@@ -433,11 +433,11 @@ cfgtest_code_snippet()
 		mb_internal_cflags="$mb_internal_cflags --include=$mb_header"
 	done
 
-	printf '%s' "$mb_internal_test"                 \
-			| $mb_cfgtest_cc -S -xc - -o -  \
-			  $mb_cfgtest_cflags            \
-			  $mb_internal_cflags           \
-		> /dev/null 2>/dev/null                 \
+	printf '%s' "$mb_internal_test"                       \
+			| eval $mb_cfgtest_cc -S -xc - -o -   \
+			  $mb_cfgtest_cflags                  \
+			  $mb_internal_cflags                 \
+		> /dev/null 2>/dev/null                       \
 	|| return 1
 
 	return 0
@@ -457,7 +457,7 @@ cfgtest_code_snippet_asm()
 	done
 
 	printf '%s' "$mb_internal_test"                 \
-			| $mb_cfgtest_cc -c -xc -       \
+			| eval $mb_cfgtest_cc -c -xc -  \
 			  -o $cfgtest_tmp               \
 			  $mb_cfgtest_cflags            \
 			  $mb_internal_cflags           \
@@ -507,7 +507,7 @@ cfgtest_library_presence()
 		"$mb_cfgtest_ldflags" "$cfgtest_libs")
 
 	printf '%s' "$cfgtest_code_snippet"          \
-		| $(printf '%s' "$cfgtest_cmd")      \
+		| eval $(printf '%s' "$cfgtest_cmd") \
 		> /dev/null 2>&3                     \
 	|| cfgtest_epilog 'library' '-----'          \
 	|| return 1
