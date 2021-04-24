@@ -169,6 +169,15 @@ init_vars()
 
 	. "$mb_config"
 
+	# config.project make preferences
+	if [ -z "${MAKE}" ]; then
+		MAKE="$mb_make"
+	fi
+
+	if [ -z "${MAKEMODE}" ]; then
+		MAKEMODE="$mb_makemode"
+	fi
+
 	# package
 	if [ -z "$mb_package" ]; then
 		error_msg "$mb_script: incomplete information in $mb_config."
