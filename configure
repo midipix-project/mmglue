@@ -837,6 +837,11 @@ config_host()
 
 config_fini()
 {
+	# rename Makefile as needed
+	if [ -n "$mb_makefile" ]; then
+		mv $mb_pwd/Makefile $mb_pwd/$mb_makefile
+	fi
+
 	# project-specific post-configuration steps
 	if [ _$mb_use_custom_cfgfini = _yes ]; then
 		. "$mb_project_dir/project/config/cfgfini.sh"
