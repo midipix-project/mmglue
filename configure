@@ -178,6 +178,11 @@ init_vars()
 		MAKEMODE="$mb_makemode"
 	fi
 
+	# project-specific initialization
+	if [ _$mb_use_custom_cfginit = _yes ]; then
+		. "$mb_project_dir/project/config/cfginit.sh"
+	fi
+
 	# package
 	if [ -z "$mb_package" ]; then
 		error_msg "$mb_script: incomplete information in $mb_config."
@@ -830,6 +835,15 @@ config_host()
 }
 
 
+config_fini()
+{
+	# project-specific post-configuration steps
+	if [ _$mb_use_custom_cfgfini = _yes ]; then
+		. "$mb_project_dir/project/config/cfgfini.sh"
+	fi
+}
+
+
 config_status()
 {
 	output_script_status ${mb_script} \
@@ -1240,6 +1254,7 @@ config_ccenv
 config_custom
 config_cfghost
 config_host
+config_fini
 config_status
 
 
