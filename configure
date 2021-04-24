@@ -190,6 +190,10 @@ init_vars()
 		exit 1
 	fi
 
+	if [ -z "${NICKNAME}" ]; then
+		NICKNAME="$mb_nickname"
+	fi
+
 	# srcinfo
 	if [ -n "$SOURCE_DIR" ]; then
 		mb_source_dir_set=yes
