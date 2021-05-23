@@ -317,6 +317,13 @@ verify_build_directory()
 		fi
 	fi
 
+	if [ -f "$mb_pwd/Makefile.common" ]; then
+		error_msg
+		error_msg "$mb_package: the file-name Makefile.common is reserved for bootstrapping projects."
+		error_msg "$mb_package: please remove or rename the file manually and then re-run configure."
+		exit 1
+	fi
+
 	rm -f Makefile Makefile.host Makefile.tmp Makefile.failed $mb_makefile
 
 	output_step_epilog
