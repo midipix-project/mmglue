@@ -282,7 +282,7 @@ dirs.tag:
 		mkdir -p lib
 		touch dirs.tag
 
-host.tag:	Makefile
+host.tag:	@makefile@
 		$(CC) $(CFLAGS) -dumpmachine > host.tmp
 		mv host.tmp host.tag
 
@@ -299,7 +299,7 @@ distclean:	clean
 		rm -f cfgdefs.mk
 		rm -f usrdefs.mk
 		rm -f config.log
-		rm -f Makefile
+		rm -f @makefile@
 		rmdir build ccenv bin lib 2>&1 || true
 
 clean:		clean-implib
