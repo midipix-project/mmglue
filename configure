@@ -747,6 +747,7 @@ config_copy()
 
 	mb_var_defs=
 	mb_sed_substs=
+	mb_template="${1:-$mb_project_dir/Makefile.in}"
 
 	mb_vars=$(cut -d'=' -f1 "$sfrt_config_vars" "$sfrt_opt_vars" \
 		| grep -v '^#');
@@ -763,9 +764,9 @@ config_copy()
 		eval mb_var_defs='"$mb_var_defs "$mb_var_def'
 	done
 
-	eval sed $mb_sed_substs $mb_project_dir/Makefile.in \
-			| eval m4 $mb_var_defs -             \
-			| sed -e 's/[[:blank:]]*$//g'         \
+	eval sed $mb_sed_substs $mb_template         \
+			| eval m4 $mb_var_defs -      \
+			| sed -e 's/[[:blank:]]*$//g'  \
 		> $mb_pwd/Makefile.tmp
 
 	output_step_epilog
