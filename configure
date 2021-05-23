@@ -804,6 +804,12 @@ config_custom()
 		eval config_custom_cfgdefs "$mb_custom_cfgdefs_args"
 
 		output_section_break
+
+		if [ -f "$mb_project_dir/project/config/Makefile.in" ]; then
+			config_copy "$mb_project_dir/project/config/Makefile.in"
+			mv $mb_pwd/Makefile.tmp Makefile
+		fi
+
 		config_copy
 	fi
 
