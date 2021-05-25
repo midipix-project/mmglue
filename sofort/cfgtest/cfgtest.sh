@@ -88,16 +88,29 @@ cfgtest_epilog()
 	printf "%${cfgtest_tool_dlen}.${cfgtest_tool_dlen}s  %s.\n" \
 		"${cfgtest_line_dots}" "${2}"
 
+	if [ "${1}" = 'snippet' ] && [ -f = 'a.out' ]; then
+		rm -f 'a.out'
+	fi
+
+	if [ "${1}" = 'snippet' ] && [ "${2}" = '(error)' ]; then
+		printf '\n\ncfgtest: the %s compiler %s %s.\n' \
+			"$mb_cfgtest_cfgtype"                 \
+			'failed to compile the above code'   \
+			"${1}" >&3
+		printf '%s\n' '------------------------' >&3
+		return 1
+	fi
+
 	if [ "${2}" = '-----' ]; then
-		printf '\n\ncfgtest: %s is missing or cannot be found.\n' "${1}" >&3
+		printf '\n\ncfgtest: %s %s is missing or cannot be found.\n' "${1}" "${3}" >&3
 		printf '%s\n' '------------------------' >&3
 		return 1
 	elif [ "${1}" = 'size-of-type' ] && [ "${2}" = '(error)' ]; then
-		printf '\n\ncfgtest: could not determine size of type.\n' >&3
+		printf '\n\ncfgtest: could not determine size of type `%s.\n' "${3}'" >&3
 		printf '%s\n' '------------------------' >&3
 		return 1
 	elif [ "${2}" = '(error)' ]; then
-		printf '\n\ncfgtest: %s is not defined or cannot be used.\n' "${1}" >&3
+		printf '\n\ncfgtest: %s `%s is not defined or cannot be used.\n' "${1}" "${3}'" >&3
 		printf '%s\n' '------------------------' >&3
 		return 1
 	fi
@@ -168,28 +181,74 @@ cfgtest_ldflags_append()
 }
 
 
-cfgtest_header_presence()
+cfgtest_common_init()
 {
-	cfgtest_prolog 'header' "${1}"
+	# cfgtest variables
+	if [ "${1:-}" = 'asm' ]; then
+		cfgtest_fmt='%s -c -xc - -o a.out'
+	elif [ "${1:-}" = 'lib' ]; then
+		cfgtest_fmt='%s -xc - -o a.out'
+	else
+		cfgtest_fmt='%s -S -xc - -o -'
+	fi
 
-	printf '%s -E -xc - \\\n' "$mb_cfgtest_cc"  >&3
+	if [ "${1:-}" = 'lib' ]; then
+		cfgtest_cmd=$(printf "$cfgtest_fmt %s %s %s" \
+			"$mb_cfgtest_cc"                     \
+			"$mb_cfgtest_cflags"                 \
+			"$mb_cfgtest_ldflags"                \
+			"$cfgtest_libs")
+	else
+		cfgtest_cmd=$(printf "$cfgtest_fmt %s" \
+			"$mb_cfgtest_cc"               \
+			"$mb_cfgtest_cflags")
+	fi
+
+	if [ -z "$mb_cfgtest_headers" ] || [ "${1:-}" = 'lib' ]; then
+		cfgtest_inc=
+		cfgtest_src="$cfgtest_code_snippet"
+	else
+		cfgtest_inc=$(printf '#include <%s>\n' $mb_cfgtest_headers)
+		cfgtest_src=$(printf '%s\n_\n' "$cfgtest_inc" \
+			| m4 -D_="$cfgtest_code_snippet")
+	fi
+
+	# config.log
+	printf "$cfgtest_fmt" "$mb_cfgtest_cc" >&3
 
 	for cfgtest_cflag in $mb_cfgtest_cflags; do
-		printf '\t%s \\\n' "$cfgtest_cflag" >&3
+		printf ' \\\n\t%s' "$cfgtest_cflag" >&3
 	done
 
-	printf '\t%s\n\n' '--include='"${1}" >&3
+	if [ "${1:-}" = 'lib' ]; then
+		for cfgtest_lib in $cfgtest_libs; do
+			printf ' \\\n\t%s' "$cfgtest_lib" >&3
+		done
+	fi
 
-	cfgtest_cmd=$(printf '%s -E -xc - %s %s'     \
-		"$mb_cfgtest_cc" "$mb_cfgtest_cflags" \
-		'--include='"${1}")
+	printf ' \\\n'                           >&3
+	printf '<< _SRCEOF\n%s\n' "$cfgtest_src" >&3
+	printf '_SRCEOF \n\n\n'                  >&3
+}
 
-	eval $(printf '%s' "$cfgtest_cmd") \
-		< /dev/null                 \
-		> /dev/null 2>&3             \
-	|| cfgtest_epilog 'header' '-----'    \
+
+cfgtest_header_presence()
+{
+	#init
+	cfgtest_prolog 'header' "${1}"
+
+	cfgtest_code_snippet=$(printf '#include <%s>\n' "${1}")
+
+	cfgtest_common_init
+
+	# execute
+	printf '%s' "$cfgtest_src"                  \
+		| eval $(printf '%s' "$cfgtest_cmd") \
+		> /dev/null 2>&3                      \
+	|| cfgtest_epilog 'header' '-----' "<${1}>"    \
 	|| return
 
+	# result
 	mb_internal_str=$(printf '%s%s' '-DHAVE_' "${1}"  \
 			| sed -e 's/\./_/g' -e 's@/@_@g'  \
 			| tr "[:lower:]" "[:upper:]")
@@ -210,26 +269,23 @@ cfgtest_header_presence()
 
 cfgtest_header_absence()
 {
+	#init
 	cfgtest_prolog 'header absence' "${1}"
 
-	printf '%s -E -xc - \\\n' "$mb_cfgtest_cc"  >&3
+	cfgtest_code_snippet=$(printf '#include <%s>\n' "${1}")
 
-	for cfgtest_cflag in $mb_cfgtest_cflags; do
-		printf '\t%s \\\n' "$cfgtest_cflag" >&3
-	done
+	cfgtest_common_init
 
-	printf '\t%s\n\n' '--include='"${1}" >&3
-
-	cfgtest_cmd=$(printf '%s -E -xc - %s %s'     \
-		"$mb_cfgtest_cc" "$mb_cfgtest_cflags" \
-		'--include='"${1}")
-
-	eval $(printf '%s' "$cfgtest_cmd") \
-		< /dev/null                 \
-		> /dev/null 2>&3             \
-	&& cfgtest_epilog 'header' "${1}"     \
+	# execute
+	printf '%s' "$cfgtest_src"                  \
+		| eval $(printf '%s' "$cfgtest_cmd") \
+		> /dev/null 2>&3                      \
+	&& printf 'cfgtest: %s header <%s>: no error.' \
+		"$mb_cfgtest_cfgtype" "${1}" >&3        \
+	&& cfgtest_epilog 'header' "${1}"                \
 	&& return
 
+	# result
 	mb_internal_str=$(printf '%s%s' '-DHAVE_NO_' "$@" \
 			| sed -e 's/\./_/g' -e 's@/@_@g'  \
 			| tr "[:lower:]" "[:upper:]")
@@ -250,39 +306,21 @@ cfgtest_header_absence()
 
 cfgtest_interface_presence()
 {
+	# init
 	cfgtest_prolog 'interface' "${1}"
 
-	mb_internal_cflags=
+	cfgtest_code_snippet=$(printf 'void * addr = &%s;\n' "${1}")
 
-	for mb_header in $mb_cfgtest_headers; do
-		mb_internal_cflags="$mb_internal_cflags --include=$mb_header"
-	done
+	cfgtest_common_init
 
-	cfgtest_code_snippet=$(printf 'void * addr = &%s;' "${1}")
+	# execute
+	printf '%s' "$cfgtest_src"                    \
+		| eval $(printf '%s' "$cfgtest_cmd")   \
+		> /dev/null 2>&3                        \
+	|| cfgtest_epilog 'interface' '(error)' "${1}"   \
+	|| return
 
-	printf 'printf %s "%s" \\\n' "'%s'" "$cfgtest_code_snippet" >&3
-	printf '| %s -S -xc - -o -' "$mb_cfgtest_cc"  >&3
-
-	for cfgtest_cflag in $mb_cfgtest_cflags; do
-		printf ' \\\n\t%s' "$cfgtest_cflag" >&3
-	done
-
-	for cfgtest_cflag in $mb_internal_cflags; do
-		printf ' \\\n\t%s' "$cfgtest_cflag" >&3
-	done
-
-	printf '\n\n' >&3
-
-	cfgtest_cmd=$(printf '%s -S -xc - -o - %s %s' \
-		"$mb_cfgtest_cc" "$mb_cfgtest_cflags"  \
-		"$mb_internal_cflags")
-
-	printf '%s' "$cfgtest_code_snippet"         \
-		| eval $(printf '%s' "$cfgtest_cmd") \
-                > /dev/null 2>&3                      \
-       || cfgtest_epilog 'interface' '(error)'         \
-       || return
-
+	# result
 	mb_internal_str=$(printf '%s%s' '-DHAVE_' "$@"  \
 			| sed -e 's/\./_/g'             \
 			| tr "[:lower:]" "[:upper:]")
@@ -305,38 +343,19 @@ cfgtest_interface_presence()
 
 cfgtest_decl_presence()
 {
+	# init
 	cfgtest_prolog 'decl' "${1}"
-
-	mb_internal_cflags=
-
-	for mb_header in $mb_cfgtest_headers; do
-		mb_internal_cflags="$mb_internal_cflags --include=$mb_header"
-	done
 
 	cfgtest_code_snippet=$(printf 'void * any = (void *)(%s);' "${1}")
 
-	printf 'printf %s "%s" \\\n' "'%s'" "$cfgtest_code_snippet" >&3
-	printf '| %s -S -xc - -o -' "$mb_cfgtest_cc"  >&3
+	cfgtest_common_init
 
-	for cfgtest_cflag in $mb_cfgtest_cflags; do
-		printf ' \\\n\t%s' "$cfgtest_cflag" >&3
-	done
-
-	for cfgtest_cflag in $mb_internal_cflags; do
-		printf ' \\\n\t%s' "$cfgtest_cflag" >&3
-	done
-
-	printf '\n\n' >&3
-
-	cfgtest_cmd=$(printf '%s -S -xc - -o - %s %s' \
-		"$mb_cfgtest_cc" "$mb_cfgtest_cflags" \
-		"$mb_internal_cflags")
-
-	printf '%s' "$cfgtest_code_snippet"         \
+	# execute
+	printf '%s' "$cfgtest_src"                  \
 		| eval $(printf '%s' "$cfgtest_cmd") \
-                > /dev/null 2>&3                      \
-       || cfgtest_epilog 'decl' '(error)'              \
-       || return
+		> /dev/null 2>&3                      \
+	|| cfgtest_epilog 'decl' '(error)' "${1}"      \
+	|| return
 
 	# does the argument solely consist of the macro or enum member name?
 	mb_internal_str=$(printf '%s' "$@" | tr -d '[a-z][A-Z][0-9][_]')
@@ -346,6 +365,7 @@ cfgtest_decl_presence()
 		return 0
 	fi
 
+	# result
 	mb_internal_str=$(printf '%s%s' '-DHAVE_DECL_' "$@"  \
 			| sed -e 's/\./_/g'                  \
 			| tr "[:lower:]" "[:upper:]")
@@ -370,34 +390,32 @@ cfgtest_type_size()
 {
 	cfgtest_entity_size_prolog "$@"
 
-	mb_internal_cflags=''
 	mb_internal_size=''
 	mb_internal_test='char x[(sizeof(%s) == %s) ? 1 : -1];'
 
-	for mb_header in $mb_cfgtest_headers; do
-		mb_internal_cflags="$mb_internal_cflags --include=$mb_header"
-	done
-
 	for mb_internal_guess in 8 4 2 1 16 32 64 128; do
 		if [ -z $mb_internal_size ]; then
+			printf '# guess %s ===>\n' "$mb_internal_guess" >&3
+
 			mb_internal_type="$@"
 
-			mb_internal_str=$(printf "$mb_internal_test"    \
-				"$mb_internal_type"                     \
-				"$mb_internal_guess")
+			cfgtest_code_snippet=$(printf "$mb_internal_test" \
+				"$mb_internal_type" "$mb_internal_guess")
 
-			printf '%s' "$mb_internal_str"                      \
-					| eval $mb_cfgtest_cc -S -xc - -o - \
-					  $mb_cfgtest_cflags                \
-					  $mb_internal_cflags               \
-				> /dev/null 2>/dev/null                     \
+			cfgtest_common_init
+
+			printf '%s' "$cfgtest_src"                  \
+				| eval $(printf '%s' "$cfgtest_cmd") \
+				> /dev/null 2>&3                      \
 			&& mb_internal_size=$mb_internal_guess
+
+			printf '\n' >&3
 		fi
 	done
 
 	# unrecognized type, or type size not within range
 	if [ -z $mb_internal_size ]; then
-		cfgtest_epilog 'size-of-type' '(error)'
+		cfgtest_epilog 'size-of-type' '(error)' "@"
 		return 1
 	fi
 
@@ -424,55 +442,39 @@ cfgtest_type_size()
 }
 
 
-cfgtest_code_snippet()
+cfgtest_code_snippet_asm()
 {
-	mb_internal_cflags=''
-	mb_internal_test="$@"
+	# init
+	cfgtest_prolog 'support of code snippet' '<...>'
 
-	for mb_header in $mb_cfgtest_headers; do
-		mb_internal_cflags="$mb_internal_cflags --include=$mb_header"
-	done
+	cfgtest_code_snippet="$@"
 
-	printf '%s' "$mb_internal_test"                       \
-			| eval $mb_cfgtest_cc -S -xc - -o -   \
-			  $mb_cfgtest_cflags                  \
-			  $mb_internal_cflags                 \
-		> /dev/null 2>/dev/null                       \
-	|| return 1
+	cfgtest_common_init 'asm'
+
+	# execute
+	cfgtest_ret=1
+
+	printf '%s' "$cfgtest_src"                  \
+		| eval $(printf '%s' "$cfgtest_cmd") \
+		> /dev/null 2>&3                      \
+	|| cfgtest_epilog 'snippet' '(error)'          \
+	|| return
+
+	# result
+	cfgtest_ret=0
+
+	printf 'cfgtest: %s compiler: above code snippet compiled successfully.\n\n' \
+		"$mb_cfgtest_cfgtype" >&3
+
+	cfgtest_epilog 'snippet' '(ok)'
 
 	return 0
 }
 
 
-cfgtest_code_snippet_asm()
-{
-	mb_internal_cflags=''
-	mb_internal_test="$@"
-
-	cfgtest_tmp=$(mktemp ./tmp_XXXXXXXXXXXXXXXX)
-	cfgtest_ret=1
-
-	for mb_header in $mb_cfgtest_headers; do
-		mb_internal_cflags="$mb_internal_cflags --include=$mb_header"
-	done
-
-	printf '%s' "$mb_internal_test"                 \
-			| eval $mb_cfgtest_cc -c -xc -  \
-			  -o $cfgtest_tmp               \
-			  $mb_cfgtest_cflags            \
-			  $mb_internal_cflags           \
-		> /dev/null 2>/dev/null                 \
-	&& cfgtest_ret=0
-
-	rm -f "$cfgtest_tmp"
-	unset cfgtest_tmp
-
-	return $cfgtest_ret
-}
-
-
 cfgtest_library_presence()
 {
+	# init
 	cfgtest_libs=
 	cfgtest_spc=
 
@@ -489,31 +491,16 @@ cfgtest_library_presence()
 
 	cfgtest_code_snippet='int main(void){return 0;}'
 
-	printf 'printf %s "%s" \\\n' "'%s'" "$cfgtest_code_snippet" >&3
-	printf '| %s -o a.out -xc -' "$mb_cfgtest_cc"  >&3
+	cfgtest_common_init 'lib'
 
-	for cfgtest_cflag in $mb_cfgtest_cflags; do
-		printf ' \\\n\t%s' "$cfgtest_cflag" >&3
-	done
-
-	for cfgtest_lib in ${@}; do
-		printf ' \\\n\t%s' "$cfgtest_lib" >&3
-	done
-
-	printf '\n\n' >&3
-
-	cfgtest_cmd=$(printf '%s -o a.out -xc - %s %s %s' \
-		"$mb_cfgtest_cc" "$mb_cfgtest_cflags"      \
-		"$mb_cfgtest_ldflags" "$cfgtest_libs")
-
-	printf '%s' "$cfgtest_code_snippet"          \
+	# execute
+	printf '%s' "$cfgtest_src"                  \
 		| eval $(printf '%s' "$cfgtest_cmd") \
-		> /dev/null 2>&3                     \
-	|| cfgtest_epilog 'library' '-----'          \
+		> /dev/null 2>&3                      \
+	|| cfgtest_epilog 'library' '-----' "$@"       \
 	|| return 1
 
-	rm -f a.out
-
+	# result
 	printf 'cfgtest: `%s'"'"' was accepted by the linker driver.\n' \
 		"$cfgtest_libs" >&3
 	printf '%s\n' '------------------------' >&3
