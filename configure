@@ -151,6 +151,9 @@ init_vars()
 		eval "$mb_expr"
 	done
 
+	# cfgtest
+	. $mb_project_dir/sofort/cfgtest/cfgtest.sh
+
 	# ccenv
 	. $mb_project_dir/sofort/ccenv/ccenv.sh
 
