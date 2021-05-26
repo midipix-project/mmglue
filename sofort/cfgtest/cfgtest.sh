@@ -333,7 +333,7 @@ cfgtest_header_absence()
 		"$mb_cfgtest_cfgtype" "${1}" >&3
 	printf '%s\n' '------------------------' >&3
 
-	cfgtest_epilog 'header' '-----'
+	cfgtest_epilog 'header' '-----' "${1}"
 }
 
 
