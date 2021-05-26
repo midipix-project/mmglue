@@ -96,7 +96,7 @@ cfgtest_epilog()
 	printf "%${cfgtest_tool_dlen}.${cfgtest_tool_dlen}s  %s.\n" \
 		"${cfgtest_line_dots}" "${2}"
 
-	if [ "${1}" = 'snippet' ] && [ -f = 'a.out' ]; then
+	if [ "${1}" = 'snippet' ] && [ -f 'a.out' ]; then
 		rm -f 'a.out'
 	fi
 
