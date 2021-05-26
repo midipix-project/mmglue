@@ -762,13 +762,20 @@ ccenv_create_framework_executable()
 		rm -f $ccenv_image.tmp
 	fi
 
-	printf 'int main(void){return 0;}'  \
-		| $ccenv_cc -xc -           \
-			-o $ccenv_image     \
-			2>&3                \
-	|| return 1
+	ccenv_tmpname='ccenv/c3RyaWN0X21vZGUK.c'
 
-	return 0
+	printf 'int main(void){return 0;}'  \
+		> "$ccenv_tmpname"
+
+	if $ccenv_cc "$ccenv_tmpname" -o $ccenv_image 2>&3; then
+		ccenv_ret=0
+	else
+		ccenv_ret=1
+	fi
+
+	rm "$ccenv_tmpname"
+
+	return $ccenv_ret
 }
 
 ccenv_create_freestanding_executable()
@@ -784,17 +791,25 @@ ccenv_create_freestanding_executable()
 		ccenv_start_fn='start'
 	fi
 
-	printf 'int %s(void){return 0;}' "$ccenv_start_fn"  \
-		| $ccenv_cc -xc -                           \
-			-ffreestanding                      \
-			-nostdlib -nostartfiles             \
-			-o $ccenv_image                     \
-			2>&3                                \
-	|| return 1
+	ccenv_tmpname='ccenv/c3RyaWN0X21vZGUK.c'
 
-	ccenv_freestd=yes
+	printf 'int %s(void){return 0;}' "$ccenv_start_fn" \
+		> "$ccenv_tmpname"
 
-	return 0
+	if $ccenv_cc "$ccenv_tmpname"         \
+			-ffreestanding         \
+			-nostdlib -nostartfiles \
+			-o $ccenv_image          \
+			2>&3; then
+		ccenv_ret=0
+		ccenv_freestd=yes
+	else
+		ccenv_ret=1
+	fi
+
+	rm "$ccenv_tmpname"
+
+	return $ccenv_ret
 }
 
 ccenv_set_cc_binfmt_error()
