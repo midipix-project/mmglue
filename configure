@@ -848,15 +848,56 @@ config_cfghost()
 
 config_host()
 {
+	# init
 	output_step_prolog ${mb_script} 'config_host'
 
-	# verify configuration for the host's (cross-)compiler
-	${mb_make} -s host.tag       \
-		-f "$mb_makefile"     \
-		&& output_step_epilog  \
-		&& return 0
+	mb_cfghost_cc="$ccenv_host_cc"
+	mb_cfghost_tmpname='ccenv/c3RyaWN0X21vZGUK.c'
+
+	mb_cfghost_cflags=$(${mb_make} -n -f "$mb_makefile" \
+		.cflags-host)
+
+	mb_cfghost_cflags="${mb_cfghost_cflags#*: }"
+
+	printf 'int main(void){return 0;}' \
+		> "$mb_cfghost_tmpname"
+
+	# log
+	printf '\n' >&3
+
+	printf '%s\n'                                         \
+		'#'                                           \
+		'# verify that that following combination of' \
+		'# host compiler and host cflags is working.' \
+		'#'                                           \
+		>&3
+
+	printf '\n%s' "$mb_cfghost_cc $ccenv_tmpname -o a.out" >&3
+
+	for mb_cfghost_cflag in $mb_cfghost_cflags; do
+		printf ' \\\n\t%s' "$mb_cfghost_cflag" >&3
+	done
+
+	printf '\n\n' >&3
+
+	# execute
+	if eval $mb_cfghost_cc "$ccenv_tmpname" -o a.out    \
+			$(printf '%s' "$mb_cfghost_cflags") \
+			2>&3; then
+		rm a.out
+		rm $mb_cfghost_tmpname
+		mb_cfghost_ret=0
+	else
+		mb_cfghost_ret=1
+	fi
+
+	if [ $mb_cfghost_ret = 0 ]; then
+		output_step_epilog
+		return 0
+	fi
 
 	# should never happen
+	error_msg
 	error_msg "configure was able to generate a Makefile for the selected host,"
 	error_msg "however the host-targeting compiler was found to be missing"
 	error_msg "at least one of the required headers or features."
