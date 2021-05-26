@@ -764,7 +764,7 @@ ccenv_create_framework_executable()
 	printf 'int main(void){return 0;}'  \
 		| $ccenv_cc -xc -           \
 			-o $ccenv_image     \
-			2>/dev/null         \
+			2>&3                \
 	|| return 1
 
 	return 0
@@ -788,6 +788,7 @@ ccenv_create_freestanding_executable()
 			-ffreestanding                      \
 			-nostdlib -nostartfiles             \
 			-o $ccenv_image                     \
+			2>&3                                \
 	|| return 1
 
 	ccenv_freestd=yes
