@@ -184,15 +184,17 @@ cfgtest_ldflags_append()
 cfgtest_common_init()
 {
 	# cfgtest variables
-	if [ "${1:-}" = 'asm' ]; then
+	cfgtest_type="${1:-}"
+
+	if [ "$cfgtest_type" = 'asm' ]; then
 		cfgtest_fmt='%s -c -xc - -o a.out'
-	elif [ "${1:-}" = 'lib' ]; then
+	elif [ "$cfgtest_type" = 'lib' ]; then
 		cfgtest_fmt='%s -xc - -o a.out'
 	else
 		cfgtest_fmt='%s -S -xc - -o -'
 	fi
 
-	if [ "${1:-}" = 'lib' ]; then
+	if [ "$cfgtest_type" = 'lib' ]; then
 		cfgtest_cmd=$(printf "$cfgtest_fmt %s %s %s" \
 			"$mb_cfgtest_cc"                     \
 			"$mb_cfgtest_cflags"                 \
@@ -204,7 +206,7 @@ cfgtest_common_init()
 			"$mb_cfgtest_cflags")
 	fi
 
-	if [ -z "$mb_cfgtest_headers" ] || [ "${1:-}" = 'lib' ]; then
+	if [ -z "$mb_cfgtest_headers" ] || [ "$cfgtest_type" = 'lib' ]; then
 		cfgtest_inc=
 		cfgtest_src="$cfgtest_code_snippet"
 	else
@@ -220,7 +222,7 @@ cfgtest_common_init()
 		printf ' \\\n\t%s' "$cfgtest_cflag" >&3
 	done
 
-	if [ "${1:-}" = 'lib' ]; then
+	if [ "$cfgtest_type" = 'lib' ]; then
 		for cfgtest_lib in $cfgtest_libs; do
 			printf ' \\\n\t%s' "$cfgtest_lib" >&3
 		done
