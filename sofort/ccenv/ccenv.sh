@@ -238,7 +238,15 @@ ccenv_set_primary_tools()
 	ccenv_windrc="$ccenv_windres"
 
 	# archive format preamble
-	ccenv_libgcc_a_header=$(od -b -N8 $($ccenv_cc -print-file-name=libgcc.a) | head -n1)
+	if [ -n "$ccenv_dumpmachine_switch" ]; then
+		ccenv_libgcc_a_header=$(od -b -N8             \
+			$($ccenv_cc -print-file-name=libgcc.a) \
+			| head -n1)
+	else
+		ccenv_libgcc_a_header=
+	fi
+
+	# ar (default)
 	ccenv_cc_arfmt='common'
 
 	# ar (big)
@@ -451,23 +459,50 @@ ccenv_set_cc()
 
 	if [ -z "$ccenv_cc" ]; then
 		ccenv_set_c_compiler_candidates
-		ccenv_find_tool -dumpmachine
+		ccenv_find_tool
 		ccenv_cc="$ccenv_tool"
 	fi
 
+
 	if [ "$ccenv_cc" = false ] && [ -n "$mb_compiler" ]; then
 		ccenv_cc="$mb_compiler"
+	fi
+
+	ccenv_tool_epilog "$ccenv_cc"
+
+
+	if [ $ccenv_cfgtype = 'host' ]; then
+		ccenv_host_cc="$ccenv_cc"
+		cfgtest_host_section
+		ccenv_host_cc=
+	else
+		ccenv_native_cc="$ccenv_cc"
+		cfgtest_native_section
+		ccenv_native_cc=
+	fi
+
+	if cfgtest_compiler_switch -dumpmachine ; then
+		ccenv_dumpmachine_switch='-dumpmachine'
+	else
+		ccenv_dumpmachine_switch=
 	fi
 
 	ccenv_cc_cmd="$ccenv_cc"
 	ccenv_errors=
 
 	if [ "$ccenv_cfgtype" = 'native' ]; then
-		ccenv_host=$(eval $ccenv_cc $(printf '%s' "$ccenv_cflags") -dumpmachine 2>&3)
+		if [ -n "$ccenv_dumpmachine_switch" ]; then
+			ccenv_host=$(eval $ccenv_cc $(printf '%s' "$ccenv_cflags") \
+				$ccenv_dumpmachine_switch 2>&3)
+		else
+			ccenv_host=$(printf '%s' $(uname -m)-$(uname -p)-$(uname -o)) \
+				| tr '[[:upper:]]' '[[:lower:]]'
+		fi
+
 		ccenv_cchost=$ccenv_host
-		ccenv_tool_epilog "$ccenv_cc"
 		return 0
 	fi
+
 
 	if [ -n "$mb_cchost" ]; then
 		ccenv_host="$mb_cchost"
@@ -477,10 +512,18 @@ ccenv_set_cc()
 		ccenv_host=
 	fi
 
-	if [ -z "$ccenv_host" ]; then
-		ccenv_host=$(eval $ccenv_cc $(printf '%s' "$ccenv_cflags") -dumpmachine 2>&3)
+	if [ -z "$ccenv_host" ] && [ -n "$ccenv_dumpmachine_switch" ]; then
+		ccenv_host=$(eval $ccenv_cc $(printf '%s' "$ccenv_cflags") \
+			$ccenv_dumpmachine_switch 2>&3)
 		ccenv_cchost=$ccenv_host
-	else
+
+	elif [ -z "$ccenv_host" ]; then
+		# assume that no -dumpmachine support means native build (fixme)
+		ccenv_host=$(printf '%s' $(uname -m)-$(uname -p)-$(uname -o)) \
+			| tr '[[:upper:]]' '[[:lower:]]' 2>&3
+		ccenv_cchost=$ccenv_host
+
+	elif [ -n "$ccenv_dumpmachine_switch" ]; then
 		ccenv_tmp=$(mktemp ./tmp_XXXXXXXXXXXXXXXX)
 		ccenv_cmd="$ccenv_cc --target=$ccenv_host -E -xc -"
 
@@ -491,8 +534,10 @@ ccenv_set_cc()
 			ccenv_errors=$(cat "$ccenv_tmp")
 
 			if [ -z "$ccenv_errors" ]; then
+				ccenv_tool_prolog 'C compiler for host'
 				ccenv_tflags="--target=$ccenv_host"
 				ccenv_cc="$ccenv_cc $ccenv_tflags"
+				ccenv_tool_epilog "$ccenv_cc"
 			else
 				printf '%s' "$ccenv_errors" >&3
 			fi
@@ -501,7 +546,8 @@ ccenv_set_cc()
 		rm -f "$ccenv_tmp"
 		unset ccenv_tmp
 
-		ccenv_cchost=$(eval $ccenv_cc $(printf '%s' "$ccenv_cflags") -dumpmachine 2>&3)
+		ccenv_cchost=$(eval $ccenv_cc $(printf '%s' "$ccenv_cflags") \
+			$ccenv_dumpmachine_switch 2>&3)
 	fi
 
 	if [ "$ccenv_cchost" != "$ccenv_host" ]; then
@@ -530,8 +576,6 @@ ccenv_set_cc()
 
 		return 2
 	fi
-
-	ccenv_tool_epilog "$ccenv_cc"
 }
 
 ccenv_set_cpp()
