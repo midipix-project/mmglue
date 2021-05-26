@@ -283,7 +283,8 @@ dirs.tag:
 		touch dirs.tag
 
 host.tag:	@makefile@
-		$(CC) $(CFLAGS) -dumpmachine > host.tmp
+		rm -f host.tmp
+		touch host.tmp
 		mv host.tmp host.tag
 
 version.tag:	$(GIT_REFERENCE_INDEX) dirs.tag
