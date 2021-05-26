@@ -708,11 +708,24 @@ ccenv_set_cc_bits()
 				"$ccenv_internal_type"                      \
 				"$ccenv_internal_guess")
 
-			printf '%s' "$ccenv_internal_str"                   \
-					| eval $ccenv_cc -S -xc - -o -      \
-					  $(printf '%s' "$ccenv_cflags")    \
-				> /dev/null 2>&3                            \
-			&& ccenv_internal_size=$ccenv_internal_guess
+			if [ -n "$ccenv_dumpmachine_switch" ]; then
+				printf '%s' "$ccenv_internal_str"                   \
+						| eval $ccenv_cc -S -xc - -o -      \
+						  $(printf '%s' "$ccenv_cflags")    \
+					> /dev/null 2>&3                            \
+				&& ccenv_internal_size=$ccenv_internal_guess
+			else
+				ccenv_tmpname='ccenv/c3RyaWN0X21vZGUK.c'
+
+				printf '%s' "$ccenv_internal_str" \
+					> "$ccenv_tmpname"
+
+				$ccenv_cc -c "$ccenv_tmpname" -o a.out \
+					> /dev/null 2>&3                \
+				&& ccenv_internal_size=$ccenv_internal_guess
+
+				rm "$ccenv_tmpname"
+			fi
 		fi
 	done
 
