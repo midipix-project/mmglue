@@ -38,7 +38,13 @@ cfgtest_host_section()
 {
 	mb_cfgtest_cc="$ccenv_host_cc"
 	mb_cfgtest_cfgtype='host'
-	mb_cfgtest_cflags=$(${mb_make} -n -f "$mb_pwd/Makefile.tmp" .cflags-host)
+
+	mb_cfgtest_cflags=$(${mb_make} -n -f "$mb_pwd/Makefile.tmp" \
+		OS_DSO_EXRULES=default                              \
+		OS_SONAME=symlink                                   \
+		OS_ARCHIVE_EXT='.a'                                 \
+		.cflags-host)
+
 	mb_cfgtest_cflags="${mb_cfgtest_cflags#*: }"
 
 	mb_cfgtest_ldflags="$mb_ldflags_cmdline"
@@ -49,20 +55,22 @@ cfgtest_host_section()
 	mb_cfgtest_ldflags="$mb_cfgtest_ldflags $mb_ldflags_sysroot"
 	mb_cfgtest_ldflags="$mb_cfgtest_ldflags $mb_ldflags_path"
 	mb_cfgtest_ldflags="$mb_cfgtest_ldflags $mb_ldflags_last"
-
-	cfgtest_comment 'host-specific tests'
 }
 
 
 cfgtest_native_section()
 {
-	mb_cfgtest_cc="$mb_native_cc"
+	mb_cfgtest_cc="$ccenv_native_cc"
 	mb_cfgtest_cfgtype='native'
-	mb_cfgtest_cflags=$(${mb_make} -n -f "$mb_pwd/Makefile.tmp" .cflags-native)
+
+	mb_cfgtest_cflags=$(${mb_make} -n -f "$mb_pwd/Makefile.tmp" \
+		OS_DSO_EXRULES=default                              \
+		OS_SONAME=symlink                                   \
+		OS_ARCHIVE_EXT='.a'                                 \
+		.cflags-native)
+
 	mb_cfgtest_cflags="${mb_cfgtest_cflags#*: }"
 	mb_cfgtest_ldflags="$mb_native_ldflags"
-
-	cfgtest_comment 'native system tests'
 }
 
 
