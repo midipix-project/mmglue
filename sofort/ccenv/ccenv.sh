@@ -743,6 +743,7 @@ ccenv_set_cc_underscore()
 
 	if printf "$ccenv_fn_code" $ccenv_fn_name  \
 			| $ccenv_cc -xc - -S -o -  \
+				2>&3               \
 			| grep "^_$ccenv_fn_name:" \
 				> /dev/null; then
 		ccenv_cc_underscore='_'
