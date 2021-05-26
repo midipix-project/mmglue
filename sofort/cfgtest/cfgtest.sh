@@ -109,6 +109,11 @@ cfgtest_epilog()
 		printf '\n\ncfgtest: could not determine size of type `%s.\n' "${3}'" >&3
 		printf '%s\n' '------------------------' >&3
 		return 1
+	elif [ "${1}" = 'switch' ] && [ "${2}" = '(error)' ]; then
+		printf '\n\ncfgtest: the switch `%s is not supported by the %s compiler.\n' \
+			"${3}'" "$mb_cfgtest_cfgtype" >&3
+		printf '%s\n' '------------------------' >&3
+		return 1
 	elif [ "${2}" = '(error)' ]; then
 		printf '\n\ncfgtest: %s `%s is not defined or cannot be used.\n' "${1}" "${3}'" >&3
 		printf '%s\n' '------------------------' >&3
@@ -194,26 +199,39 @@ cfgtest_common_init()
 		cfgtest_fmt='%s -S -xc - -o -'
 	fi
 
+
 	if [ "$cfgtest_type" = 'lib' ]; then
 		cfgtest_cmd=$(printf "$cfgtest_fmt %s %s %s" \
 			"$mb_cfgtest_cc"                     \
 			"$mb_cfgtest_cflags"                 \
 			"$mb_cfgtest_ldflags"                \
 			"$cfgtest_libs")
+
+	elif [ "$cfgtest_type" = 'switch' ]; then
+		cfgtest_cmd=$(printf "$cfgtest_fmt %s %s" \
+			"$mb_cfgtest_cc"                  \
+			"$mb_cfgtest_cflags"              \
+			"$cfgtest_switches")
 	else
 		cfgtest_cmd=$(printf "$cfgtest_fmt %s" \
 			"$mb_cfgtest_cc"               \
 			"$mb_cfgtest_cflags")
 	fi
 
+
 	if [ -z "$mb_cfgtest_headers" ] || [ "$cfgtest_type" = 'lib' ]; then
 		cfgtest_inc=
 		cfgtest_src="$cfgtest_code_snippet"
+
+	elif [ "$cfgtest_type" = 'switch' ]; then
+		cfgtest_inc=
+		cfgtest_src=
 	else
 		cfgtest_inc=$(printf '#include <%s>\n' $mb_cfgtest_headers)
 		cfgtest_src=$(printf '%s\n_\n' "$cfgtest_inc" \
 			| m4 -D_="$cfgtest_code_snippet")
 	fi
+
 
 	# config.log
 	printf "$cfgtest_fmt" "$mb_cfgtest_cc" >&3
@@ -225,6 +243,11 @@ cfgtest_common_init()
 	if [ "$cfgtest_type" = 'lib' ]; then
 		for cfgtest_lib in $cfgtest_libs; do
 			printf ' \\\n\t%s' "$cfgtest_lib" >&3
+		done
+
+	elif [ "$cfgtest_type" = 'switch' ]; then
+		for cfgtest_switch in $cfgtest_switches; do
+			printf ' \\\n\t%s' "$cfgtest_switch" >&3
 		done
 	fi
 
@@ -508,6 +531,45 @@ cfgtest_library_presence()
 	printf '%s\n' '------------------------' >&3
 
 	cfgtest_epilog 'library' '(present)'
+
+	return 0
+}
+
+
+cfgtest_compiler_switch()
+{
+	# init
+	cfgtest_switches=
+	cfgtest_spc=
+
+	for cfgtest_switch in ${@}; do
+		cfgtest_switches="$cfgtest_switches$cfgtest_spc$cfgtest_switch"
+		cfgtest_spc=' '
+	done
+
+	if [ "${1}" = "$cfgtest_switches" ]; then
+		cfgtest_prolog 'compiler switch' "$cfgtest_switches"
+	else
+		cfgtest_prolog 'compiler switch combination' "$cfgtest_switches"
+	fi
+
+	cfgtest_code_snippet=
+
+	cfgtest_common_init 'switch'
+
+	# execute
+	printf '%s' "$cfgtest_src"                  \
+		| eval $(printf '%s' "$cfgtest_cmd") \
+		> /dev/null 2>&3                      \
+	|| cfgtest_epilog 'switch' '(error)' "$@"      \
+	|| return 1
+
+	# result
+	printf 'cfgtest: the switch `%s was accepted by the compier.\n' \
+		"$cfgtest_switches'" >&3
+	printf '%s\n' '------------------------' >&3
+
+	cfgtest_epilog 'switch' '(accepted)'
 
 	return 0
 }
