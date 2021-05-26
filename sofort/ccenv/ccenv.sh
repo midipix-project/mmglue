@@ -440,7 +440,7 @@ ccenv_set_c_compiler_candidates()
 		ccenv_candidates="$mb_toolchain c99 c11 cc gcc clang"
 
 	else
-		ccenv_candidates="c99 c11 cc gcc clang"
+		ccenv_candidates="cc gcc clang c99 c11"
 	fi
 }
 
