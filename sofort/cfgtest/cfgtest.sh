@@ -244,17 +244,17 @@ cfgtest_common_init()
 	# config.log
 	printf "$cfgtest_fmt" "$mb_cfgtest_cc" >&3
 
-	for cfgtest_cflag in $mb_cfgtest_cflags; do
+	for cfgtest_cflag in $(printf '%s' "$mb_cfgtest_cflags"); do
 		printf ' \\\n\t%s' "$cfgtest_cflag" >&3
 	done
 
 	if [ "$cfgtest_type" = 'lib' ]; then
-		for cfgtest_lib in $cfgtest_libs; do
+		for cfgtest_lib in $(printf '%s' "$cfgtest_libs"); do
 			printf ' \\\n\t%s' "$cfgtest_lib" >&3
 		done
 
 	elif [ "$cfgtest_type" = 'switch' ]; then
-		for cfgtest_switch in $cfgtest_switches; do
+		for cfgtest_switch in $(printf '%s' "$cfgtest_switches"); do
 			printf ' \\\n\t%s' "$cfgtest_switch" >&3
 		done
 	fi
@@ -550,7 +550,7 @@ cfgtest_compiler_switch()
 	cfgtest_switches=
 	cfgtest_spc=
 
-	for cfgtest_switch in ${@}; do
+	for cfgtest_switch in $(printf '%s' "${@}"); do
 		cfgtest_switches="$cfgtest_switches$cfgtest_spc$cfgtest_switch"
 		cfgtest_spc=' '
 	done

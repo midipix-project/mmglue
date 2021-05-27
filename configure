@@ -874,7 +874,7 @@ config_host()
 
 	printf '\n%s' "$mb_cfghost_cc $ccenv_tmpname -o a.out" >&3
 
-	for mb_cfghost_cflag in $mb_cfghost_cflags; do
+	for mb_cfghost_cflag in $(printf '%s' "$mb_cfghost_cflags"); do
 		printf ' \\\n\t%s' "$mb_cfghost_cflag" >&3
 	done
 
