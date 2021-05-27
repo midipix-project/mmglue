@@ -495,8 +495,8 @@ ccenv_set_cc()
 			ccenv_host=$(eval $ccenv_cc $(printf '%s' "$ccenv_cflags") \
 				$ccenv_dumpmachine_switch 2>&3)
 		else
-			ccenv_host=$(printf '%s' $(uname -m)-$(uname -p)-$(uname -o)) \
-				| tr '[[:upper:]]' '[[:lower:]]'
+			ccenv_host=$(printf '%s' $(uname -m)-$(uname -p)-$(uname -o) \
+				| tr '[[:upper:]]' '[[:lower:]]')
 		fi
 
 		ccenv_cchost=$ccenv_host
@@ -519,8 +519,8 @@ ccenv_set_cc()
 
 	elif [ -z "$ccenv_host" ]; then
 		# assume that no -dumpmachine support means native build (fixme)
-		ccenv_host=$(printf '%s' $(uname -m)-$(uname -p)-$(uname -o)) \
-			| tr '[[:upper:]]' '[[:lower:]]' 2>&3
+		ccenv_host=$(printf '%s' $(uname -m)-$(uname -p)-$(uname -o) \
+			| tr '[[:upper:]]' '[[:lower:]]')
 		ccenv_cchost=$ccenv_host
 
 	elif [ -n "$ccenv_dumpmachine_switch" ]; then
