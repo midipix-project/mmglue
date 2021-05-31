@@ -767,6 +767,12 @@ ccenv_set_cc_underscore()
 
 ccenv_create_framework_executable()
 {
+	if [ "$ccenv_cfgtype" = 'host' ]; then
+		if [ "$mb_freestanding" = 'yes' ]; then
+			return 1
+		fi
+	fi
+
 	if [ -f $ccenv_image ]; then
 		mv $ccenv_image $ccenv_image.tmp
 		rm -f $ccenv_image.tmp
@@ -779,6 +785,7 @@ ccenv_create_framework_executable()
 
 	if $ccenv_cc "$ccenv_tmpname" -o $ccenv_image 2>&3; then
 		ccenv_ret=0
+		ccenv_cc_environment='hosted'
 	else
 		ccenv_ret=1
 	fi
@@ -812,7 +819,7 @@ ccenv_create_freestanding_executable()
 			-o $ccenv_image          \
 			2>&3; then
 		ccenv_ret=0
-		ccenv_freestd=yes
+		ccenv_cc_environment='freestanding'
 	else
 		ccenv_ret=1
 	fi
@@ -971,7 +978,7 @@ ccenv_set_cc_binfmt()
 
 ccenv_set_os_pe()
 {
-	if [ -n "$ccenv_freestd" ]; then
+	if [ "$ccenv_cc_environment" = 'freestanding' ]; then
 		case "$ccenv_cchost" in
 			*-midipix | *-midipix-* )
 				ccenv_os='midipix' ;;
@@ -1451,7 +1458,6 @@ ccenv_common_init()
 
 	ccenv_cfgtype=$1
 	ccenv_cfgfile="$mb_pwd/ccenv/$ccenv_cfgtype.mk"
-	ccenv_freestd=
 	ccenv_cchost=
 
 	if [ $ccenv_cfgtype = 'native' ]; then

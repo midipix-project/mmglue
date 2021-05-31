@@ -28,6 +28,7 @@ CC_ARFMT                        = @ccenv_cc_arfmt@
 CC_SOFMT                        = @ccenv_cc_sofmt@
 CC_BINFMT                       = @ccenv_cc_binfmt@
 CC_UNDERSCORE                   = @ccenv_cc_underscore@
+CC_ENVIRONMENT                  = @ccenv_cc_environment@
 
 CC_ARCH_BFD                     = @ccenv_cc_arch_bfd@
 CC_ARCH_LLVM                    = @ccenv_cc_arch_llvm@
