@@ -859,8 +859,22 @@ config_host()
 
 	mb_cfghost_cflags="${mb_cfghost_cflags#*: }"
 
-	printf 'int main(void){return 0;}' \
-		> "$mb_cfghost_tmpname"
+	if [ $mb_cc_environment = 'freestanding' ]; then
+		if [ -z "mb_cc_underscore" ]; then
+			mb_cfghost_start_fn='_start'
+		else
+			mb_cfghost_start_fn='start'
+		fi
+
+		printf 'int %s(void){return 0;}' "$mb_cfghost_start_fn" \
+			> "$mb_cfghost_tmpname"
+
+		mb_cfghost_cflags="$mb_cfghost_cflags -ffreestanding"
+		mb_cfghost_cflags="$mb_cfghost_cflags -nostdlib"
+	else
+		printf 'int main(void){return 0;}' \
+			> "$mb_cfghost_tmpname"
+	fi
 
 	# log
 	printf '\n' >&3
