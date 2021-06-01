@@ -29,6 +29,10 @@ mb_pkglibs=
 mb_ccenv_create_log=
 mb_ccenv_skip_native=
 
+# compilation environment
+mb_hosted=
+mb_freestanding=yes
+
 # switches
 mb_default_cflags_common="-std=c99 -pipe -D_XOPEN_SOURCE=700"
 mb_default_cflags_common="$mb_default_cflags_common -ffreestanding -nostdinc"
