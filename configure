@@ -688,12 +688,12 @@ config_flags()
 
 	# ccstrict
 	if [ _$mb_ccstrict = _yes ]; then
-		mb_cflags_strict='-Wall -Werror -Wextra -Wundef'
+		mb_cflags_strict='$(_CFLAGS_Wall) $(_CFLAGS_Werror) $(_CFLAGS_Wextra) $(_CFLAGS_Wundef)'
 	fi
 
 	# ldstrict
 	if [ _$mb_ldstrict = _yes ]; then
-		mb_ldflags_strict='-Wl,--no-undefined'
+		mb_ldflags_strict='$(_CFLAGS_Wl___no_undefined)'
 	fi
 
 	# step epilog
