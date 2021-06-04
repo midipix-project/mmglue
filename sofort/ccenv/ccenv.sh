@@ -1431,6 +1431,8 @@ ccenv_output_defs()
 		rm -f "$ccenv_tmp"
 		unset ccenv_tmp
 	fi
+
+	eval 'ccenv_'${ccenv_cfgtype}'_cc'=\'$ccenv_cc\'
 }
 
 ccenv_dso_verify()
@@ -1542,8 +1544,6 @@ ccenv_set_toolchain_variables()
 
 	ccenv_output_defs
 	ccenv_clean_up
-
-	eval 'ccenv_'${ccenv_cfgtype}'_cc'=\'$ccenv_cc\'
 }
 
 ccenv_set_host_variables()
