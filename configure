@@ -634,7 +634,7 @@ common_defaults()
 	# debug
 	if [ _$mb_debug = _yes ]; then
 		if [ -z "$mb_cflags_debug" ]; then
-			mb_cflags_debug='-g3 -O0'
+			mb_cflags_debug='$(_CFLAGS_g3) $(_CFLAGS_O0)'
 		fi
 	fi
 
