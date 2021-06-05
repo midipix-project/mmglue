@@ -481,11 +481,15 @@ ccenv_set_cc()
 		ccenv_native_cc=
 	fi
 
+	cfgtest_silent='yes'
+
 	if cfgtest_compiler_switch -dumpmachine ; then
 		ccenv_dumpmachine_switch='-dumpmachine'
 	else
 		ccenv_dumpmachine_switch=
 	fi
+
+	unset cfgtest_silent
 
 	ccenv_cc_cmd="$ccenv_cc"
 	ccenv_errors=
