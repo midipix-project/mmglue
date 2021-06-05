@@ -83,8 +83,11 @@ cfgtest_prolog()
 
 	printf '\n%s\n' '________________________' >&3
 	printf "cfgtest: probing for ${mb_cfgtest_cfgtype} ${1}: ${2}\n\n" >&3
-	printf "%${cfgtest_tool_dlen}.${cfgtest_tool_dlen}s" \
-		"${cfgtest_tool_desc}  ${mb_line_dots}"
+
+	if [ "${cfgtest_silent:-}" != 'yes' ]; then
+		printf "%${cfgtest_tool_dlen}.${cfgtest_tool_dlen}s" \
+			"${cfgtest_tool_desc}  ${mb_line_dots}"
+	fi
 }
 
 
@@ -93,8 +96,10 @@ cfgtest_epilog()
 	cfgtest_line_dots='...............'
 	cfgtest_tool_dlen="$((${#cfgtest_line_dots} - ${#2}))"
 
-	printf "%${cfgtest_tool_dlen}.${cfgtest_tool_dlen}s  %s.\n" \
-		"${cfgtest_line_dots}" "${2}"
+	if [ "${cfgtest_silent:-}" != 'yes' ]; then
+		printf "%${cfgtest_tool_dlen}.${cfgtest_tool_dlen}s  %s.\n" \
+			"${cfgtest_line_dots}" "${2}"
+	fi
 
 	if [ "${1}" = 'snippet' ] && [ -f 'a.out' ]; then
 		rm -f 'a.out'
