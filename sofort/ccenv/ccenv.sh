@@ -1443,6 +1443,7 @@ ccenv_output_defs()
 	fi
 
 	eval 'ccenv_'${ccenv_cfgtype}'_cc'=\'$ccenv_cc\'
+	eval 'ccenv_'${ccenv_cfgtype}'_cc_environment'=\'$ccenv_cc_environment\'
 }
 
 ccenv_set_cc_switch_vars()
