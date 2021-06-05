@@ -1459,11 +1459,9 @@ ccenv_set_cc_switch_vars()
 	fi
 
 	if [ $ccenv_cfgtype = 'host' ]; then
-		# ccenv_host_cc="$ccenv_cc"
 		ccenv_makevar_prefix='_CFLAGS_'
 		cfgtest_host_section
 	else
-		# ccenv_native_cc="$ccenv_cc"
 		ccenv_makevar_prefix='_NATIVE_CFLAGS_'
 		cfgtest_native_section
 	fi
