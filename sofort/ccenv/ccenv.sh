@@ -489,6 +489,12 @@ ccenv_set_cc()
 		ccenv_dumpmachine_switch=
 	fi
 
+	if cfgtest_code_snippet_asm 'typedef int dummy;' ; then
+		eval ccenv_${ccenv_cfgtype}_stdin_input='yes'
+	else
+		eval ccenv_${ccenv_cfgtype}_stdin_input='no'
+	fi
+
 	unset cfgtest_silent
 
 	ccenv_cc_cmd="$ccenv_cc"
