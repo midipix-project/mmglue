@@ -39,6 +39,7 @@ cfgtest_host_section()
 	mb_cfgtest_cc="$ccenv_host_cc"
 	mb_cfgtest_cfgtype='host'
 	mb_cfgtest_stdin_input=${ccenv_host_stdin_input:-}
+	mb_cfgtest_environment=${ccenv_host_cc_environment:-}
 
 	mb_cfgtest_cflags=$(${mb_make} -n -f "$mb_pwd/Makefile.tmp" \
 		OS_DSO_EXRULES=default                              \
@@ -64,6 +65,7 @@ cfgtest_native_section()
 	mb_cfgtest_cc="$ccenv_native_cc"
 	mb_cfgtest_cfgtype='native'
 	mb_cfgtest_stdin_input=${ccenv_native_stdin_input:-}
+	mb_cfgtest_environment=${ccenv_native_cc_environment:-}
 
 	mb_cfgtest_cflags=$(${mb_make} -n -f "$mb_pwd/Makefile.tmp" \
 		OS_DSO_EXRULES=default                              \
@@ -600,7 +602,18 @@ cfgtest_compiler_switch()
 
 	case "${1}" in
 		-Wl,*)
-			cfgtest_code_snippet='int main(void){return 0;}'
+			if [ "$mb_cfgtest_environment" = 'freestanding' ]; then
+				cfgtest_switches="$cfgtest_switches -nostdlib -nostartfiles"
+
+				if [ -z "ccenv_cc_underscore" ]; then
+					cfgtest_code_snippet='int start(void){return 0;}'
+				else
+					cfgtest_code_snippet='int _start(void){return 0;}'
+				fi
+			else
+				cfgtest_code_snippet='int main(void){return 0;}'
+			fi
+
 			cfgtest_common_init 'ldflag'
 			;;
 
