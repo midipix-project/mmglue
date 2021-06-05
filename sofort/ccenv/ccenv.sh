@@ -1475,10 +1475,10 @@ ccenv_set_cc_switch_vars()
 			ccenv_switch_var=${ccenv_switch_var%=}
 			ccenv_switch_var=${ccenv_switch_var%,}
 
-			printf '%-31s = %s\n' "${ccenv_make_var}" "${ccenv_switch_var}" \
+			printf '%-40s= %s\n' "${ccenv_make_var}" "${ccenv_switch_var}" \
 				>> "$ccenv_mk"
 		else
-			printf '%-31s =\n' "${ccenv_make_var}" \
+			printf '%-40s=\n' "${ccenv_make_var}" \
 				>> "$ccenv_mk"
 		fi
 	done
