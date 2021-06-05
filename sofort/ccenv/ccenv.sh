@@ -1442,12 +1442,12 @@ ccenv_output_defs()
 ccenv_set_cc_switch_vars()
 {
 	if [ -f $mb_project_dir/project/config/ccswitch.strs ]; then
-		ccenv_switch_vars=$(grep -v '^#'                   \
+		ccenv_switch_vars=$(grep -v -e '^#' -e '^-Wl,'     \
 			$mb_project_dir/sofort/ccenv/ccswitch.strs  \
 			$mb_project_dir/project/config/ccswitch.strs \
 			| sort -u)
 	else
-		ccenv_switch_vars=$(grep -v '^#'                   \
+		ccenv_switch_vars=$(grep -v -e '^#' -e '^-Wl,'     \
 			$mb_project_dir/sofort/ccenv/ccswitch.strs  \
 			| sort -u)
 	fi
@@ -1459,6 +1459,56 @@ ccenv_set_cc_switch_vars()
 	else
 		# ccenv_native_cc="$ccenv_cc"
 		ccenv_makevar_prefix='_NATIVE_CFLAGS_'
+		cfgtest_native_section
+	fi
+
+	for ccenv_switch_var in $(printf '%s' "$ccenv_switch_vars"); do
+		ccenv_make_var=${ccenv_switch_var%=}
+		ccenv_make_var=${ccenv_make_var%,}
+
+		ccenv_make_var=${ccenv_make_var##---}
+		ccenv_make_var=${ccenv_make_var##--}
+		ccenv_make_var=${ccenv_make_var##-}
+
+		ccenv_make_var=$(printf '%s' "$ccenv_make_var" \
+			| sed -e 's/=/_/g' -e 's/-/_/g' -e 's/,/_/g')
+
+		ccenv_make_var="${ccenv_makevar_prefix}${ccenv_make_var}"
+
+		if cfgtest_compiler_switch "$ccenv_switch_var"; then
+			ccenv_switch_var=${ccenv_switch_var%=}
+			ccenv_switch_var=${ccenv_switch_var%,}
+
+			printf '%-40s= %s\n' "${ccenv_make_var}" "${ccenv_switch_var}" \
+				>> "$ccenv_mk"
+		else
+			printf '%-40s=\n' "${ccenv_make_var}" \
+				>> "$ccenv_mk"
+		fi
+	done
+}
+
+ccenv_set_cc_linker_switch_vars()
+{
+	printf '\n# %s ldflags: supported compiler switches\n' "$ccenv_cfgtype" \
+		>> "$ccenv_mk"
+
+	if [ -f $mb_project_dir/project/config/ccswitch.strs ]; then
+		ccenv_switch_vars=$(grep -e '^-Wl,'                \
+			$mb_project_dir/sofort/ccenv/ccswitch.strs  \
+			$mb_project_dir/project/config/ccswitch.strs \
+			| sort -u)
+	else
+		ccenv_switch_vars=$(grep -e '^-Wl,'                \
+			$mb_project_dir/sofort/ccenv/ccswitch.strs  \
+			| sort -u)
+	fi
+
+	if [ $ccenv_cfgtype = 'host' ]; then
+		ccenv_makevar_prefix='_LDFLAGS_'
+		cfgtest_host_section
+	else
+		ccenv_makevar_prefix='_NATIVE_LDFLAGS_'
 		cfgtest_native_section
 	fi
 
@@ -1599,6 +1649,7 @@ ccenv_set_toolchain_variables()
 	ccenv_clean_up
 
 	ccenv_set_cc_switch_vars
+	ccenv_set_cc_linker_switch_vars
 }
 
 ccenv_set_host_variables()

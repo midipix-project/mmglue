@@ -5,7 +5,8 @@
 # ``CFLAGS_foo = -foo'' to the respective ccenv variable file
 # (that is, ccenv/host.mk or ccenv/native.mk).
 
-# the make variable prefix is _CFLAGS_ or _NATIVE_CFLAGS_,
+# the make variable prefix is _CFLAGS_ or _NATIVE_CFLAGS_
+# (_LDFLAGS_ or _NATIVE_LDFLAGS for -Wl, linker options),
 # to which the compiler-switch, minus leading dashes and
 # trailing equal-sign or comma, is appended; non-leading
 # dashes and non-trailing equal-signs and commas are then
@@ -24,6 +25,7 @@
 -std=c11
 
 # linker switches
+-Wl,
 -Wl,--no-undefined
 
 # errors and warnings
