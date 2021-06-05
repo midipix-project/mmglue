@@ -1390,12 +1390,12 @@ ccenv_output_defs()
 	fi
 
 	ccenv_var_defs=
-	ccenv_sed_substs=
+	ccenv_sed_substs="-e s/@ccenv_cfgtype@/${ccenv_cfgtype}/g"
 
 	ccenv_vars=$(cut -d'=' -f1 "$mb_project_dir/sofort/ccenv/ccenv.vars" \
 		| grep -v '^#');
 
-	ccenv_exvars="ccenv_cfgtype ccenv_makevar_prefix"
+	ccenv_exvars="ccenv_makevar_prefix"
 
 	for __var in $(printf '%s' "$ccenv_vars $ccenv_exvars"); do
 		ccenv_sed_subst=$(printf '%s %s%s%s' \
