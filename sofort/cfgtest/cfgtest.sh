@@ -38,6 +38,7 @@ cfgtest_host_section()
 {
 	mb_cfgtest_cc="$ccenv_host_cc"
 	mb_cfgtest_cfgtype='host'
+	mb_cfgtest_stdin_input=${ccenv_host_stdin_input:-}
 
 	mb_cfgtest_cflags=$(${mb_make} -n -f "$mb_pwd/Makefile.tmp" \
 		OS_DSO_EXRULES=default                              \
@@ -62,6 +63,7 @@ cfgtest_native_section()
 {
 	mb_cfgtest_cc="$ccenv_native_cc"
 	mb_cfgtest_cfgtype='native'
+	mb_cfgtest_stdin_input=${ccenv_native_stdin_input:-}
 
 	mb_cfgtest_cflags=$(${mb_make} -n -f "$mb_pwd/Makefile.tmp" \
 		OS_DSO_EXRULES=default                              \
@@ -103,6 +105,10 @@ cfgtest_epilog()
 
 	if [ "${1}" = 'snippet' ] && [ -f 'a.out' ]; then
 		rm -f 'a.out'
+	fi
+
+	if [ "$mb_cfgtest_stdin_input" = 'no' ]; then
+		rm 'cfgtest_c3RyaWN0X21vZGUK.c'
 	fi
 
 	if [ "${1}" = 'snippet' ] && [ "${2}" = '(error)' ]; then
@@ -204,7 +210,13 @@ cfgtest_common_init()
 	# cfgtest variables
 	cfgtest_type="${1:-}"
 
-	if [ "$cfgtest_type" = 'asm' ]; then
+	if [ "$mb_cfgtest_stdin_input" = 'no' ]; then
+		if [ "$cfgtest_type" = 'lib' ]; then
+			cfgtest_fmt='%s cfgtest_c3RyaWN0X21vZGUK.c -o a.out'
+		else
+			cfgtest_fmt='%s -c cfgtest_c3RyaWN0X21vZGUK.c -o a.out'
+		fi
+	elif [ "$cfgtest_type" = 'asm' ]; then
 		cfgtest_fmt='%s -c -xc - -o a.out'
 	elif [ "$cfgtest_type" = 'lib' ]; then
 		cfgtest_fmt='%s -xc - -o a.out'
@@ -267,6 +279,11 @@ cfgtest_common_init()
 	printf ' \\\n'                           >&3
 	printf '<< _SRCEOF\n%s\n' "$cfgtest_src" >&3
 	printf '_SRCEOF \n\n\n'                  >&3
+
+	if [ "$mb_cfgtest_stdin_input" = 'no' ]; then
+		printf '%s' "$cfgtest_src" > 'cfgtest_c3RyaWN0X21vZGUK.c'
+		cfgtest_src=
+	fi
 }
 
 
