@@ -1448,6 +1448,9 @@ ccenv_output_defs()
 
 ccenv_set_cc_switch_vars()
 {
+	printf '\n# %s cflags: supported compiler switches\n' "$ccenv_cfgtype" \
+		>> "$ccenv_mk"
+
 	if [ -f $mb_project_dir/project/config/ccswitch.strs ]; then
 		ccenv_switch_vars=$(cat                            \
 			$mb_project_dir/sofort/ccenv/ccswitch.strs  \
