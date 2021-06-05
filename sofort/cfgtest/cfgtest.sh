@@ -76,7 +76,7 @@ cfgtest_native_section()
 
 cfgtest_prolog()
 {
-	cfgtest_line_dots='.......................'
+	cfgtest_line_dots='...........................'
 	cfgtest_line_dots="${cfgtest_line_dots}${cfgtest_line_dots}"
 	cfgtest_tool_desc=" == trying ${mb_cfgtest_cfgtype} ${1}: ${2}"
 	cfgtest_tool_dlen="${#cfgtest_line_dots}"
@@ -90,7 +90,7 @@ cfgtest_prolog()
 
 cfgtest_epilog()
 {
-	cfgtest_line_dots='.......................'
+	cfgtest_line_dots='...............'
 	cfgtest_tool_dlen="$((${#cfgtest_line_dots} - ${#2}))"
 
 	printf "%${cfgtest_tool_dlen}.${cfgtest_tool_dlen}s  %s.\n" \
