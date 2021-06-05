@@ -1448,10 +1448,11 @@ ccenv_output_defs()
 ccenv_set_cc_switch_vars()
 {
 	if [ -f $mb_project_dir/project/config/ccswitch.strs ]; then
-		ccenv_switch_vars=$(grep -v -e '^#' -e '^-Wl,'     \
+		ccenv_switch_vars=$(cat                            \
 			$mb_project_dir/sofort/ccenv/ccswitch.strs  \
 			$mb_project_dir/project/config/ccswitch.strs \
-			| sort -u)
+		| grep -v -e '^#' -e '^-Wl,'                          \
+		| sort -u)
 	else
 		ccenv_switch_vars=$(grep -v -e '^#' -e '^-Wl,'     \
 			$mb_project_dir/sofort/ccenv/ccswitch.strs  \
@@ -1498,9 +1499,10 @@ ccenv_set_cc_linker_switch_vars()
 		>> "$ccenv_mk"
 
 	if [ -f $mb_project_dir/project/config/ccswitch.strs ]; then
-		ccenv_switch_vars=$(grep -e '^-Wl,'                \
+		ccenv_switch_vars=$(cat                            \
 			$mb_project_dir/sofort/ccenv/ccswitch.strs  \
 			$mb_project_dir/project/config/ccswitch.strs \
+			| grep -e '^-Wl,'                             \
 			| sort -u)
 	else
 		ccenv_switch_vars=$(grep -e '^-Wl,'                \
