@@ -1,4 +1,4 @@
 # @ccenv_cfgtype@ pe switches
-PE_SUBSYSTEM                    = @ccenv_pe_subsystem@
-PE_IMAGE_BASE                   = @ccenv_pe_image_base@
+PE_SUBSYSTEM                            = @ccenv_pe_subsystem@
+PE_IMAGE_BASE                           = @ccenv_pe_image_base@
 
