@@ -25,8 +25,9 @@
 -std=c11
 
 # linker switches
--Wl,
+-Wl,--print-map
 -Wl,--no-undefined
+-Wl,--verbose
 
 # errors and warnings
 -Wall

@@ -213,12 +213,16 @@ cfgtest_common_init()
 	if [ "$mb_cfgtest_stdin_input" = 'no' ]; then
 		if [ "$cfgtest_type" = 'lib' ]; then
 			cfgtest_fmt='%s cfgtest_c3RyaWN0X21vZGUK.c -o a.out'
+		elif [ "$cfgtest_type" = 'ldflag' ]; then
+			cfgtest_fmt='%s cfgtest_c3RyaWN0X21vZGUK.c -o a.out'
 		else
 			cfgtest_fmt='%s -c cfgtest_c3RyaWN0X21vZGUK.c -o a.out'
 		fi
 	elif [ "$cfgtest_type" = 'asm' ]; then
 		cfgtest_fmt='%s -c -xc - -o a.out'
 	elif [ "$cfgtest_type" = 'lib' ]; then
+		cfgtest_fmt='%s -xc - -o a.out'
+	elif [ "$cfgtest_type" = 'ldflag' ]; then
 		cfgtest_fmt='%s -xc - -o a.out'
 	else
 		cfgtest_fmt='%s -S -xc - -o -'
@@ -231,6 +235,13 @@ cfgtest_common_init()
 			"$mb_cfgtest_cflags"                 \
 			"$mb_cfgtest_ldflags"                \
 			"$cfgtest_libs")
+
+	elif [ "$cfgtest_type" = 'ldflag' ]; then
+		cfgtest_cmd=$(printf "$cfgtest_fmt %s %s %s" \
+			"$mb_cfgtest_cc"                     \
+			"$mb_cfgtest_cflags"                 \
+			"$mb_cfgtest_ldflags"                \
+			"$cfgtest_switches")
 
 	elif [ "$cfgtest_type" = 'switch' ]; then
 		cfgtest_cmd=$(printf "$cfgtest_fmt %s %s" \
@@ -247,6 +258,10 @@ cfgtest_common_init()
 	if [ -z "$mb_cfgtest_headers" ] || [ "$cfgtest_type" = 'lib' ]; then
 		cfgtest_inc=
 		cfgtest_src="$cfgtest_code_snippet"
+
+	elif [ "$cfgtest_type" = 'ldflag' ]; then
+		cfgtest_inc=
+		cfgtest_src=
 
 	elif [ "$cfgtest_type" = 'switch' ]; then
 		cfgtest_inc=
@@ -270,7 +285,7 @@ cfgtest_common_init()
 			printf ' \\\n\t%s' "$cfgtest_lib" >&3
 		done
 
-	elif [ "$cfgtest_type" = 'switch' ]; then
+	elif [ "$cfgtest_type" = 'switch' ] || [ "$cfgtest_type" = 'ldflag' ]; then
 		for cfgtest_switch in $(printf '%s' "$cfgtest_switches"); do
 			printf ' \\\n\t%s' "$cfgtest_switch" >&3
 		done
@@ -583,9 +598,17 @@ cfgtest_compiler_switch()
 		cfgtest_prolog 'compiler switch combination' "$cfgtest_switches"
 	fi
 
-	cfgtest_code_snippet=
+	case "${1}" in
+		-Wl,*)
+			cfgtest_code_snippet='int main(void){return 0;}'
+			cfgtest_common_init 'ldflag'
+			;;
 
-	cfgtest_common_init 'switch'
+		*)
+			cfgtest_code_snippet=
+			cfgtest_common_init 'switch'
+			;;
+	esac
 
 	# execute
 	printf '%s' "$cfgtest_src"                  \
