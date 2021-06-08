@@ -261,6 +261,10 @@ cfgtest_common_init()
 		cfgtest_inc=
 		cfgtest_src="$cfgtest_code_snippet"
 
+	elif [ "$cfgtest_type" = 'macro' ]; then
+		cfgtest_inc=
+		cfgtest_src="$cfgtest_code_snippet"
+
 	elif [ "$cfgtest_type" = 'ldflag' ]; then
 		cfgtest_inc=
 		cfgtest_src=
@@ -539,6 +543,39 @@ cfgtest_code_snippet_asm()
 		"$mb_cfgtest_cfgtype" >&3
 
 	cfgtest_epilog 'snippet' '(ok)'
+
+	return 0
+}
+
+
+cfgtest_macro_definition()
+{
+	# init
+	cfgtest_prolog 'macro definition' "${1}"
+
+	cfgtest_code_snippet=$(printf '%s\n'      \
+		"#ifndef ${1}"                     \
+		"#error macro ${1} is not defined." \
+		"#endif")
+
+	cfgtest_common_init 'macro'
+
+	# execute
+	cfgtest_ret=1
+
+	printf '%s' "$cfgtest_src"                  \
+		| eval $(printf '%s' "$cfgtest_cmd") \
+		> /dev/null 2>&3                      \
+	|| cfgtest_epilog 'macro' '(error)' "${1}"     \
+	|| return
+
+	# result
+	cfgtest_ret=0
+
+	printf 'cfgtest: %s compiler: above macro definition test compiled successfully.\n\n' \
+		"$mb_cfgtest_cfgtype" >&3
+
+	cfgtest_epilog 'macro' '(defined)'
 
 	return 0
 }
