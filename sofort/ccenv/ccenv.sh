@@ -721,7 +721,10 @@ ccenv_set_cc_bits()
 				"$ccenv_internal_type"                      \
 				"$ccenv_internal_guess")
 
-			if [ -n "$ccenv_dumpmachine_switch" ]; then
+			ccenv_expr='ccenv_stdin_input=$ccenv_'${ccenv_cfgtype}'_stdin_input'
+			eval ${ccenv_expr}
+
+			if [ "$ccenv_stdin_input" = 'yes' ]; then
 				printf '%s' "$ccenv_internal_str"                   \
 						| eval $ccenv_cc -S -xc - -o -      \
 						  $(printf '%s' "$ccenv_cflags")    \
