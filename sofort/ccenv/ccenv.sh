@@ -560,7 +560,10 @@ ccenv_set_cc()
 			$ccenv_dumpmachine_switch 2>&3)
 	fi
 
-	if [ "$ccenv_cchost" != "$ccenv_host" ]; then
+	if [ -z "$ccenv_dumpmachine_switch" ] && [ -n "$ccenv_host" ]; then
+		ccenv_cchost="$ccenv_host"
+
+	elif [ "$ccenv_cchost" != "$ccenv_host" ]; then
 		printf 'error!\n' >&2
 		printf 'ccenv:\n' >&2
 		printf 'ccenv: ccenv_host:   %s \n' $ccenv_host >&2
