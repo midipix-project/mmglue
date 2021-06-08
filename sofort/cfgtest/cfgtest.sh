@@ -299,7 +299,7 @@ cfgtest_common_init()
 
 	printf ' \\\n'                           >&3
 	printf '<< _SRCEOF\n%s\n' "$cfgtest_src" >&3
-	printf '_SRCEOF \n\n\n'                  >&3
+	printf '_SRCEOF\n\n\n'                   >&3
 
 	if [ "$mb_cfgtest_stdin_input" = 'no' ]; then
 		printf '%s' "$cfgtest_src" > 'cfgtest_c3RyaWN0X21vZGUK.c'
