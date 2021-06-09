@@ -257,25 +257,13 @@ cfgtest_common_init()
 	fi
 
 
-	if [ -z "$mb_cfgtest_headers" ] || [ "$cfgtest_type" = 'lib' ]; then
-		cfgtest_inc=
-		cfgtest_src="$cfgtest_code_snippet"
-
-	elif [ "$cfgtest_type" = 'macro' ]; then
-		cfgtest_inc=
-		cfgtest_src="$cfgtest_code_snippet"
-
-	elif [ "$cfgtest_type" = 'ldflag' ]; then
-		cfgtest_inc=
-		cfgtest_src=
-
-	elif [ "$cfgtest_type" = 'switch' ]; then
-		cfgtest_inc=
-		cfgtest_src=
-	else
+	if [ -n "$mb_cfgtest_headers" ]; then
 		cfgtest_inc=$(printf '#include <%s>\n' $mb_cfgtest_headers)
 		cfgtest_src=$(printf '%s\n_\n' "$cfgtest_inc" \
 			| m4 -D_="$cfgtest_code_snippet")
+	else
+		cfgtest_inc=
+		cfgtest_src="$cfgtest_code_snippet"
 	fi
 
 
