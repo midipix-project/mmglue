@@ -280,6 +280,10 @@ cfgtest_common_init()
 		printf ' \\\n\t%s' "$cfgtest_cflag" >&3
 	done
 
+	for cfgtest_ldflag in $(printf '%s' "$mb_cfgtest_ldflags"); do
+		printf ' \\\n\t%s' "$cfgtest_ldflag" >&3
+	done
+
 	if [ "$cfgtest_type" = 'lib' ]; then
 		for cfgtest_lib in $(printf '%s' "$cfgtest_libs"); do
 			printf ' \\\n\t%s' "$cfgtest_lib" >&3
