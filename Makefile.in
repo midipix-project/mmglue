@@ -149,6 +149,12 @@ install-app-extras:
 .cflags-native:
 	@true : $(NATIVE_CFLAGS)
 
+.ldflags-host:
+	@true : $(LDFLAGS)
+
+.ldflags-native:
+	@true : $(NATIVE_LDFLAGS)
+
 
 include ./ccenv/host.mk
 include ./ccenv/native.mk

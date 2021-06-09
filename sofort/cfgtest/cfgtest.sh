@@ -49,14 +49,13 @@ cfgtest_host_section()
 
 	mb_cfgtest_cflags="${mb_cfgtest_cflags#*: }"
 
-	mb_cfgtest_ldflags="$mb_ldflags_cmdline"
-	mb_cfgtest_ldflags="$mb_cfgtest_ldflags $mb_ldflags_debug"
-	mb_cfgtest_ldflags="$mb_cfgtest_ldflags $mb_ldflags_common"
-	mb_cfgtest_ldflags="$mb_cfgtest_ldflags $mb_ldflags_strict"
-	mb_cfgtest_ldflags="$mb_cfgtest_ldflags $mb_ldflags_config"
-	mb_cfgtest_ldflags="$mb_cfgtest_ldflags $mb_ldflags_sysroot"
-	mb_cfgtest_ldflags="$mb_cfgtest_ldflags $mb_ldflags_path"
-	mb_cfgtest_ldflags="$mb_cfgtest_ldflags $mb_ldflags_last"
+	mb_cfgtest_ldflags=$(${mb_make} -n -f "$mb_pwd/Makefile.tmp" \
+		OS_DSO_EXRULES=default                               \
+		OS_SONAME=symlink                                    \
+		OS_ARCHIVE_EXT='.a'                                  \
+		.ldflags-host)
+
+	mb_cfgtest_ldflags="${mb_cfgtest_ldflags#*: }"
 }
 
 
@@ -74,7 +73,14 @@ cfgtest_native_section()
 		.cflags-native)
 
 	mb_cfgtest_cflags="${mb_cfgtest_cflags#*: }"
-	mb_cfgtest_ldflags="$mb_native_ldflags"
+
+	mb_cfgtest_ldflags=$(${mb_make} -n -f "$mb_pwd/Makefile.tmp" \
+		OS_DSO_EXRULES=default                               \
+		OS_SONAME=symlink                                    \
+		OS_ARCHIVE_EXT='.a'                                  \
+		.ldflags-native)
+
+	mb_cfgtest_ldflags="${mb_cfgtest_ldflags#*: }"
 }
 
 
