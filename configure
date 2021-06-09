@@ -207,6 +207,11 @@ init_vars()
 		mb_source_dir_set=yes
 	fi
 
+	# cchost
+	if [ -n "$CCHOST" ]; then
+		mb_cchost_set=yes
+	fi
+
 	# step prolog
 	output_step_prolog ${mb_script} 'init_vars'
 
@@ -1111,6 +1116,7 @@ for arg ; do
 			;;
 		--cchost=*)
 			mb_cchost=${arg#*=}
+			mb_cchost_set=yes
 			;;
 		--cfghost=*)
 			mb_cfghost=${arg#*=}
