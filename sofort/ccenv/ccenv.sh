@@ -501,11 +501,20 @@ ccenv_set_cc()
 	ccenv_errors=
 
 	if [ "$ccenv_cfgtype" = 'native' ]; then
-		if [ -n "$ccenv_dumpmachine_switch" ]; then
+		if [ -n "$mb_native_host" ]; then
+			ccenv_host="$mb_native_host"
+
+		elif [ -n "$ccenv_dumpmachine_switch" ]; then
 			ccenv_host=$(eval $ccenv_cc $(printf '%s' "$ccenv_cflags") \
 				$ccenv_dumpmachine_switch 2>&3)
 		else
-			ccenv_host=$(printf '%s' $(uname -m)-$(uname -p)-$(uname -o) \
+			ccenv_machine=$(uname -m 2>/dev/null)
+			ccenv_system=$(uname -s 2>/dev/null)
+
+			ccenv_machine="${ccenv_machine:-unknown}"
+			ccenv_system="${ccenv_system:-anyos}"
+
+			ccenv_host=$(printf '%s' "${ccenv_machine}-unknown-${ccenv_system}" \
 				| tr '[[:upper:]]' '[[:lower:]]')
 		fi
 
@@ -529,8 +538,15 @@ ccenv_set_cc()
 
 	elif [ -z "$ccenv_host" ]; then
 		# assume that no -dumpmachine support means native build (fixme)
-		ccenv_host=$(printf '%s' $(uname -m)-$(uname -p)-$(uname -o) \
+		ccenv_machine=$(uname -m 2>/dev/null)
+		ccenv_system=$(uname -s 2>/dev/null)
+
+		ccenv_machine="${ccenv_machine:-unknown}"
+		ccenv_system="${ccenv_system:-anyos}"
+
+		ccenv_host=$(printf '%s' "${ccenv_machine}-unknown-${ccenv_system}" \
 			| tr '[[:upper:]]' '[[:lower:]]')
+
 		ccenv_cchost=$ccenv_host
 
 	elif [ -n "$ccenv_dumpmachine_switch" ]; then
