@@ -596,7 +596,15 @@ cfgtest_library_presence()
 		cfgtest_prolog 'lib module' '(see config.log)'
 	fi
 
-	cfgtest_code_snippet='int main(void){return 0;}'
+	if [ "$mb_cfgtest_environment" = 'freestanding' ]; then
+		if [ -z "ccenv_cc_underscore" ]; then
+			cfgtest_code_snippet='int start(void){return 0;}'
+		else
+			cfgtest_code_snippet='int _start(void){return 0;}'
+		fi
+	else
+		cfgtest_code_snippet='int main(void){return 0;}'
+	fi
 
 	cfgtest_common_init 'lib'
 
