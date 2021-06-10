@@ -239,9 +239,16 @@ ccenv_set_primary_tools()
 
 	# archive format preamble
 	if [ -n "$ccenv_dumpmachine_switch" ]; then
-		ccenv_libgcc_a_header=$(od -b -N8             \
-			$($ccenv_cc -print-file-name=libgcc.a) \
-			| head -n1)
+		ccenv_libgcc_path=$($ccenv_cc -print-file-name=libgcc.a \
+			2>/dev/null)
+
+		if [ -n "$ccenv_libgcc_path" ]; then
+			ccenv_libgcc_a_header=$(od -b -N8             \
+				$($ccenv_cc -print-file-name=libgcc.a) \
+				| head -n1)
+		else
+			ccenv_libgcc_a_header=
+		fi
 	else
 		ccenv_libgcc_a_header=
 	fi
