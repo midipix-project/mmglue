@@ -511,7 +511,7 @@ ccenv_set_cc()
 				$ccenv_dumpmachine_switch 2>&3)
 
 		elif command -v slibtool > /dev/null 2>&1; then
-			ccenv=$(slibtool --dumpmachine 2>/dev/null)
+			ccenv=$(slibtool --dumpmachine 2>/dev/null || true)
 		fi
 
 		if [ -z "$ccenv_host" ]; then
@@ -546,7 +546,7 @@ ccenv_set_cc()
 	elif [ -z "$ccenv_host" ]; then
 		# no -dumpmachine support and no --host argument implies native build
 		if command -v slibtool > /dev/null 2>&1; then
-			ccenv=$(slibtool --dumpmachine 2>/dev/null)
+			ccenv=$(slibtool --dumpmachine 2>/dev/null || true)
 		fi
 
 		if [ -z "$ccenv_host" ]; then
