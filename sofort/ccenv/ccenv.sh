@@ -501,13 +501,20 @@ ccenv_set_cc()
 	ccenv_errors=
 
 	if [ "$ccenv_cfgtype" = 'native' ]; then
+		ccenv_host=
+
 		if [ -n "$mb_native_host" ]; then
 			ccenv_host="$mb_native_host"
 
 		elif [ -n "$ccenv_dumpmachine_switch" ]; then
 			ccenv_host=$(eval $ccenv_cc $(printf '%s' "$ccenv_cflags") \
 				$ccenv_dumpmachine_switch 2>&3)
-		else
+
+		elif command -v slibtool > /dev/null 2>&1; then
+			ccenv=$(slibtool --dumpmachine 2>/dev/null)
+		fi
+
+		if [ -z "$ccenv_host" ]; then
 			ccenv_machine=$(uname -m 2>/dev/null)
 			ccenv_system=$(uname -s 2>/dev/null)
 
@@ -537,15 +544,21 @@ ccenv_set_cc()
 		ccenv_cchost=$ccenv_host
 
 	elif [ -z "$ccenv_host" ]; then
-		# assume that no -dumpmachine support means native build (fixme)
-		ccenv_machine=$(uname -m 2>/dev/null)
-		ccenv_system=$(uname -s 2>/dev/null)
+		# no -dumpmachine support and no --host argument implies native build
+		if command -v slibtool > /dev/null 2>&1; then
+			ccenv=$(slibtool --dumpmachine 2>/dev/null)
+		fi
 
-		ccenv_machine="${ccenv_machine:-unknown}"
-		ccenv_system="${ccenv_system:-anyos}"
+		if [ -z "$ccenv_host" ]; then
+			ccenv_machine=$(uname -m 2>/dev/null)
+			ccenv_system=$(uname -s 2>/dev/null)
 
-		ccenv_host=$(printf '%s' "${ccenv_machine}-unknown-${ccenv_system}" \
-			| tr '[[:upper:]]' '[[:lower:]]')
+			ccenv_machine="${ccenv_machine:-unknown}"
+			ccenv_system="${ccenv_system:-anyos}"
+
+			ccenv_host=$(printf '%s' "${ccenv_machine}-unknown-${ccenv_system}" \
+				| tr '[[:upper:]]' '[[:lower:]]')
+		fi
 
 		ccenv_cchost=$ccenv_host
 
