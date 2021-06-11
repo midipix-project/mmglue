@@ -181,7 +181,7 @@ ccenv_set_primary_tools()
 {
 	ccenv_core_tools="ar nm objdump ranlib size strip strings objcopy"
 	ccenv_hack_tools="addr2line cov elfedit readelf readobj otool"
-	ccenv_peep_tools="perk mdso dlltool windmc windres"
+	ccenv_peep_tools="perk mdso dlltool windmc windres pkgconf"
 
 	for __tool in $(printf '%s' "$ccenv_core_tools $ccenv_hack_tools $ccenv_peep_tools"); do
 		ccenv_tool_prolog "$__tool"

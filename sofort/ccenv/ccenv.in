@@ -77,6 +77,8 @@ DLLTOOL                                 = @ccenv_dlltool@
 WINDMC                                  = @ccenv_windmc@
 WINDRC                                  = @ccenv_windrc@
 
+PKGCONF                                 = @ccenv_pkgconf@
+
 # @ccenv_cfgtype@ secondary tools
 # note: the direct use of $(@ccenv_makevar_prefix@LD) is highly discouraged
 AS                                      = @ccenv_as@

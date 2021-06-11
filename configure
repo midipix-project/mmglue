@@ -186,6 +186,24 @@ init_vars()
 		mb_makefile='Makefile'
 	fi
 
+	# pkgconf (host)
+	if [ -z "${PKGCONF}" ]; then
+		PKGCONF="$mb_pkgconf"
+	fi
+
+	if [ -z "${PKGCONF}" ]; then
+		PKGCONF="${PKGCONFIG}"
+	fi
+
+	# pkgconf (native)
+	if [ -z "${NATIVE_PKGCONF}" ]; then
+		NATIVE_PKGCONF="$mb_native_pkgconf"
+	fi
+
+	if [ -z "${NATIVE_PKGCONF}" ]; then
+		NATIVE_PKGCONF="${NATIVE_PKGCONFIG}"
+	fi
+
 	# project-specific initialization
 	if [ _$mb_use_custom_cfginit = _yes ]; then
 		. "$mb_project_dir/project/config/cfginit.sh"
@@ -259,6 +277,9 @@ init_vars()
 	mb_cross_compile=$CROSS_COMPILE
 	mb_shell=$SHELL
 
+	# pkgconf
+	mb_pkgconf=$PKGCONF
+
 	# switches
 	mb_cflags=$CFLAGS
 	mb_cflags_debug=$CFLAGS_DEBUG
@@ -302,6 +323,8 @@ init_vars()
 	mb_native_cfghost=$NATIVE_CFGHOST
 	mb_native_cflags=$NATIVE_CFLAGS
 	mb_native_ldflags=$NATIVE_LDFLAGS
+
+	mb_native_pkgconf=$NATIVE_PKGCONF
 
 	mb_native_pe_subsystem=$NATIVE_PE_SUBSYSTEM
 	mb_native_pe_image_base=$NATIVE_PE_IMAGE_BASE
@@ -1105,6 +1128,15 @@ for arg ; do
 
 		--makemode=*)
 			mb_makemode=${arg#*=}
+			;;
+
+		#pkgconf[ig]
+		--pkgconf=*)
+			mb_pkgconf=${arg#*=}
+			;;
+
+		--pkgconfig=*)
+			mb_pkgconf=${arg#*=}
 			;;
 
 		# build

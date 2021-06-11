@@ -75,6 +75,9 @@ supported switches:
 	--shell
 	--debug
 
+	--pkgconf
+	--pkgconfig
+
 	--strict
 	--ccstrict
 	--ldstrict
@@ -142,6 +145,9 @@ supported variables:
 	CROSS_COMPILE
 	SHELL
 
+	PKGCONF
+	PKGCONFIG
+
 	CFLAGS
 	CFLAGS_DEBUG
 	CFLAGS_COMMON
@@ -179,6 +185,9 @@ supported variables:
 	NATIVE_CFGHOST
 	NATIVE_CFLAGS
 	NATIVE_LDFLAGS
+
+	NATIVE_PKGCONF
+	NATIVE_PKGCONFIG
 
 	NATIVE_OS
 	NATIVE_OS_BITS
