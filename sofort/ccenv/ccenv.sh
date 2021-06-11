@@ -220,12 +220,14 @@ ccenv_set_primary_tools()
 			ccenv_var_prefix='mb_native_'
 		fi
 
+		ccenv_tool=
 		ccenv_var_name=$ccenv_var_prefix$__tool
 		ccenv_var_expr='${'$ccenv_var_name':-}'
 		eval ccenv_var_val=$ccenv_var_expr
 
 		if [ -n "$ccenv_var_val" ]; then
 			eval ccenv_$__tool="$ccenv_var_val"
+			ccenv_tool="$ccenv_var_val"
 		else
 			ccenv_find_tool
 			eval ccenv_$__tool="$ccenv_tool"
