@@ -1495,6 +1495,35 @@ ccenv_output_defs()
 	eval 'ccenv_'${ccenv_cfgtype}'_pkgconf'=\'$ccenv_pkgconf\'
 }
 
+ccenv_set_cc_sysroot_vars()
+{
+	if [ "$ccenv_cfgtype" = 'native' ] || [ -z "$mb_sysroot" ]; then
+		return 0
+	fi
+
+	cfgtest_host_section
+	ccenv_switch_var="--sysroot=${mb_sysroot}"
+
+	if cfgtest_compiler_switch_arg "${ccenv_switch_var}"; then
+		printf '\n# %s sysroot: cflags and ldflags\n' "$ccenv_cfgtype" \
+			>> "$ccenv_mk"
+
+		for ccenv_make_var in '_CFLAGS_SYSROOT' '_LDFLAGS_SYSROOT'; do
+			printf '%-40s= %s\n' "${ccenv_make_var}" "${ccenv_switch_var}" \
+				>> "$ccenv_mk"
+		done
+	else
+		printf '\n# %s sysroot: cflags and ldflags %s\n' "$ccenv_cfgtype" \
+			'(not supported: see config.log)'                          \
+			>> "$ccenv_mk"
+
+		for ccenv_make_var in '_CFLAGS_SYSROOT' '_LDFLAGS_SYSROOT'; do
+			printf '%-40s=\n' "${ccenv_make_var}" \
+				>> "$ccenv_mk"
+		done
+	fi
+}
+
 ccenv_set_cc_switch_vars()
 {
 	printf '\n# %s cflags: supported compiler switches\n' "$ccenv_cfgtype" \
@@ -1707,6 +1736,7 @@ ccenv_set_toolchain_variables()
 	ccenv_output_defs
 	ccenv_clean_up
 
+	ccenv_set_cc_sysroot_vars
 	ccenv_set_cc_switch_vars
 	ccenv_set_cc_linker_switch_vars
 }

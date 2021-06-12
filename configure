@@ -651,11 +651,11 @@ common_defaults()
 	# sysroot
 	if [ -n "$mb_sysroot" ]; then
 		if [ -z "$mb_cflags_sysroot" ]; then
-			mb_cflags_sysroot="--sysroot=$mb_sysroot"
+			mb_cflags_sysroot='$(_CFLAGS_SYSROOT)'
 		fi
 
 		if [ -z "$mb_ldflags_sysroot" ]; then
-			mb_ldflags_sysroot="--sysroot=$mb_sysroot"
+			mb_ldflags_sysroot='$(_LDFLAGS_SYSROOT)'
 		fi
 	fi
 
