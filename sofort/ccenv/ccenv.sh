@@ -208,6 +208,9 @@ ccenv_set_primary_tools()
 			ccenv_candidates="$ccenv_candidates gcc-$__tool"
 			ccenv_candidates="$ccenv_candidates llvm-$__tool"
 
+		elif [ "$__tool" = 'pkgconf' ]; then
+			ccenv_candidates="$__tool pkg-config"
+
 		else
 			ccenv_candidates="$__tool"
 			ccenv_candidates="$ccenv_candidates gcc-$__tool"
