@@ -816,8 +816,17 @@ config_ccenv()
 	output_section_break
 	ccenv_set_native_variables
 
+	# require --sysroot when cross-compiling
+	if [ "$mb_cchost" != "$mb_native_cchost" ] && [ -z "$mb_sysroot" ]; then
+		error_msg ' !!'
+		error_msg "$mb_package: --sysroot is required when cross-compiling."
+		exit 2
+	fi
+
+	# re-generate Makefile.tmp
 	output_section_break
 	config_copy
+
 }
 
 config_custom_cfgdefs()
