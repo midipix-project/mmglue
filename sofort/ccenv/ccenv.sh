@@ -1489,6 +1489,7 @@ ccenv_output_defs()
 	eval 'ccenv_'${ccenv_cfgtype}'_cc'=\'$ccenv_cc\'
 	eval 'ccenv_'${ccenv_cfgtype}'_cc_environment'=\'$ccenv_cc_environment\'
 	eval 'ccenv_'${ccenv_cfgtype}'_dumpmachine_switch'=\'$ccenv_dumpmachine_switch\'
+	eval 'ccenv_'${ccenv_cfgtype}'_pkgconf'=\'$ccenv_pkgconf\'
 }
 
 ccenv_set_cc_switch_vars()

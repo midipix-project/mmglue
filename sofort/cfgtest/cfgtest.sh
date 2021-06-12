@@ -10,6 +10,7 @@
 
 # cfgdefs fraework variables:
 # mb_cfgtest_cc:      the compiler used for the current test
+# mb_cfgtest_pkgconf: the pkgconf utility used for the current test
 # mb_cfgtest_cflags:  the compiler flags used for the current test
 # mb_cfgtest_cfgtype: the type of the current test (host/native)
 # mb_cfgtest_makevar: the make variable affected by the current test
@@ -37,6 +38,7 @@ cfgtest_comment()
 cfgtest_host_section()
 {
 	mb_cfgtest_cc="$ccenv_host_cc"
+	mb_cfgtest_pkgconf="${ccenv_host_pkgconf:-false}"
 	mb_cfgtest_cfgtype='host'
 	mb_cfgtest_stdin_input=${ccenv_host_stdin_input:-}
 	mb_cfgtest_environment=${ccenv_host_cc_environment:-}
@@ -62,6 +64,7 @@ cfgtest_host_section()
 cfgtest_native_section()
 {
 	mb_cfgtest_cc="$ccenv_native_cc"
+	mb_cfgtest_pkgconf="${ccenv_native_pkgconf:-false}"
 	mb_cfgtest_cfgtype='native'
 	mb_cfgtest_stdin_input=${ccenv_native_stdin_input:-}
 	mb_cfgtest_environment=${ccenv_native_cc_environment:-}
@@ -128,7 +131,7 @@ cfgtest_epilog()
 		return 1
 	fi
 
-	if [ "${2}" = '-----' ]; then
+	if [ "${2}" = '-----' ] || [ "${2}" = '(missing)' ]; then
 		printf '\n\ncfgtest: %s %s is missing or cannot be found.\n' "${1}" "${3}" >&3
 		printf '%s\n' '------------------------' >&3
 		return 1
@@ -636,6 +639,128 @@ cfgtest_library_presence()
 	printf '%s\n' '------------------------' >&3
 
 	cfgtest_epilog 'library' '(present)'
+
+	return 0
+}
+
+
+cfgtest_package_exists()
+{
+	# init
+	cfgtest_pkg=
+
+	for cfgtest_arg in ${@}; do
+		case "$cfgtest_arg" in
+			-*)
+				;;
+
+			*)
+				cfgtest_pkg="$cfgtest_arg"
+				;;
+		esac
+	done
+
+	cfgtest_prolog 'package' "$cfgtest_pkg"
+
+	# execute
+	"$mb_cfgtest_pkgconf" "${@}"                         \
+		> /dev/null 2>&3                              \
+	|| cfgtest_epilog 'package' '(missing)' "$cfgtest_pkg" \
+	|| return 1
+
+	# result
+	printf 'cfgtest: package `%s'"'"' was found.\n' \
+		"$cfgtest_pkg" >&3
+	printf '%s\n' '------------------------' >&3
+
+	cfgtest_epilog 'package' '(exists)' "$cfgtest_pkg"
+
+	return 0
+}
+
+
+cfgtest_package_config()
+{
+	# init
+	if ! cfgtest_package_exists "${@}"; then
+		return 0
+	fi
+
+	cfgtest_pkg=
+
+	for cfgtest_arg in ${@}; do
+		case "$cfgtest_arg" in
+			-*)
+				;;
+
+			*)
+				cfgtest_pkg="$cfgtest_arg"
+				;;
+		esac
+	done
+
+	cfgtest_makevar_prefix=
+	cfgtest_pkgconf_prefix=
+
+	if [ "$mb_cfgtest_cfgtype" = 'native' ]; then
+		cfgtest_makevar_prefix='_NATIVE'
+	else
+		if [ -n "${mb_sysroot}" ]; then
+			cfgtest_pkgconf_prefix="--define-variable=prefix=${mb_sysroot}"
+		fi
+	fi
+
+	cfgtest_newline
+	cfgtest_comment 'package config:' "$cfgtest_pkg"
+
+	# foo.pc
+	cfgtest_pkgconf_path=$("$mb_cfgtest_pkgconf" \
+			--path "${@}"                 \
+		2>/dev/null || true)
+
+	if [ -z "$cfgtest_pkgconf_path" ]; then
+		cfgtest_pkgconf_path=$("$mb_cfgtest_pkgconf" \
+				--debug "${@}" 2>&1           \
+				| grep ".pc'$"                 \
+				| head -n1                      \
+			|| true)
+
+		cfgtest_pkgconf_path="${cfgtest_pkgconf_path##* \'}"
+		cfgtest_pkgconf_path="${cfgtest_pkgconf_path%%\'}"
+	fi
+
+	mb_cfgtest_makevar=$(printf '%s_PKGCONF_%s'             \
+			"$cfgtest_makevar_prefix" "$cfgtest_pkg" \
+		| tr '[[:lower:]]' '[[:upper:]]'                  \
+		| sed -e 's/-/_/g')
+
+	cfgtest_makevar_set "$cfgtest_pkgconf_path"
+
+	# --cflags
+	cfgtest_pkgconf_path=$("$mb_cfgtest_pkgconf" \
+			"$cfgtest_pkgconf_prefix"     \
+			--cflags "${@}"                \
+		| sed 's/[ \t]*$//')
+
+	mb_cfgtest_makevar=$(printf '%s_CFLAGS_%s'              \
+			"$cfgtest_makevar_prefix" "$cfgtest_pkg" \
+		| tr '[[:lower:]]' '[[:upper:]]'                  \
+		| sed -e 's/-/_/g')
+
+	cfgtest_makevar_set "$cfgtest_pkgconf_path"
+
+	# --ldflags
+	cfgtest_pkgconf_path=$("$mb_cfgtest_pkgconf" \
+			"$cfgtest_pkgconf_prefix"     \
+			--libs "${@}"                  \
+		| sed 's/[ \t]*$//')
+
+	mb_cfgtest_makevar=$(printf '%s_LDFLAGS_%s'             \
+			"$cfgtest_makevar_prefix" "$cfgtest_pkg" \
+		| tr '[[:lower:]]' '[[:upper:]]'                  \
+		| sed -e 's/-/_/g')
+
+	cfgtest_makevar_set "$cfgtest_pkgconf_path"
 
 	return 0
 }
