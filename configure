@@ -815,8 +815,27 @@ config_ccenv()
 
 	# require --sysroot when cross-compiling
 	if [ "$mb_cchost" != "$mb_native_cchost" ] && [ -z "$mb_sysroot" ]; then
+		mb_pretty=$(printf "%-${#mb_package}s" '')
+
 		error_msg ' !!'
-		error_msg "$mb_package: --sysroot is required when cross-compiling."
+		error_msg "$mb_package: host machine:    $mb_cchost"
+		error_msg "$mb_package: host compiler:   $ccenv_host_cc"
+
+		error_msg ' !!'
+		error_msg "$mb_package: native machine:  $mb_native_cchost"
+		error_msg "$mb_package: native compiler: $ccenv_native_cc"
+
+		error_msg ' !!'
+		error_msg "$mb_package: detected host machine and native machine differ, assuming cross-compilation."
+
+		error_msg ' !!'
+		error_msg "$mb_package: native compilation mode can be forced via --cchost=$mb_native_cchost"
+		error_msg "${mb_pretty}  or otherwise by setting the NATIVE_CC environment variable to '$ccenv_host_cc',"
+		error_msg "${mb_pretty}  however that should almost never be necessary; then again,"
+		error_msg "${mb_pretty}  forcing native mode when cross-building is strictly prohibited."
+
+		error_msg ' !!'
+		error_msg "$mb_package: error: --sysroot is required when cross-compiling."
 		exit 2
 	fi
 
