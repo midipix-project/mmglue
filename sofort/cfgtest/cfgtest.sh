@@ -164,6 +164,21 @@ cfgtest_entity_size_prolog()
 }
 
 
+cfgtest_makevar_set()
+{
+	if [ -n "${@}" ]; then
+		mb_internal_str='= '
+	else
+		mb_internal_str='='
+	fi
+
+	printf '%-25s%s%s\n' "$mb_cfgtest_makevar" "$mb_internal_str" "${@}" \
+		>> $mb_pwd/cfgdefs.mk
+
+	unset cfgtest_internal_unit_test
+}
+
+
 cfgtest_makevar_append()
 {
 	mb_internal_str='+='
