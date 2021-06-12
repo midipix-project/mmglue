@@ -777,8 +777,12 @@ cfgtest_compiler_switch()
 		cfgtest_spc=' '
 	done
 
-	if [ "${1}" = "$cfgtest_switches" ]; then
+	if [ -n "${cfgtest_switch_arg:-}" ]; then
+		cfgtest_prolog 'compiler switch' "${cfgtest_switches%=*}"
+
+	elif [ "${1}" = "$cfgtest_switches" ]; then
 		cfgtest_prolog 'compiler switch' "$cfgtest_switches"
+
 	else
 		cfgtest_prolog 'compiler switch combination' "$cfgtest_switches"
 	fi
@@ -821,6 +825,22 @@ cfgtest_compiler_switch()
 	cfgtest_epilog 'switch' '(accepted)'
 
 	return 0
+}
+
+
+cfgtest_compiler_switch_arg()
+{
+	cfgtest_switch_arg='yes'
+
+	if cfgtest_compiler_switch "${@}"; then
+		cfgtest_ret=0
+	else
+		cfgtest_ret=1
+	fi
+
+	unset cfgtest_switch_arg
+
+	return $cfgtest_ret
 }
 
 
