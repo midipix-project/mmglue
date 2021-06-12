@@ -693,9 +693,6 @@ common_defaults()
 	mb_cflags_cmdline="$mb_cflags_cmdline $mb_cflags"
 	mb_ldflags_cmdline="$mb_ldflags_cmdline $mb_ldflags"
 
-	# add the prefix's library directory to the linker library path
-	mb_ldflags_last="$mb_ldflags_last -L$mb_libdir"
-
 	# step epilog
 	output_step_epilog
 }
@@ -821,6 +818,19 @@ config_ccenv()
 		error_msg ' !!'
 		error_msg "$mb_package: --sysroot is required when cross-compiling."
 		exit 2
+	fi
+
+	# add the library directory to the linker library path
+	if [ "$mb_cchost" = "$mb_native_cchost" ]; then
+		mb_ldflags_last="$mb_ldflags_last -L$mb_libdir"
+	else
+		case "$mb_libdir" in
+			/*)
+				mb_ldflags_last="$mb_ldflags_last -L$mb_sysroot/.$mb_libdir"
+				;;
+			*)
+				mb_ldflags_last="$mb_ldflags_last -L$mb_libdir"
+		esac
 	fi
 
 	# re-generate Makefile.tmp
