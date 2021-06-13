@@ -28,8 +28,10 @@
 # variables available to cfgdefs.sh and cfgfini.sh:
 # ccenv_host_cflags:    expanded cflags, valid for the host compiler
 # ccenv_host_ldflags:   expanded ldflags, valid for the host compiler
+# ccenv_host_sysroot:   host sysroot, as reported by the host compiler
 # ccenv_native_cflags:  expanded cflags, valid for the native compiler
 # ccenv_native_ldflags: expanded ldflags, valid for the native compiler
+# ccenv_native_sysroot: native sysroot, as reported by the native compiler
 
 ccenv_usage()
 {
@@ -1507,8 +1509,12 @@ ccenv_output_defs()
 	ccenv_cflags="${ccenv_cflags#*: }"
 	ccenv_ldflags="${ccenv_ldflags#*: }"
 
+	ccenv_sysroot=$(eval $ccenv_cc $(printf '%s' "$ccenv_cflags") \
+		-print-sysroot 2>/dev/null || true)
+
 	eval 'ccenv_'${ccenv_cfgtype}'_cflags'=\'$ccenv_cflags\'
 	eval 'ccenv_'${ccenv_cfgtype}'_ldflags'=\'$ccenv_ldflags\'
+	eval 'ccenv_'${ccenv_cfgtype}'_sysroot'=\'$ccenv_sysroot\'
 
 	eval 'ccenv_'${ccenv_cfgtype}'_cc'=\'$ccenv_cc\'
 	eval 'ccenv_'${ccenv_cfgtype}'_cc_environment'=\'$ccenv_cc_environment\'

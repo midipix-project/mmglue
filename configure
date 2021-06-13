@@ -813,8 +813,15 @@ config_ccenv()
 	output_section_break
 	ccenv_set_native_variables
 
+	# implicit --sysroot for use with pkgconf and friends
+	if [ -z "$mb_sysroot" ]; then
+		mb_sysroot="$ccenv_host_sysroot"
+	fi
+
 	# require --sysroot when cross-compiling
-	if [ "$mb_cchost" != "$mb_native_cchost" ] && [ -z "$mb_sysroot" ]; then
+	if [ "$mb_cchost" != "$mb_native_cchost" ]                   \
+			&& [ "$ccenv_host_cc" != "$ccenv_native_cc" ] \
+			&& [ -z "$mb_sysroot" ]; then
 		mb_pretty=$(printf "%-${#mb_package}s" '')
 
 		error_msg ' !!'
