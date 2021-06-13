@@ -17,6 +17,7 @@
 /* ./sofort/ccenv/ccenv.sh                                                   */
 /* ./sofort/ccenv/ccenv.usage                                                */
 /* ./sofort/ccenv/ccenv.vars                                                 */
+/* ./sofort/ccenv/ccswitch.strs                                              */
 /* ./sofort/ccenv/pedefs.in                                                  */
 /* ./sofort/cfgtest/cfgtest.sh                                               */
 /* ./sofort/config/cfgdefs.in                                                */
@@ -43,6 +44,7 @@
 /* ./sofort/core/defs.mk                                                     */
 /* ./sofort/core/flavor.mk                                                   */
 /* ./sofort/core/infer.mk                                                    */
+/* ./sofort/core/modern.m4                                                   */
 /* ./sofort/core/pkgconf.mk                                                  */
 /* ./sofort/core/version.mk                                                  */
 /* ./sofort/exrules/_pe/pe_mdso_version_none.mk                              */
