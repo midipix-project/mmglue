@@ -1,3 +1,4 @@
+
 # ccenv.sh: sofort's tool-finding bits,
 # invoked from within the project-agnostic configure script.
 
@@ -24,6 +25,11 @@
 # ccenv_cflags:  the comprehensive cflags for the host being tested
 # ccenv_cchost:  the host being tested, as reported by -dumpmachine
 
+# variables available to cfgdefs.sh and cfgfini.sh:
+# ccenv_host_cflags:    expanded cflags, valid for the host compiler
+# ccenv_host_ldflags:   expanded ldflags, valid for the host compiler
+# ccenv_native_cflags:  expanded cflags, valid for the native compiler
+# ccenv_native_ldflags: expanded ldflags, valid for the native compiler
 
 ccenv_usage()
 {
@@ -1489,10 +1495,26 @@ ccenv_output_defs()
 		unset ccenv_tmp
 	fi
 
+
+	if [ "${ccenv_cfgtype}" = 'host' ]; then
+		ccenv_cflags=$(${mb_make} -n -f "$mb_pwd/Makefile.tmp" .cflags-host)
+		ccenv_ldflags=$(${mb_make} -n -f "$mb_pwd/Makefile.tmp" .ldflags-host)
+	else
+		ccenv_cflags=$(${mb_make} -n -f "$mb_pwd/Makefile.tmp" .cflags-native)
+		ccenv_ldflags=$(${mb_make} -n -f "$mb_pwd/Makefile.tmp" .ldflags-native)
+	fi
+
+	ccenv_cflags="${ccenv_cflags#*: }"
+	ccenv_ldflags="${ccenv_ldflags#*: }"
+
+	eval 'ccenv_'${ccenv_cfgtype}'_cflags'=\'$ccenv_cflags\'
+	eval 'ccenv_'${ccenv_cfgtype}'_ldflags'=\'$ccenv_ldflags\'
+
 	eval 'ccenv_'${ccenv_cfgtype}'_cc'=\'$ccenv_cc\'
 	eval 'ccenv_'${ccenv_cfgtype}'_cc_environment'=\'$ccenv_cc_environment\'
 	eval 'ccenv_'${ccenv_cfgtype}'_dumpmachine_switch'=\'$ccenv_dumpmachine_switch\'
 	eval 'ccenv_'${ccenv_cfgtype}'_pkgconf'=\'$ccenv_pkgconf\'
+
 }
 
 ccenv_set_cc_sysroot_vars()
