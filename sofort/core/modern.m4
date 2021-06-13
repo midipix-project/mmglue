@@ -5,6 +5,7 @@ dnl
 dnl 1) make all standard m4 builtins m4_ prefixed.
 dnl 2) set the left-bracket and right-bracket symbols the begin-quote and end-quote strings.
 dnl 3) make a single underscore symbol the equivalent of the standard dnl builtin.
+dnl 4) provide the m4_toupper and m4_tolower macros.
 dnl
 divert(-1)
 
@@ -43,7 +44,6 @@ define(m4_undefine,defn(`undefine'))
 define(m4_undivert,defn(`undivert'))
 
 m4_changequote([,])
-m4_define(_,defn([m4_dnl]))
 
 m4_undefine([changecom])
 m4_undefine([changequote])
@@ -78,5 +78,10 @@ m4_undefine([traceon])
 m4_undefine([translit])
 m4_undefine([undefine])
 m4_undefine([undivert])
+
+m4_define([_],m4_defn([m4_dnl]))
+
+m4_define([m4_toupper],[m4_translit]([$1],[abcdefghijklmnopqrstuvwxyz],[ABCDEFGHIJKLMNOPQRSTUVWXYZ]))
+m4_define([m4_tolower],[m4_translit]([$1],[ABCDEFGHIJKLMNOPQRSTUVWXYZ],[abcdefghijklmnopqrstuvwxyz]))
 
 m4_divert(0)_
