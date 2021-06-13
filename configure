@@ -53,10 +53,10 @@ output_step_prolog()
 {
 	mb_line_dots='.................................'
 	mb_line_dots="${mb_line_dots}.${mb_line_dots}"
-	mb_step_desc="${mb_package} : ${1##*/} : ${2}()  "
+	mb_step_desc="${mb_package} : ${1##*/} : ${2}  "
 	mb_step_dlen="$((${#mb_line_dots} - ${#mb_step_desc}))"
 
-	printf "configure step: ${2}()\n" >&3
+	printf "configure step: ${2}\n" >&3
 	printf "%s%${mb_step_dlen}.${mb_step_dlen}s  " "${mb_step_desc}" "${mb_line_dots}"
 }
 
