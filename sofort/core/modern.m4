@@ -88,7 +88,7 @@ m4_define([_],m4_defn([m4_dnl]))
 
 m4_define([m4_toupper],[m4_translit([[$1]],[[abcdefghijklmnopqrstuvwxyz]],[[ABCDEFGHIJKLMNOPQRSTUVWXYZ]])])
 m4_define([m4_tolower],[m4_translit([[$1]],[[ABCDEFGHIJKLMNOPQRSTUVWXYZ]],[[abcdefghijklmnopqrstuvwxyz]])])
-m4_define([m4_pathvar],[m4_translit(m4_toupper([[$1]]),[/],[_])])
+m4_define([m4_pathvar],[m4_translit(m4_toupper([[$1]]),[/-],[__])])
 
 m4_define([m4_srclist],[[$1] = \])
 m4_define([m4_srcitem],[m4_tab[$1] \])
