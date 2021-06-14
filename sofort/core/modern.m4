@@ -5,7 +5,12 @@ dnl
 dnl 1) make all standard m4 builtins m4_ prefixed.
 dnl 2) set the left-bracket and right-bracket symbols the begin-quote and end-quote strings.
 dnl 3) make a single underscore symbol the equivalent of the standard dnl builtin.
-dnl 4) provide the m4_toupper and m4_tolower macros.
+dnl 4) provide the m4_toupper(), m4_tolower(), and m4_pathvar() macros.
+dnl 5) provide the m4_srclist() and m4_srcitem() macros.
+dnl 6) provide the m4_fillerdots(), m4_fillerdash(), and m4_fillerline() macros.
+dnl 7) provide the m4_whitespace() and m4_spacealign() macros.
+dnl 8) provide the m4_alignlen(), m4_leftalign(), and m4_rightalign() macros.
+dnl 9) provide the m4_tab(), m4_tabtab(), and m4_tabtabtab() macros.
 dnl
 divert(-1)
 
@@ -81,7 +86,32 @@ m4_undefine([undivert])
 
 m4_define([_],m4_defn([m4_dnl]))
 
-m4_define([m4_toupper],[m4_translit]([$1],[abcdefghijklmnopqrstuvwxyz],[ABCDEFGHIJKLMNOPQRSTUVWXYZ]))
-m4_define([m4_tolower],[m4_translit]([$1],[ABCDEFGHIJKLMNOPQRSTUVWXYZ],[abcdefghijklmnopqrstuvwxyz]))
+m4_define([m4_toupper],[m4_translit([[$1]],[[abcdefghijklmnopqrstuvwxyz]],[[ABCDEFGHIJKLMNOPQRSTUVWXYZ]])])
+m4_define([m4_tolower],[m4_translit([[$1]],[[ABCDEFGHIJKLMNOPQRSTUVWXYZ]],[[abcdefghijklmnopqrstuvwxyz]])])
+m4_define([m4_pathvar],[m4_translit(m4_toupper([[$1]]),[/],[_])])
+
+m4_define([m4_srclist],[[$1] = \])
+m4_define([m4_srcitem],[m4_tab[$1] \])
+
+m4_define([m4_fillerdots],[................................])
+m4_define([m4_fillerdash],[--------------------------------])
+m4_define([m4_fillerline],[m4_fillerdots[]m4_fillerdots[]m4_fillerdots[]])
+
+m4_define([m4_whitespace],[m4_translit(m4_fillerdots,[[.]],[[ ]])])
+m4_define([m4_spacealign],[m4_translit(m4_fillerline,[[.]],[[ ]])])
+
+m4_define([m4_alignlen],[m4_eval([$1]-m4_len([$2]))])
+m4_define([m4_leftalign],[m4_substr(m4_spacealign,0,m4_alignlen([$1],[$2]))[$2]])
+m4_define([m4_rightalign],[[$2]m4_substr(m4_spacealign,0,m4_alignlen([$1],[$2]))])
+
+
+m4_define([m4_tab],_
+	[$1]))
+
+m4_define([m4_tabtab],_
+		[$1])
+
+m4_define([m4_tabtabtab],_
+			[$1])
 
 m4_divert(0)_
