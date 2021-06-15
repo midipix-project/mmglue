@@ -853,11 +853,11 @@ config_ccenv()
 	else
 		case "$mb_libdir" in
 			/*)
-				mb_ldflags_last="$mb_cflags_last -I$mb_sysroot/.$mb_includedir"
+				mb_cflags_last="$mb_cflags_last -I$mb_sysroot/.$mb_includedir"
 				mb_ldflags_last="$mb_ldflags_last -L$mb_sysroot/.$mb_libdir"
 				;;
 			*)
-				mb_ldflags_last="$mb_cflags_last -I$mb_includedir"
+				mb_cflags_last="$mb_cflags_last -I$mb_includedir"
 				mb_ldflags_last="$mb_ldflags_last -L$mb_libdir"
 		esac
 	fi
