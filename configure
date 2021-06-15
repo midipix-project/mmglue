@@ -846,15 +846,18 @@ config_ccenv()
 		exit 2
 	fi
 
-	# add the library directory to the linker library path
+	# add the include and library directories to the compiler and linker search path
 	if [ "$mb_cchost" = "$mb_native_cchost" ]; then
+		mb_cflags_last="$mb_cflags_last -I$mb_includedir"
 		mb_ldflags_last="$mb_ldflags_last -L$mb_libdir"
 	else
 		case "$mb_libdir" in
 			/*)
+				mb_ldflags_last="$mb_cflags_last -I$mb_sysroot/.$mb_includedir"
 				mb_ldflags_last="$mb_ldflags_last -L$mb_sysroot/.$mb_libdir"
 				;;
 			*)
+				mb_ldflags_last="$mb_cflags_last -I$mb_includedir"
 				mb_ldflags_last="$mb_ldflags_last -L$mb_libdir"
 		esac
 	fi
