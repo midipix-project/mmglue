@@ -840,10 +840,6 @@ config_ccenv()
 		error_msg "${mb_pretty}  or otherwise by setting the NATIVE_CC environment variable to '$ccenv_host_cc',"
 		error_msg "${mb_pretty}  however that should almost never be necessary; then again,"
 		error_msg "${mb_pretty}  forcing native mode when cross-building is strictly prohibited."
-
-		error_msg ' !!'
-		error_msg "$mb_package: error: --sysroot is required when cross-compiling."
-		exit 2
 	fi
 
 	# add the include and library directories to the compiler and linker search path
