@@ -2,7 +2,7 @@
 /*                                                                           */
 /*  mmglue: midipix architecture- and target-specific bits for musl libc     */
 /*                                                                           */
-/*  Copyright (C) 2013--2019  Z. Gilboa                                      */
+/*  Copyright (C) 2013--2021  Z. Gilboa                                      */
 /*                                                                           */
 /*  This program is free software: you can redistribute it and/or modify     */
 /*  it under the terms of the GNU General Public License as published by     */
