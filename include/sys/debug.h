@@ -138,7 +138,7 @@ struct __dbg_event {
 	stack_t *       thread_astack;
 	sigset_t *      thread_sigmask;
 
-	struct tstat *  thread_stat;
+	struct __tmeta *thread_meta;
 	struct __teb *  thread_teb;
 	struct __tlca * thread_tlca;
 
