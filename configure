@@ -275,7 +275,7 @@ init_vars()
 	mb_toolchain=$TOOLCHAIN
 	mb_sysroot=$SYSROOT
 	mb_cross_compile=$CROSS_COMPILE
-	mb_shell=$SHELL
+	mb_shell=$CONFIG_SHELL
 
 	# pkgconf
 	mb_pkgconf=$PKGCONF
