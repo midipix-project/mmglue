@@ -1,1 +1,1 @@
-typedef int epoll_dummy;
+typedef int mount_dummy;
