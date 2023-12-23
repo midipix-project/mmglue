@@ -1,3 +1,9 @@
+/**************************************************************************/
+/*  mmglue: midipix architecture- and target-specific bits for musl libc  */
+/*  Copyright (C) 2013--2023  SysDeer Technologies, LLC                   */
+/*  Released under the Standard MIT License; see COPYING.MMGLUE.          */
+/**************************************************************************/
+
 /****************************************/
 /* dynamically linked applications only */
 /* see also: Scrt1.c                    */
