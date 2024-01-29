@@ -110,9 +110,10 @@ headers.tag:		build/headers.tag $(ARCH_GEN_H)
 					> build/include/bits/socket.h
 			grep -v '^@@@' build/include/bits/ioctl.h \
 				> build/include/bits/ioctl.h.tmp
-			grep 'struct winsize' $(SOURCE_DIR)/include/sys/ioctl.h \
-				|| sed 's/^@@@//g' build/include/bits/ioctl.h     \
-					> build/include/bits/ioctl.h.tmp
+			grep 'struct winsize' $(SOURCE_DIR)/include/sys/ioctl.h              \
+				|| grep '^STRUCT winsize' $(SOURCE_DIR)/include/alltypes.h.in \
+					|| sed 's/^@@@//g' build/include/bits/ioctl.h          \
+						> build/include/bits/ioctl.h.tmp
 			mv build/include/bits/ioctl.h.tmp build/include/bits/ioctl.h
 			touch $@
 
