@@ -60,7 +60,11 @@ static inline struct pthread ** __psx_tlca(void)
 }
 
 
+#ifdef __MUSL_PRE___GET_TP
 static inline struct pthread * __pthread_self(void)
+#else
+static inline struct pthread * __get_tp(void)
+#endif
 {
 	struct pthread ** ptlca;
 
