@@ -334,6 +334,11 @@
 #define __NR_io_pgetevents			333
 #define __NR_rseq				334
 
+#define __NR_close_range                        436
+#define __NR_openat2                            437
+#define __NR_pidfd_getfd                        438
+#define __NR_faccessat2                         439
+
 
 /* system calls in the range [352..415] are framework-specific */
 #define __NR_fs_rpath			352
