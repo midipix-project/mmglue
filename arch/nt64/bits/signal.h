@@ -93,6 +93,7 @@ typedef struct {
 	uc_m128a_t		uc_xmm13;			/* 0x270 */
 	uc_m128a_t		uc_xmm14;			/* 0x280 */
 	uc_m128a_t		uc_xmm15;			/* 0x290 */
+	uc_m128a_t		uc_xsave_reserved[6];		/* 0x2a0 */
 	uc_m128a_t		uc_vector_register[26];		/* 0x300 */
 	unsigned long		uc_vector_control;		/* 0x4a0 */
 	unsigned long		uc_debug_control;		/* 0x4a8 */
