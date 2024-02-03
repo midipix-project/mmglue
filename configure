@@ -33,7 +33,12 @@ usage()
 			" ___________________________________________" \
 			"__________________________________"
 
-		cat "$mb_project_dir"/project/config/cfgdefs.usage
+		if [ -f "$mb_project_dir"/project/config/cfgdefs.usage ]; then
+			cat "$mb_project_dir"/project/config/cfgdefs.usage
+		else
+			printf '%s\n\n' \
+				"[ info: this project does not provide a project-specific cfgdefs.usage file. ]"
+		fi
 	fi
 
 	exit 0
