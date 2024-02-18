@@ -15,6 +15,7 @@
 # mb_cfgtest_cfgtype: the type of the current test (host/native)
 # mb_cfgtest_makevar: the make variable affected by the current test
 # mb_cfgtest_headers: headers for ad-hoc inclusion with the current test
+# mb_cfgtest_attr:    if supported, the compiler-specific attribute definition
 
 
 cfgtest_newline()
@@ -127,6 +128,15 @@ cfgtest_epilog()
 			"$mb_cfgtest_cfgtype"                 \
 			'failed to compile the above code'   \
 			"${1}" >&3
+		printf '%s\n' '------------------------' >&3
+		return 1
+	fi
+
+	if [ "${1}" = 'attr' ] && [ "${2}" = '(error)' ]; then
+		printf '\n\ncfgtest: the %s compiler %s %s_ attribute.\n' \
+			"$mb_cfgtest_cfgtype"                            \
+			'does not appear to support the _'              \
+			"${3}" >&3
 		printf '%s\n' '------------------------' >&3
 		return 1
 	fi
@@ -246,6 +256,8 @@ cfgtest_common_init()
 		fi
 	elif [ "$cfgtest_type" = 'asm' ]; then
 		cfgtest_fmt='%s -c -xc - -o a.out'
+	elif [ "$cfgtest_type" = 'attr' ]; then
+		cfgtest_fmt='%s -c -xc - -o a.out -Werror'
 	elif [ "$cfgtest_type" = 'lib' ]; then
 		cfgtest_fmt='%s -xc - -o a.out'
 	elif [ "$cfgtest_type" = 'ldflag' ]; then
@@ -529,6 +541,39 @@ cfgtest_type_size()
 	printf '%s\n' '------------------------' >&3
 
 	cfgtest_epilog 'size-of-type' "$mb_internal_size"
+
+	return 0
+}
+
+
+cfgtest_attr_visibility()
+{
+	# init
+	cfgtest_prolog 'compiler visibility attr' "${1}"
+
+	cfgtest_attr_syntax='__attribute__((__visibility__("'"${1}"'")))'
+	cfgtest_code_snippet="$cfgtest_attr_syntax"' int f_'"${1}"'(void);'
+
+	cfgtest_common_init 'attr'
+
+	# execute
+	cfgtest_ret=1
+
+	printf '%s' "$cfgtest_src"                  \
+		| eval $(printf '%s' "$cfgtest_cmd") \
+		> /dev/null 2>&3                      \
+	|| cfgtest_epilog 'attr' '(error)' "${1}"      \
+	|| return
+
+	# result
+	mb_cfgtest_attr=$(printf '__attribute__\\(\\(__visibility__\\(\\"%s\\"\\)\\)\\)' "${1}")
+
+	cfgtest_ret=0
+
+	printf 'cfgtest: %s compiler: above attribute is supported; see also ccenv/%s.mk.\n\n' \
+		"$mb_cfgtest_cfgtype" "$mb_cfgtest_cfgtype" >&3
+
+	cfgtest_epilog 'attr' '(ok)'
 
 	return 0
 }

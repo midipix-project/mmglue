@@ -1654,6 +1654,25 @@ ccenv_set_cc_linker_switch_vars()
 	done
 }
 
+ccenv_set_cc_attr_visibility_vars()
+{
+	if cfgtest_attr_visibility 'default'; then
+		ccenv_attr_visibility_default="$mb_cfgtest_attr"
+	fi
+
+	if cfgtest_attr_visibility 'hidden'; then
+		ccenv_attr_visibility_hidden="$mb_cfgtest_attr"
+	fi
+
+	if cfgtest_attr_visibility 'internal'; then
+		ccenv_attr_visibility_internal="$mb_cfgtest_attr"
+	fi
+
+	if cfgtest_attr_visibility 'protected'; then
+		ccenv_attr_visibility_protected="$mb_cfgtest_attr"
+	fi
+}
+
 ccenv_dso_verify()
 {
 	ccenv_str='int foo(int x){return ++x;}'
@@ -1760,6 +1779,7 @@ ccenv_set_toolchain_variables()
 	ccenv_set_os_dso_linkage
 	ccenv_set_os_dso_patterns
 	ccenv_set_os_pe_switches
+	ccenv_set_cc_attr_visibility_vars
 
 	ccenv_output_defs
 	ccenv_clean_up
