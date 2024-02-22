@@ -1412,6 +1412,20 @@ ccenv_set_os_pe_switches()
 				;;
 		esac
 	fi
+
+	if [ "$ccenv_cc_binfmt" = 'PE' ]; then
+		if ! cfgtest_macro_definition '__PE__'; then
+			ccenv_cflags_os="${ccenv_cflags_os} -D__PE__"
+		fi
+
+		if ! cfgtest_macro_definition '__dllexport'; then
+			ccenv_cflags_os="${ccenv_cflags_os} -D__dllexport=__attribute__\(\(__dllexport__\)\)"
+		fi
+
+		if ! cfgtest_macro_definition '__dllimport'; then
+			ccenv_cflags_os="${ccenv_cflags_os} -D__dllimport=__attribute__\(\(__dllimport__\)\)"
+		fi
+	fi
 }
 
 ccenv_output_defs()
