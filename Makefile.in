@@ -84,7 +84,6 @@ CFLAGS_DEBUG 		+= @cflags_debug@
 CFLAGS_CMDLINE 		+= @cflags_cmdline@
 CFLAGS_CONFIG 		+= @cflags_config@
 CFLAGS_SYSROOT 		+= @cflags_sysroot@
-CFLAGS_OS		+= @cflags_os@
 CFLAGS_SITE		+= @cflags_site@
 CFLAGS_PATH 		+= @cflags_path@
 CFLAGS_STRICT 		+= @cflags_strict@
