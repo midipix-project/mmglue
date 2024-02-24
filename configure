@@ -847,26 +847,9 @@ config_ccenv()
 		error_msg "${mb_pretty}  forcing native mode when cross-building is strictly prohibited."
 	fi
 
-	# add the include and library directories to the compiler and linker search path
-	if [ "$mb_cchost" = "$mb_native_cchost" ]; then
-		mb_cflags_last="$mb_cflags_last -I$mb_includedir"
-		mb_ldflags_last="$mb_ldflags_last -L$mb_libdir"
-	else
-		case "$mb_libdir" in
-			/*)
-				mb_cflags_last="$mb_cflags_last -I$mb_sysroot/.$mb_includedir"
-				mb_ldflags_last="$mb_ldflags_last -L$mb_sysroot/.$mb_libdir"
-				;;
-			*)
-				mb_cflags_last="$mb_cflags_last -I$mb_includedir"
-				mb_ldflags_last="$mb_ldflags_last -L$mb_libdir"
-		esac
-	fi
-
 	# re-generate Makefile.tmp
 	output_section_break
 	config_copy
-
 }
 
 config_custom_cfgdefs()
