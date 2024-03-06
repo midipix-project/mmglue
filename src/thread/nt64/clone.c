@@ -59,6 +59,11 @@ hidden int __clone(
 	void *		pthread_self_addr,
 	int *		ctid)
 {
+	uintptr_t       sbase;
+	uintptr_t       slimit;
+	uintptr_t       sbottom;
+	void *          stack;
+
 	struct pt_regs	regs;
 	__sys_clone *	pfn_clone;
 	pthread_t	pthread;
@@ -69,6 +74,10 @@ hidden int __clone(
 
 	pfn_clone = (__sys_clone *)(__syscall_vtbl[SYS_clone]);
 
+	sbase  = (uintptr_t)child_stack;
+	sbase &= ~(uintptr_t)(0xf);
+	stack  = (void *)sbase;
+
 	if (flags == (CLONE_VM|CLONE_VFORK|SIGCHLD)) {
 		regs.sbase   = 0;
 		regs.slimit  = 0;
@@ -76,18 +85,27 @@ hidden int __clone(
 
 		return (int)pfn_clone(
 			flags,
-			child_stack,
+			stack,
 			0,0,&regs);
 	}
 
-	pthread      = (pthread_t)pthread_self_addr;
-	regs.sbase   = (unsigned long)pthread->stack;
-	regs.slimit  = regs.sbase  - pthread->stack_size;
-	regs.sbottom = regs.slimit - pthread->guard_size;
+	pthread = (pthread_t)pthread_self_addr;
+	sbase   = (uintptr_t)pthread->stack;
+	slimit  = sbase - pthread->stack_size;
+	sbottom = slimit - pthread->guard_size;
+
+	sbase  &= ~(uintptr_t)(0xf);
+	slimit += 0xf;
+	slimit |= 0xf;
+	slimit ^= 0xf;
+
+	regs.sbase   = sbase;
+	regs.slimit  = slimit;
+	regs.sbottom = sbottom;
 
 	return (int)pfn_clone(
 		flags,
-		child_stack,
+		stack,
 		ptid,
 		ctid,
 		&regs);
