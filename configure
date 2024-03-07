@@ -932,7 +932,7 @@ config_host()
 		mb_cfghost_cflags="$mb_cfghost_cflags -ffreestanding"
 		mb_cfghost_cflags="$mb_cfghost_cflags -nostdlib"
 	else
-		printf 'int main(void){return 0;}' \
+		printf 'int main(void){return 0;}\n' \
 			> "$mb_cfghost_tmpname"
 	fi
 

@@ -342,11 +342,16 @@ cfgtest_header_presence()
 	cfgtest_prolog 'header' "${1}"
 
 	cfgtest_code_snippet=$(printf '#include <%s>\n' "${1}")
+	cfgtest_code_onedecl='int fn(void){return 0;}'
+
+	cfgtest_code_snippet=$(printf '%s\n%s\n' \
+			"$cfgtest_code_snippet"   \
+			"$cfgtest_code_onedecl")
 
 	cfgtest_common_init
 
 	# execute
-	printf '%s' "$cfgtest_src"                  \
+	printf '%s\n' "$cfgtest_src"                \
 		| eval $(printf '%s' "$cfgtest_cmd") \
 		> /dev/null 2>&3                      \
 	|| cfgtest_epilog 'header' '-----' "<${1}>"    \
@@ -377,11 +382,16 @@ cfgtest_header_absence()
 	cfgtest_prolog 'header absence' "${1}"
 
 	cfgtest_code_snippet=$(printf '#include <%s>\n' "${1}")
+	cfgtest_code_onedecl='int fn(void){return 0;}'
+
+	cfgtest_code_snippet=$(printf '%s\n%s\n' \
+			"$cfgtest_code_snippet"   \
+			"$cfgtest_code_onedecl")
 
 	cfgtest_common_init
 
 	# execute
-	printf '%s' "$cfgtest_src"                  \
+	printf '%s\n' "$cfgtest_src"                \
 		| eval $(printf '%s' "$cfgtest_cmd") \
 		> /dev/null 2>&3                      \
 	&& printf 'cfgtest: %s header <%s>: no error.' \
@@ -418,7 +428,7 @@ cfgtest_interface_presence()
 	cfgtest_common_init
 
 	# execute
-	printf '%s' "$cfgtest_src"                    \
+	printf '%s\n' "$cfgtest_src"                  \
 		| eval $(printf '%s' "$cfgtest_cmd")   \
 		> /dev/null 2>&3                        \
 	|| cfgtest_epilog 'interface' '(error)' "${1}"   \
@@ -455,7 +465,7 @@ cfgtest_decl_presence()
 	cfgtest_common_init
 
 	# execute
-	printf '%s' "$cfgtest_src"                  \
+	printf '%s\n' "$cfgtest_src"                \
 		| eval $(printf '%s' "$cfgtest_cmd") \
 		> /dev/null 2>&3                      \
 	|| cfgtest_epilog 'decl' '(error)' "${1}"      \
@@ -508,7 +518,7 @@ cfgtest_type_size()
 
 			cfgtest_common_init
 
-			printf '%s' "$cfgtest_src"                  \
+			printf '%s\n' "$cfgtest_src"                \
 				| eval $(printf '%s' "$cfgtest_cmd") \
 				> /dev/null 2>&3                      \
 			&& mb_internal_size=$mb_internal_guess
@@ -559,7 +569,7 @@ cfgtest_attr_visibility()
 	# execute
 	cfgtest_ret=1
 
-	printf '%s' "$cfgtest_src"                  \
+	printf '%s\n' "$cfgtest_src"                \
 		| eval $(printf '%s' "$cfgtest_cmd") \
 		> /dev/null 2>&3                      \
 	|| cfgtest_epilog 'attr' '(error)' "${1}"      \
@@ -591,7 +601,7 @@ cfgtest_code_snippet_asm()
 	# execute
 	cfgtest_ret=1
 
-	printf '%s' "$cfgtest_src"                  \
+	printf '%s\n' "$cfgtest_src"                \
 		| eval $(printf '%s' "$cfgtest_cmd") \
 		> /dev/null 2>&3                      \
 	|| cfgtest_epilog 'snippet' '(error)'          \
@@ -624,7 +634,7 @@ cfgtest_macro_definition()
 	# execute
 	cfgtest_ret=1
 
-	printf '%s' "$cfgtest_src"                  \
+	printf '%s\n' "$cfgtest_src"                \
 		| eval $(printf '%s' "$cfgtest_cmd") \
 		> /dev/null 2>&3                      \
 	|| cfgtest_epilog 'macro' '(error)' "${1}"     \
@@ -672,7 +682,7 @@ cfgtest_library_presence()
 	cfgtest_common_init 'lib'
 
 	# execute
-	printf '%s' "$cfgtest_src"                  \
+	printf '%s\n' "$cfgtest_src"                \
 		| eval $(printf '%s' "$cfgtest_cmd") \
 		> /dev/null 2>&3                      \
 	|| cfgtest_epilog 'library' '-----' "$@"       \
@@ -850,13 +860,13 @@ cfgtest_compiler_switch()
 			;;
 
 		*)
-			cfgtest_code_snippet=
+			cfgtest_code_snippet='int fn(void){return 0;}'
 			cfgtest_common_init 'switch'
 			;;
 	esac
 
 	# execute
-	printf '%s' "$cfgtest_src"                  \
+	printf '%s\n' "$cfgtest_src"                \
 		| eval $(printf '%s' "$cfgtest_cmd") \
 		> /dev/null 2>&3                      \
 	|| cfgtest_epilog 'switch' '(error)' "$@"      \
