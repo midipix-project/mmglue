@@ -873,7 +873,7 @@ cfgtest_compiler_switch()
 	|| return 1
 
 	# result
-	printf 'cfgtest: the switch `%s was accepted by the compier.\n' \
+	printf 'cfgtest: the switch `%s was accepted by the compiler.\n' \
 		"$cfgtest_switches'" >&3
 	printf '%s\n' '------------------------' >&3
 
