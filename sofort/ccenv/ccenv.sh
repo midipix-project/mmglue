@@ -1126,6 +1126,9 @@ ccenv_set_os()
 			ccenv_tip=${ccenv_cchost%-*}
 			ccenv_os=${ccenv_tip#*-}
 			;;
+		*-*-solaris* )
+			ccenv_os='solaris'
+			;;
 		*-*-* )
 			ccenv_os=${ccenv_cchost#*-*-}
 			;;
@@ -1424,6 +1427,15 @@ ccenv_set_os_pe_switches()
 
 		if ! cfgtest_macro_definition '__dllimport'; then
 			ccenv_cflags_os="${ccenv_cflags_os} -D__dllimport=__attribute__\(\(__dllimport__\)\)"
+		fi
+	fi
+}
+
+ccenv_set_os_gate_switches()
+{
+	if [ "$ccenv_os" = 'solaris' ]; then
+		if ! cfgtest_macro_definition 'AT_FDCWD'; then
+			ccenv_cflags_os="${ccenv_cflags_os} -D__EXTENSIONS__"
 		fi
 	fi
 }
@@ -1793,6 +1805,7 @@ ccenv_set_toolchain_variables()
 	ccenv_set_os_dso_linkage
 	ccenv_set_os_dso_patterns
 	ccenv_set_os_pe_switches
+	ccenv_set_os_gate_switches
 	ccenv_set_cc_attr_visibility_vars
 
 	ccenv_output_defs
