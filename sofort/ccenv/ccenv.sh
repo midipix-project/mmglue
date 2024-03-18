@@ -1118,16 +1118,19 @@ ccenv_set_os()
 	fi
 
 	case "$ccenv_cchost" in
-		*-*-*-* )
-			ccenv_tip=${ccenv_cchost%-*}
-			ccenv_os=${ccenv_tip#*-*-}
-			;;
 		*-*-musl | *-*-gnu )
 			ccenv_tip=${ccenv_cchost%-*}
 			ccenv_os=${ccenv_tip#*-}
 			;;
 		*-*-solaris* )
 			ccenv_os='solaris'
+			;;
+		*-*-*bsd* | *-*-dragonfly* )
+			ccenv_os='bsd'
+			;;
+		*-*-*-* )
+			ccenv_tip=${ccenv_cchost%-*}
+			ccenv_os=${ccenv_tip#*-*-}
 			;;
 		*-*-* )
 			ccenv_os=${ccenv_cchost#*-*-}
@@ -1437,6 +1440,19 @@ ccenv_set_os_gate_switches()
 		if ! cfgtest_macro_definition 'AT_FDCWD'; then
 			ccenv_cflags_os="${ccenv_cflags_os} -D__EXTENSIONS__"
 		fi
+	fi
+}
+
+ccenv_set_os_bsd_switches()
+{
+	if [ "$ccenv_os" = 'bsd' ]; then
+		mb_cfgtest_headers='sys/mman.h'
+
+		if ! cfgtest_macro_definition 'MAP_ANON'; then
+			ccenv_cflags_os="${ccenv_cflags_os} -D__BSD_VISIBLE"
+		fi
+
+		mb_cfgtest_headers=
 	fi
 }
 
@@ -1806,6 +1822,7 @@ ccenv_set_toolchain_variables()
 	ccenv_set_os_dso_patterns
 	ccenv_set_os_pe_switches
 	ccenv_set_os_gate_switches
+	ccenv_set_os_bsd_switches
 	ccenv_set_cc_attr_visibility_vars
 
 	ccenv_output_defs
