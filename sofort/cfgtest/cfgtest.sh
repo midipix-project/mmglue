@@ -423,7 +423,7 @@ cfgtest_interface_presence()
 	# init
 	cfgtest_prolog 'interface' "${1}"
 
-	cfgtest_code_snippet=$(printf 'void * addr = &%s;\n' "${1}")
+	cfgtest_code_snippet=$(printf 'void (*addr)() = (void (*)())&%s;\n' "${1}")
 
 	cfgtest_common_init
 
