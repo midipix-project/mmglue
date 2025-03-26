@@ -1111,6 +1111,9 @@ for arg ; do
 		--mandir=*)
 			mb_mandir=${arg#*=}
 			;;
+		--docdir=*)
+			mb_docdir=${arg#*=}
+			;;
 		--libexecdir=*)
 			mb_libexecdir=${arg#*=}
 			;;
