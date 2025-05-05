@@ -77,13 +77,12 @@ void * dlopen(const char * file, int mode)
 			for (; *ch; ) {
 				if (*ch == ':') {
 					*ch = 0;
-					ch  = 0;
 				} else {
 					ch++;
 				}
 			}
 
-			next = *ch ? ch : 0;
+			next = *ch ? ch : (*++ch ? ch : 0);
 		}
 
 		*epathv = 0;
