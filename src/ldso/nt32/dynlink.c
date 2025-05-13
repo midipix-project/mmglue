@@ -173,9 +173,9 @@ int __dlinfo(void * dso, int req, void * res)
 	return (__ldso_vtbl->dlinfo(dso,req,res)) ? -1 : 0;
 }
 
-void *__dlsym(void * restrict p, const char * restrict s)
+void *__dlsym(void * restrict p, const char * restrict s, void * restrict a)
 {
-	return __ldso_vtbl->dlsym(p,s,0);
+	return __ldso_vtbl->dlsym(p,s,a);
 }
 
 int dlclose(void *p)
@@ -188,6 +188,5 @@ char * dlerror(void)
 	return __ldso_vtbl->dlerror();
 }
 
-weak_alias(__dlsym,dlsym);
 weak_alias(__dladdr,dladdr);
 weak_alias(__dlinfo,dlinfo);
